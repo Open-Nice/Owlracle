@@ -62,6 +62,9 @@ dependencies:
   next-auth:
     specifier: 0.0.0-manual.83c4ebd1
     version: 0.0.0-manual.83c4ebd1(next@13.4.7-canary.1)(react@18.2.0)
+  next-template:
+    specifier: 'link:'
+    version: 'link:'
   next-themes:
     specifier: ^0.2.1
     version: 0.2.1(next@13.4.7-canary.1)(react-dom@18.2.0)(react@18.2.0)
