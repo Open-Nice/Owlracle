@@ -1,5 +1,6 @@
 import NextAuth, { type DefaultSession } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
+import {connectDB} from '@/app/db/db'
 
 declare module 'next-auth' {
   interface Session {
@@ -17,7 +18,14 @@ export const {
 } = NextAuth({
   providers: [GitHub({ clientId: process.env.AUTH_GITHUB_ID, clientSecret: process.env.AUTH_GITHUB_SECRET })],
   callbacks: {
-    jwt({ token, profile }) {
+    async signIn({ profile }) {
+      console.log(profile)
+      console.log('connecting to mongodb in auth')
+      await connectDB()
+
+      return true
+    },
+    async jwt({ token, profile }) {
       if (profile) {
         token.id = profile.id
         token.image = profile.picture
