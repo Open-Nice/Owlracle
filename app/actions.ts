@@ -90,31 +90,31 @@ export async function clearChats() {
   return redirect('/')
 }
 
-export async function getSharedChat(id: string) {
-  const chat = await kv.hgetall<Chat>(`chat:${id}`)
+// export async function getSharedChat(id: string) {
+//   const chat = await kv.hgetall<Chat>(`chat:${id}`)
 
-  if (!chat || !chat.sharePath) {
-    return null
-  }
+//   if (!chat || !chat.sharePath) {
+//     return null
+//   }
 
-  return chat
-}
+//   return chat
+// }
 
-export async function shareChat(chat: Chat) {
-  const session = await auth()
+// export async function shareChat(chat: Chat) {
+//   const session = await auth()
 
-  if (!session?.user?.id || session.user.id !== chat.userId) {
-    return {
-      error: 'Unauthorized'
-    }
-  }
+//   if (!session?.user?.id || session.user.id !== chat.userId) {
+//     return {
+//       error: 'Unauthorized'
+//     }
+//   }
 
-  const payload = {
-    ...chat,
-    sharePath: `/share/${chat.id}`
-  }
+//   const payload = {
+//     ...chat,
+//     sharePath: `/share/${chat.id}`
+//   }
 
-  await kv.hmset(`chat:${chat.id}`, payload)
+//   await kv.hmset(`chat:${chat.id}`, payload)
 
-  return payload
-}
+//   return payload
+// }
