@@ -1,7 +1,5 @@
 import NextAuth, { type DefaultSession } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import { connectDB } from '@/db/db'
-import User from '@/db/user'
 
 declare module 'next-auth' {
   interface Session {
@@ -29,27 +27,13 @@ export const {
     },
     async signIn({ profile }) {
       console.log(profile)
-      try {
-        console.log('connecting to mongodb in auth')
-        await connectDB()
 
-        const userExist = await User.findOne({email: profile?.email})
-
-        if (! userExist) {
-          const user = await User.create({
-            email: profile?.email,
-            name: profile?.name,
-            image: profile?.picture
-          })
-        }
-
-        return true
-
-      } catch (error) {
-        console.log(`encounter error in auth: ${error}`)
+      // Email needs to be verified and ends with rice.edu
+      if (! (profile?.email_verified && profile?.email?.endsWith("@rice.com")) ) {
         return false
       }
 
+      return true
     },
     async jwt({ token, profile }) {
       if (profile) {
