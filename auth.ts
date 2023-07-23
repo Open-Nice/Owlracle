@@ -1,6 +1,7 @@
 import NextAuth, { type DefaultSession } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import {connectDB} from '@/utils/db'
+import { connectDB } from '@/db/db'
+import User from '@/db/user'
 
 declare module 'next-auth' {
   interface Session {
@@ -23,15 +24,32 @@ export const {
     })
   ],
   callbacks: {
-    // async session({ session }) {
-    //   return session
-    // },
+    async session({ session }) {
+      return session
+    },
     async signIn({ profile }) {
       console.log(profile)
-      console.log('connecting to mongodb in auth')
-      await connectDB()
+      try {
+        console.log('connecting to mongodb in auth')
+        await connectDB()
 
-      return true
+        const userExist = await User.findOne({email: profile?.email})
+
+        if (! userExist) {
+          const user = await User.create({
+            email: profile?.email,
+            name: profile?.name,
+            image: profile?.picture
+          })
+        }
+
+        return true
+
+      } catch (error) {
+        console.log(`encounter error in auth: ${error}`)
+        return false
+      }
+
     },
     async jwt({ token, profile }) {
       if (profile) {
