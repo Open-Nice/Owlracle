@@ -1,6 +1,6 @@
 import NextAuth, { type DefaultSession } from 'next-auth'
-import GitHub from 'next-auth/providers/github'
-import {connectDB} from '@/app/db/db'
+import GoogleProvider from 'next-auth/providers/google'
+import {connectDB} from '@/utils/db'
 
 declare module 'next-auth' {
   interface Session {
@@ -16,8 +16,16 @@ export const {
   auth,
   CSRF_experimental // will be removed in future
 } = NextAuth({
-  providers: [GitHub({ clientId: process.env.AUTH_GITHUB_ID, clientSecret: process.env.AUTH_GITHUB_SECRET })],
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+    })
+  ],
   callbacks: {
+    // async session({ session }) {
+    //   return session
+    // },
     async signIn({ profile }) {
       console.log(profile)
       console.log('connecting to mongodb in auth')
