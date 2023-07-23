@@ -26,6 +26,21 @@ export function SidebarItem({ chat, children }: SidebarItemProps) {
 
   return (
     <div className="relative">
+      <div className="absolute left-2 top-1 flex h-6 w-6 items-center justify-center">
+        {chat.sharePath ? (
+          <Tooltip delayDuration={1000}>
+            <TooltipTrigger
+              tabIndex={-1}
+              className="focus:bg-muted focus:ring-1 focus:ring-ring"
+            >
+              <IconUsers className="mr-2" />
+            </TooltipTrigger>
+            <TooltipContent>This is a shared chat.</TooltipContent>
+          </Tooltip>
+        ) : (
+          <IconMessage className="mr-2" />
+        )}
+      </div>
       <Link
         href={chat.path}
         className={cn(
