@@ -1,5 +1,5 @@
 import NextAuth, { type DefaultSession } from 'next-auth'
-import GitHub from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
 
 declare module 'next-auth' {
   interface Session {
@@ -15,11 +15,40 @@ export const {
   auth,
   CSRF_experimental // will be removed in future
 } = NextAuth({
-  providers: [GitHub({ clientId: process.env.AUTH_GITHUB_ID, clientSecret: process.env.AUTH_GITHUB_SECRET })],
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+    })
+  ],
   callbacks: {
-    jwt({ token, profile }) {
+    async signIn({ profile }) {
+      // console.log('profile:')
+      // console.log(profile)
+
+      // Email needs to be verified and ends with rice.edu
+      if (! (profile?.email_verified && profile?.email?.endsWith("@rice.edu")) ) {
+        return false
+      }
+
+      return true
+    },
+    async jwt({ token, user, account, profile }) {
+      // console.log('token') // always not null
+      // console.log(token)
+
+      // console.log('profile') // not null first time
+      // console.log(profile)
+      
+      // console.log('user') // not null first time
+      // console.log(user)
+
+      // console.log('account') // not null first time
+      // console.log(account)
+
       if (profile) {
-        token.id = profile.id
+        // ab123@rice.edu, token.id = 'ab123'
+        token.id = profile.email?.split('@')[0]
         token.image = profile.picture
       }
       return token
