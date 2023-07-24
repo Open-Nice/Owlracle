@@ -2,6 +2,10 @@ import { kv } from '@vercel/kv'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 import { Configuration, OpenAIApi } from 'openai-edge'
 
+import { OpenAI } from "langchain/llms/openai";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+
+
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 
@@ -12,6 +16,8 @@ const configuration = new Configuration({
 })
 
 const openai = new OpenAIApi(configuration)
+
+const embeddings = new OpenAIEmbeddings();
 
 export async function POST(req: Request) {
   const json = await req.json()
@@ -28,6 +34,11 @@ export async function POST(req: Request) {
     configuration.apiKey = previewToken
   }
 
+  console.log("prompt:", messages[messages.length-1]);
+
+  const embedding_res = await embeddings.embedQuery("Hello world");
+  // console.log("embedding_res:", embedding_res);
+  
   const res = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
     messages,
