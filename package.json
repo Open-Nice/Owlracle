@@ -51,6 +51,7 @@
     "remark-math": "^5.1.1"
   },
   "devDependencies": {
+    "@types/common-tags": "^1.8.1",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^17.0.12",
     "@types/react": "^18.0.22",
