@@ -22,10 +22,62 @@ const embeddingFn = new OpenAIEmbeddings();
 
 const supabaseUrl = process.env.SUPABASE_URL
 if (!supabaseUrl) throw new Error(`Expected env var SUPABASE_URL`)
-
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY
 if (!supabaseServiceKey) throw new Error(`Expected env var SUPABASE_SERVICE_KEY`)
 
+
+const getBetterQuery = async (messages: ChatCompletionRequestMessage[]): Promise<string> => {
+  if (messages.length == 1)
+      return messages[0].content!
+
+  const query = messages[messages.length-1].content
+  const sanitizedQuery = query!.trim()
+
+  const message_str: string = messages
+    .slice(messages.length < 5 ? 0 : -5, -1)
+    .map(conv => `${conv['role']}: ${conv['content']}`)
+    .join('\n')
+  
+  const prompt = codeBlock`
+    I have the following conversation history between user and LLM:
+    ${message_str}
+
+    ${oneLine`
+      Based on this conversation history,
+      I want you to make the following user
+      prompt more complete by removing refereces.
+      For example, if user asks "What is his
+      name?" Then you should figure out what
+      does "his" refer to and give me the more
+      complete version of user prompt."
+      Don't leave any reference in your eventual answer.
+    `}
+
+    This is the user prompt:
+    ${sanitizedQuery}
+  `
+
+  const chatMessage : ChatCompletionRequestMessage = {
+    role: 'user',
+    content: prompt,
+  }
+
+  const response = await openai.createChatCompletion({
+    model: 'gpt-3.5-turbo',
+    messages: [chatMessage],
+    temperature: 0.7,
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    console.log('getBetterQuery: Failed to generate completion', error)
+    throw new Error('getBetterQuery: Failed to generate completion')
+  }
+  
+  const result = await response.json()
+
+  return result.choices[0].message.content
+}
 
 export async function POST(req: Request) {
   const json = await req.json()
@@ -42,17 +94,23 @@ export async function POST(req: Request) {
     configuration.apiKey = previewToken
   }
 
-  // Get user query
-  const query = messages[messages.length-1].content
-  console.log("query:", query);
-  const sanitizedQuery = query.trim()
+  // Make query better for vectorDB: reference free
+  const betterQuery = await getBetterQuery(messages)
+  console.log("Better query:", betterQuery)
 
   // Create embedding from query
-  const queryEmbedding = await embeddingFn.embedQuery(sanitizedQuery.replaceAll('\n', ' '));
-  // console.log("queryEmbedding:", queryEmbedding);
+  const queryEmbedding = await embeddingFn.embedQuery(betterQuery.replaceAll('\n', ' '));
 
   // Connect to vector DB
-  const supabaseClient = createClient(supabaseUrl!, supabaseServiceKey!)
+  const supabaseClient = createClient(
+    supabaseUrl!, 
+    supabaseServiceKey!,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    })
 
   // Similarity search
   const { error: matchError, data: pageSections } = await supabaseClient.rpc(
@@ -68,19 +126,8 @@ export async function POST(req: Request) {
     console.log('Failed to match page sections', matchError)
     throw new Error(`Failed to match page sections`)
   } else {
-    console.log('Retreival successful:', pageSections)
+    // console.log('Retreival successful:', pageSections)
   }
-
-  // Similarity search using langchain: Maybe implement this later ?
-  // const vectorStore = new SupabaseVectorStore(
-  //                                   embeddingFn,
-  //                                   {
-  //                                     client: supabaseClient,
-  //                                     tableName: 'courses',
-  //                                     queryName: 'match_documents'
-  //                                   })
-  // const pageSections = await vectorStore.similaritySearch(sanitizedQuery, 1);
-  // console.log(pageSections)
 
   // Generate contexts
   const tokenizer = new GPT3Tokenizer({ type: 'gpt3' })
@@ -99,26 +146,28 @@ export async function POST(req: Request) {
 
     contextText += `${content.trim()}\n---\n`
   }
-  console.log('tokenCount:', tokenCount)
+  // console.log('tokenCount:', tokenCount)
 
   const prompt = codeBlock`
-    ${oneLine`
-    Use the context below, answer the following question accurately.
-    Include in your answer as many relevant professors mentioned below as possible.
-    Along with the professor, provide the professor' urls from the below information.
-    If you are unsure and the answer is not explicitly written in the documentation, say
-    "Sorry, I don't know how to help with that."`}
-
     Context sections:
     ${contextText}
 
+    ${oneLine`
+      Use the above information, answer the following question accurately.
+      Include in your answer as many relevant professors mentioned above as possible.
+      Along with the professor, provide the professors' urls from the above information.
+      If you are unsure and the answer is not explicitly written in the documentation, say
+      "Sorry, I don't know how to help with that." Try to make your response concise and
+      informative. Try to summarize the information you are given instead of completely copying.
+    `}
+
     Question: """
-    ${sanitizedQuery}
+    ${betterQuery}
     """
 
-    Answer as markdown (including related code snippets if available):
+    Answer as markdown. Provide professor's title, websites, email, description, description if available:
   `
-  console.log('prompt:', prompt)
+  // console.log('prompt:', prompt)
 
   const chatMessage : ChatCompletionRequestMessage = {
     role: 'user',
@@ -168,43 +217,4 @@ export async function POST(req: Request) {
   })
 
   return new StreamingTextResponse(stream)
-
-
-  
-  // const res = await openai.createChatCompletion({
-  //   model: 'gpt-3.5-turbo',
-  //   messages,
-  //   temperature: 0.7,
-  //   stream: true
-  // })
-
-  // const stream = OpenAIStream(res, {
-  //   async onCompletion(completion) {
-  //     const title = json.messages[0].content.substring(0, 100)
-  //     const id = json.id ?? nanoid()
-  //     const createdAt = Date.now()
-  //     const path = `/chat/${id}`
-  //     const payload = {
-  //       id,
-  //       title,
-  //       userId,
-  //       createdAt,
-  //       path,
-  //       messages: [
-  //         ...messages,
-  //         {
-  //           content: completion,
-  //           role: 'assistant'
-  //         }
-  //       ]
-  //     }
-  //     await kv.hmset(`chat:${id}`, payload)
-  //     await kv.zadd(`user:chat:${userId}`, {
-  //       score: createdAt,
-  //       member: `chat:${id}`
-  //     })
-  //   }
-  // })
-
-  // return new StreamingTextResponse(stream)
 }
