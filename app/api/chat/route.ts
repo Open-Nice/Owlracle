@@ -26,6 +26,28 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY
 if (!supabaseServiceKey) throw new Error(`Expected env var SUPABASE_SERVICE_KEY`)
 
 
+const openAiAPIcall = async (prompt: string): Promise<string> => {
+
+  const chatMessage : ChatCompletionRequestMessage = {
+    role: 'user',
+    content: prompt,
+  }
+
+  const response = await openai.createChatCompletion({
+    model: 'gpt-3.5-turbo',
+    messages: [chatMessage],
+    temperature: 0.7,
+  })
+
+  if (! response.ok) {
+    const error = await response.json()
+    console.log('openAiAPIcall: Failed to generate completion', error)
+    throw new Error('openAiAPIcall: Failed to generate completion')
+  }
+
+  return (await response.json()).choices[0].message.content
+}
+
 const getBetterQuery = async (messages: ChatCompletionRequestMessage[]): Promise<string> => {
 
   if (messages.length == 1)
@@ -58,26 +80,27 @@ const getBetterQuery = async (messages: ChatCompletionRequestMessage[]): Promise
     ${sanitizedQuery}
   `
 
-  const chatMessage : ChatCompletionRequestMessage = {
-    role: 'user',
-    content: prompt,
-  }
+  return openAiAPIcall(prompt)
+}
 
-  const response = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
-    messages: [chatMessage],
-    temperature: 0.7,
-  })
-
-  if (!response.ok) {
-    const error = await response.json()
-    console.log('getBetterQuery: Failed to generate completion', error)
-    throw new Error('getBetterQuery: Failed to generate completion')
-  }
+const getIfNeedDB =async (query: string): Promise<boolean>  => {
   
-  const result = await response.json()
+  const prompt = codeBlock`
+    Question: """
+    ${query}
+    """
 
-  return result.choices[0].message.content
+    ${oneLine`
+      Imagine yourself as the virtual assistant for Rice Univ. students created by Nice Organization.
+      For the query above, determine if you need information from the following database: courses, organization, events, faculties.
+      If you don't need database, simply say "No I don't need the database"
+    `}
+  `
+  
+  const ifNeedDB : string = (await openAiAPIcall(prompt)).toLowerCase()
+
+  console.log(`${! ifNeedDB.includes("i don't need the database") ? "need db" : "no need for db"}`)
+  return ! ifNeedDB.includes("i don't need the database")
 }
 
 interface RelevantDBResult {
@@ -108,25 +131,7 @@ const getRelaventDB = async (query: string): Promise<Promise<RelevantDBResult>> 
     ${query}
   `
 
-  const chatMessage : ChatCompletionRequestMessage = {
-    role: 'user',
-    content: prompt,
-  }
-
-  const response = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
-    messages: [chatMessage],
-    temperature: 0.7,
-  })
-
-  if (!response.ok) {
-    const error = await response.json()
-    console.log('getBetterQuery: Failed to generate completion', error)
-    throw new Error('getBetterQuery: Failed to generate completion')
-  }
-  
-  const result = await response.json()
-  const relaventDBs : string = result.choices[0].message.content.toLowerCase()
+  const relaventDBs : string = (await openAiAPIcall(prompt)).toLowerCase()
   // console.log(relaventDBs)
 
   let dbs: Record<string, boolean> = {
@@ -168,6 +173,72 @@ export async function POST(req: Request) {
   // Make query better for vectorDB: reference free
   const betterQuery = await getBetterQuery(messages)
   console.log("Better query:", betterQuery)
+
+  // If there's no need to use Vector DB, answer question directly
+  if (! (await getIfNeedDB(betterQuery))){
+    const prompt = codeBlock`
+      ${oneLine`
+        Imagine yourself as the virtual assistant for Rice Univ. students created by Nice Organization.
+        Chat with the user playfully or provide an overview of your functionality.
+        Your can answer questions about faculty, courses, events and organizations at Rice Univ.
+      `}
+
+      Question: """
+      ${betterQuery}
+      """
+    `
+
+    const chatMessage : ChatCompletionRequestMessage = {
+      role: 'user',
+      content: prompt,
+    }
+  
+    const response = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [chatMessage],
+      max_tokens: 512,
+      temperature: 0.7,
+      stream: true,
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      console.log('Failed to generate completion', error)
+      throw new Error('Failed to generate completion')
+    }
+  
+    const stream = OpenAIStream(response, {
+      async onCompletion(completion) {
+        const title = json.messages[0].content.substring(0, 100)
+        const id = json.id ?? nanoid()
+        const createdAt = Date.now()
+        const path = `/chat/${id}`
+        const payload = {
+          id,
+          title,
+          userId,
+          createdAt,
+          path,
+          messages: [
+            ...messages,
+            {
+              content: completion,
+              role: 'assistant'
+            }
+          ]
+        }
+        await kv.hmset(`chat:${id}`, payload)
+        await kv.zadd(`user:chat:${userId}`, {
+          score: createdAt,
+          member: `chat:${id}`
+        })
+      }
+    })
+
+
+    return new StreamingTextResponse(stream)
+  }
+
 
   // Create embedding for query
   const queryEmbedding = await embeddingFn.embedQuery(betterQuery.replaceAll('\n', ' '));
@@ -235,10 +306,10 @@ export async function POST(req: Request) {
     ${contextText}
 
     ${oneLine`
-      Use the above information, answer the following question accurately.
-      Include in your answer as many relevant information mentioned above as possible.
-      Provide relavent url inside your answer.
-      If you are unsure and the answer is not explicitly written in the documentation, say
+      Use the context above, answer the question below accurately.
+      Include in your answer as many relevant information from context as possible.
+      Provide relavent url inside your answer if available.
+      If you are unsure and the answer is not explicitly written in the context, say
       "Sorry, I don't know how to help with that." Try to make your response concise and
       informative. Try to summarize the information you are given instead of completely copying.
     `}
