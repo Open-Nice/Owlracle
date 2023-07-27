@@ -105,11 +105,9 @@ const enoughContext = async (currentContext: string, userQuery: string): Promise
     ${userQuery}
   `
 
-  // const response = (await openAiAPIcall(prompt)).toLowerCase()
+  const response = (await openAiAPIcall(prompt)).toLowerCase()
   // console.log("response:", response, response.includes('yes'))
-  // return response.includes('yes')
-
-  return (await openAiAPIcall(prompt)).toLowerCase().includes('yes')
+  return response.includes('yes')
 }
 
 interface RelevantDBResult {
@@ -207,9 +205,11 @@ export async function POST(req: Request) {
     throw new Error(`Failed to match page sections`)
   }
   combinedPageSections.push(...pageSections)
+  // console.log("combinedPageSections:", combinedPageSections)
 
   // Check if current contexts are already enough
-  const isSufficient = enoughContext(combinedPageSections.map(obj => obj.content).join(''), betterQuery)
+  const isSufficient = await enoughContext(combinedPageSections.map(obj => obj.content).join(''), betterQuery)
+  console.log('isSufficient:', isSufficient)
   if (! isSufficient) {
     
     // Infer which vectorDB(s) are needed
