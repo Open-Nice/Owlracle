@@ -84,6 +84,34 @@ const getBetterQuery = async (messages: ChatCompletionRequestMessage[]): Promise
   return openAiAPIcall(prompt)
 }
 
+const enoughContext = async (currentContext: string, userQuery: string): Promise<boolean> => {
+
+  // console.log('currentContext:', currentContext)
+  // console.log('userQuery:', userQuery)
+
+  const prompt = codeBlock`
+    I have the following context:
+    ${currentContext}
+
+    ${oneLine`
+      Based on the context,
+      I want you to determine if the context is
+      sufficient to answer the following user
+      prompt. If it's sufficient, respond "yes" without explanation.
+      If the user prompt is about you i.e. the virtual assistant, respond "yes" without explanation.
+    `}
+
+    This is the user prompt:
+    ${userQuery}
+  `
+
+  // const response = (await openAiAPIcall(prompt)).toLowerCase()
+  // console.log("response:", response, response.includes('yes'))
+  // return response.includes('yes')
+
+  return (await openAiAPIcall(prompt)).toLowerCase().includes('yes')
+}
+
 interface RelevantDBResult {
   // A dictionary indicating if the db is needed
   dbs: Record<string, boolean>
@@ -91,7 +119,7 @@ interface RelevantDBResult {
   dbNum: number
 }
 
-const getRelaventDB = async (query: string): Promise<Promise<RelevantDBResult>> => {
+const getRelaventDB = async (query: string): Promise<RelevantDBResult> => {
   const prompt = codeBlock`
     ${oneLine`
       You are given following Rice University databases:
@@ -153,10 +181,6 @@ export async function POST(req: Request) {
   // Create embedding for query
   const queryEmbedding = await embeddingFn.embedQuery(betterQuery.replaceAll('\n', ' '));
 
-  // Infer which vectorDB(s) are needed
-  const { dbs, dbNum } = await getRelaventDB(betterQuery)
-  console.log("getRelaventDB:", dbs, dbNum)
-
   // Connect to vector DB
   const supabaseClient = createClient(
     supabaseUrl!, 
@@ -175,7 +199,7 @@ export async function POST(req: Request) {
     {
       query_embedding: queryEmbedding,
       match_threshold: 0.78,
-      match_count: 5,
+      match_count: 2,
     }
   )
   if (matchError) {
@@ -183,25 +207,34 @@ export async function POST(req: Request) {
     throw new Error(`Failed to match page sections`)
   }
   combinedPageSections.push(...pageSections)
-  
-  for (const key in dbs) {
-    if (dbs[key]) {
-      const { error: matchError, data: pageSections } = await supabaseClient.rpc(
-        `match_${key}`,
-        {
-          query_embedding: queryEmbedding,
-          match_count: Math.floor(10 / dbNum),
-        }
-      )
-      if (matchError) {
-        console.log('Failed to match page sections', matchError)
-        throw new Error(`Failed to match page sections`)
-      }
 
-      combinedPageSections.push(...pageSections)
+  // Check if current contexts are already enough
+  const isSufficient = enoughContext(combinedPageSections.map(obj => obj.content).join(''), betterQuery)
+  if (! isSufficient) {
+    
+    // Infer which vectorDB(s) are needed
+    const { dbs, dbNum } = await getRelaventDB(betterQuery)
+    console.log("getRelaventDB:", dbs, dbNum)
+
+    for (const key in dbs) {
+      if (dbs[key]) {
+        const { error: matchError, data: pageSections } = await supabaseClient.rpc(
+          `match_${key}`,
+          {
+            query_embedding: queryEmbedding,
+            match_count: Math.floor(10 / dbNum),
+          }
+        )
+        if (matchError) {
+          console.log('Failed to match page sections', matchError)
+          throw new Error(`Failed to match page sections`)
+        }
+  
+        combinedPageSections.push(...pageSections)
+      }
     }
+    // console.log('Retreival successful:', combinedPageSections)
   }
-  // console.log('Retreival successful:', combinedPageSections)
 
 
   // Generate contexts
@@ -224,7 +257,9 @@ export async function POST(req: Request) {
   // console.log('tokenCount:', tokenCount)
 
   const prompt = codeBlock`
-    Imagine yourself as the virtual assistant for Rice Univ. students created by Nice Organization, that can provide information on course, faculty, event, organization.
+    Imagine yourself as the virtual assistant for Rice Univ. students created by Nice Organization,
+    that can provide information on course, faculty, event, organization.
+    In addition, you can update your knowledge base through learning independent and from Rice students.
 
     Context sections:
     ${contextText}
@@ -232,10 +267,10 @@ export async function POST(req: Request) {
     ${oneLine`
       Use the context above, answer the question below concisely and accurately.
       Include in your answer as many relevant information from context as possible.
-      Provide relavent url inside your answer if available.
+      Provide relavent url for reference inside your answer if available.
       If you are unsure and the answer is not explicitly written in the context, say
-      "Sorry, I don't know how to help with that." Try to make your response concise and
-      informative. Try to summarize the information you are given instead of completely copying.
+      "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
+      Try to make your response concise and informative by summarizing the information instead of completely copying.
     `}
 
     Question: """
