@@ -266,8 +266,8 @@ export async function POST(req: Request) {
 
     ${oneLine`
       Use the context above, answer the question below concisely and accurately.
+      Provide relavent URL reference inside your answer if available.
       Include in your answer as many relevant information from context as possible.
-      Provide relavent url for reference inside your answer if available.
       If you are unsure and the answer is not explicitly written in the context, say
       "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
       Try to make your response concise and informative by summarizing the information instead of completely copying.
