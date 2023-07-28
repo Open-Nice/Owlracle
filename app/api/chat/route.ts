@@ -74,6 +74,7 @@ const getBetterQuery = async (messages: ChatCompletionRequestMessage[]): Promise
       does "his" refer to and give me the more
       complete version of user prompt.
       Don't leave any reference in your eventual answer.
+      If the user prompt is about you i.e. the virtual assistant, no need to change it.
     `}
 
     This is the user prompt:
@@ -83,24 +84,30 @@ const getBetterQuery = async (messages: ChatCompletionRequestMessage[]): Promise
   return openAiAPIcall(prompt)
 }
 
-const getIfNeedDB =async (query: string): Promise<boolean>  => {
-  
+const enoughContext = async (currentContext: string, userQuery: string): Promise<boolean> => {
+
+  // console.log('currentContext:', currentContext)
+  // console.log('userQuery:', userQuery)
+
   const prompt = codeBlock`
-    Question: """
-    ${query}
-    """
+    I have the following context:
+    ${currentContext}
 
     ${oneLine`
-      Imagine yourself as the virtual assistant for Rice Univ. students created by Nice Organization.
-      For the query above, determine if you need information from the following database: courses, organization, events, faculties.
-      If you don't need database, simply say "No I don't need the database"
+      Based on the context,
+      I want you to determine if the context is
+      sufficient to answer the following user
+      prompt. If it's sufficient, respond "yes" without explanation.
+      If the user prompt is about you i.e. the virtual assistant, respond "yes" without explanation.
     `}
-  `
-  
-  const ifNeedDB : string = (await openAiAPIcall(prompt)).toLowerCase()
 
-  console.log(`${! ifNeedDB.includes("i don't need the database") ? "need db" : "no need for db"}`)
-  return ! ifNeedDB.includes("i don't need the database")
+    This is the user prompt:
+    ${userQuery}
+  `
+
+  const response = (await openAiAPIcall(prompt)).toLowerCase()
+  // console.log("response:", response, response.includes('yes'))
+  return response.includes('yes')
 }
 
 interface RelevantDBResult {
@@ -110,18 +117,19 @@ interface RelevantDBResult {
   dbNum: number
 }
 
-const getRelaventDB = async (query: string): Promise<Promise<RelevantDBResult>> => {
+const getRelaventDB = async (query: string): Promise<RelevantDBResult> => {
   const prompt = codeBlock`
     ${oneLine`
-      You are given four databases:
-      Courses, which contains all the course information at Rice University;
-      Events, which contains all the information of events held by organizations at Rice University;
-      Organizations, which contains all the organization information;
-      Faculties, which contains all the information of professors, graduate students, and other faculties at Rice University.
-      You will then be provided with a question. 
-      Your task is to give all the relevant databases that are necessary to use to answer the question.
-      You have to give as many databases as possible to achieve full coverage.
-      Respond in the following format, do not include any explanation, only the name of the database:
+      You are given following Rice University databases:
+      1. Courses
+      2. Events
+      3. Organizations
+      4. Faculties
+      You will be given a question.
+      Your job is to give all the relevant databases that are necessary to answer the question.
+      If the question is about you i.e. the virtual assistant, no need to look into any database.
+      Generally, more database and more information is better.
+      Respond in this format without any explanation, only the name of the database:
       database_1
       database_2
       ...
@@ -132,22 +140,16 @@ const getRelaventDB = async (query: string): Promise<Promise<RelevantDBResult>> 
   `
 
   const relaventDBs : string = (await openAiAPIcall(prompt)).toLowerCase()
-  // console.log(relaventDBs)
+  // console.log('relaventDBs:', relaventDBs)
 
   let dbs: Record<string, boolean> = {
-    'courses': false,
-    'events': false,
-    'faculties': false,
-    'organizations': false,
+    'courses': relaventDBs.includes('courses'),
+    'events': relaventDBs.includes('events'),
+    'faculties': relaventDBs.includes('faculties'),
+    'organizations': relaventDBs.includes('organizations'),
   };
   
-  let dbNum = 0
-
-  for (const key in dbs)
-    if (relaventDBs.includes(key.toLowerCase())) {
-      dbs[key] = true;
-      dbNum += 1
-    }
+  let dbNum = Object.values(dbs).filter(value => value === true).length
   
   return {
       dbs,
@@ -174,78 +176,8 @@ export async function POST(req: Request) {
   const betterQuery = await getBetterQuery(messages)
   console.log("Better query:", betterQuery)
 
-  // If there's no need to use Vector DB, answer question directly
-  if (! (await getIfNeedDB(betterQuery))){
-    const prompt = codeBlock`
-      ${oneLine`
-        Imagine yourself as the virtual assistant for Rice Univ. students created by Nice Organization.
-        Chat with the user playfully or provide an overview of your functionality.
-        Your can answer questions about faculty, courses, events and organizations at Rice Univ.
-      `}
-
-      Question: """
-      ${betterQuery}
-      """
-    `
-
-    const chatMessage : ChatCompletionRequestMessage = {
-      role: 'user',
-      content: prompt,
-    }
-  
-    const response = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: [chatMessage],
-      max_tokens: 512,
-      temperature: 0.7,
-      stream: true,
-    })
-
-    if (!response.ok) {
-      const error = await response.json()
-      console.log('Failed to generate completion', error)
-      throw new Error('Failed to generate completion')
-    }
-  
-    const stream = OpenAIStream(response, {
-      async onCompletion(completion) {
-        const title = json.messages[0].content.substring(0, 100)
-        const id = json.id ?? nanoid()
-        const createdAt = Date.now()
-        const path = `/chat/${id}`
-        const payload = {
-          id,
-          title,
-          userId,
-          createdAt,
-          path,
-          messages: [
-            ...messages,
-            {
-              content: completion,
-              role: 'assistant'
-            }
-          ]
-        }
-        await kv.hmset(`chat:${id}`, payload)
-        await kv.zadd(`user:chat:${userId}`, {
-          score: createdAt,
-          member: `chat:${id}`
-        })
-      }
-    })
-
-
-    return new StreamingTextResponse(stream)
-  }
-
-
   // Create embedding for query
   const queryEmbedding = await embeddingFn.embedQuery(betterQuery.replaceAll('\n', ' '));
-
-  // Infer which vectorDB(s) are needed
-  const { dbs, dbNum } = await getRelaventDB(betterQuery)
-  console.log("getRelaventDB:", dbs, dbNum)
 
   // Connect to vector DB
   const supabaseClient = createClient(
@@ -260,26 +192,49 @@ export async function POST(req: Request) {
   
   // Similarity search
   let combinedPageSections = []
-  for (const key in dbs) {
-    if (dbs[key]) {
-      const { error: matchError, data: pageSections } = await supabaseClient.rpc(
-        `match_${key}`,
-        {
-          query_embedding: queryEmbedding,
-          // match_threshold: 0.78,
-          match_count: Math.floor(10 / dbNum),
-          // min_content_length: 50,
-        }
-      )
-      if (matchError) {
-        console.log('Failed to match page sections', matchError)
-        throw new Error(`Failed to match page sections`)
-      }
-
-      combinedPageSections.push(...pageSections)
+  const { error: matchError, data: pageSections } = await supabaseClient.rpc(
+    `match_faq`,
+    {
+      query_embedding: queryEmbedding,
+      match_threshold: 0.78,
+      match_count: 2,
     }
+  )
+  if (matchError) {
+    console.log('Failed to match page sections', matchError)
+    throw new Error(`Failed to match page sections`)
   }
-  // console.log('Retreival successful:', combinedPageSections)
+  combinedPageSections.push(...pageSections)
+  // console.log("combinedPageSections:", combinedPageSections)
+
+  // Check if current contexts are already enough
+  const isSufficient = await enoughContext(combinedPageSections.map(obj => obj.content).join(''), betterQuery)
+  console.log('isSufficient:', isSufficient)
+  if (! isSufficient) {
+    
+    // Infer which vectorDB(s) are needed
+    const { dbs, dbNum } = await getRelaventDB(betterQuery)
+    console.log("getRelaventDB:", dbs, dbNum)
+
+    for (const key in dbs) {
+      if (dbs[key]) {
+        const { error: matchError, data: pageSections } = await supabaseClient.rpc(
+          `match_${key}`,
+          {
+            query_embedding: queryEmbedding,
+            match_count: Math.floor(10 / dbNum),
+          }
+        )
+        if (matchError) {
+          console.log('Failed to match page sections', matchError)
+          throw new Error(`Failed to match page sections`)
+        }
+  
+        combinedPageSections.push(...pageSections)
+      }
+    }
+    // console.log('Retreival successful:', combinedPageSections)
+  }
 
 
   // Generate contexts
@@ -302,16 +257,20 @@ export async function POST(req: Request) {
   // console.log('tokenCount:', tokenCount)
 
   const prompt = codeBlock`
+    Imagine yourself as the virtual assistant for Rice Univ. students created by Nice Organization,
+    that can provide information on course, faculty, event, organization.
+    In addition, you can update your knowledge base through learning independent and from Rice students.
+
     Context sections:
     ${contextText}
 
     ${oneLine`
-      Use the context above, answer the question below accurately.
+      Use the context above, answer the question below concisely and accurately.
+      Provide relavent URL reference inside your answer if available.
       Include in your answer as many relevant information from context as possible.
-      Provide relavent url inside your answer if available.
       If you are unsure and the answer is not explicitly written in the context, say
-      "Sorry, I don't know how to help with that." Try to make your response concise and
-      informative. Try to summarize the information you are given instead of completely copying.
+      "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
+      Try to make your response concise and informative by summarizing the information instead of completely copying.
     `}
 
     Question: """
