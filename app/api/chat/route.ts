@@ -212,6 +212,9 @@ export async function POST(req: Request) {
   console.log('isSufficient:', isSufficient)
   if (! isSufficient) {
     
+    // Delete previously stored contexts
+    combinedPageSections = []
+
     // Infer which vectorDB(s) are needed
     const { dbs, dbNum } = await getRelaventDB(betterQuery)
     console.log("getRelaventDB:", dbs, dbNum)
@@ -266,7 +269,6 @@ export async function POST(req: Request) {
 
     ${oneLine`
       Use the context above, answer the question below concisely and accurately.
-      Provide relavent URL reference inside your answer if available.
       Include in your answer as many relevant information from context as possible.
       If you are unsure and the answer is not explicitly written in the context, say
       "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
@@ -274,7 +276,7 @@ export async function POST(req: Request) {
     `}
 
     Question: """
-    ${betterQuery}
+    Provide relavant URL references if possible: ${betterQuery}
     """
 
     Answer as markdown.
