@@ -99,20 +99,23 @@
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: #49494978 white;
+    scrollbar-color: #a4a4a481;
   }
 
 *::-webkit-scrollbar {
     width: 5px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
   }
   
   *::-webkit-scrollbar-track {
-    background: white;
     border-radius: 5px;
+    background-color: transparent;
   }
   
   *::-webkit-scrollbar-thumb {
-    background-color: #49494978;
+    background-color: #a4a4a481;
     border-radius: 5px;
     border: none;
   }
@@ -148,7 +151,7 @@
     opacity: 1;
   }
 
-  @media only screen and (max-width: 760px)  {
+@media only screen and (max-width: 760px)  {
     .tooltiptext{
         left: 0px;
     }

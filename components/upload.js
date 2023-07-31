@@ -34,7 +34,7 @@ export default function UploadFile() {
         <Dialog.Overlay className="DialogOverlay">
           <Dialog.Content className="DialogContent">
             <div className='DialogScrollWrapper'>
-                <Dialog.Title className="DialogTitle">Teach me something I dont know <span style={{ fontSize: '25px' }}>🤓</span> </Dialog.Title>
+                <Dialog.Title className="DialogTitle">Teach me something I do not know <span style={{ fontSize: '25px' }}>🤓</span> </Dialog.Title>
                 <Dialog.Description className="DialogDescription">
                   Upload info /
                   knowledge /
