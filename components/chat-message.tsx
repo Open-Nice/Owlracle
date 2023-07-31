@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react';
 import { Message } from 'ai'
 import remarkGfm from 'remark-gfm'
