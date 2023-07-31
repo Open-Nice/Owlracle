@@ -3,10 +3,15 @@ import { auth } from '@/auth'
 
 export const runtime = 'edge'
 
+type Course = {
+  cField: string
+  cNum: string
+}
+
 export async function POST(req: Request) {
   const json = await req.json()
-  const { cField, cNum } = json
-  // console.log(cField, cNum)
+  const { courses }: { courses: Course[] } = json
+  console.log('courses', courses)
 
   const userId = (await auth())?.user.id
 
@@ -16,13 +21,13 @@ export async function POST(req: Request) {
     })
   }
 
-  const catalog = await prisma.courseCatalog.findUnique({
+  const catalog = await prisma.courseCatalog.findMany({
     where: {
-        cField_cNum: {
-          cNum: cNum,
-          cField: cField
-        }
-    }
+      OR: courses.map((course) => ({
+        cNum: course.cNum,
+        cField: course.cField,
+      })),
+    },
   })
   // console.log({ catalog })
 

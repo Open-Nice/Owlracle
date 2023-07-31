@@ -31,33 +31,28 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
     
     const regexPattern = /\b[A-Z]{4} \d{3}\b/g
     const content = message.content
-    const courses = content.match(regexPattern)
+    const coursesNames = content.match(regexPattern)
 
-    if (! courses)
+    if (! coursesNames)
       return
 
-    for(let course of courses) {
-      const [cField, cNum] = course.split(' ')
+    const courses = coursesNames.map(course => ({ 'cField': course.split(' ')[0], 'cNum': course.split(' ')[1] }))
 
-      fetch('/api/course', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          'cField': cField,
-          'cNum': cNum,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => { 
-          if (! courseCatalogs) 
-            setCCL([data])
-          else 
-            setCCL([...courseCatalogs, data])
-        })
-        .catch((error) => console.error('Error fetching data:', error))
-    }
+    // console.log('courses', courses)
+
+    fetch('/api/course', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify( {'courses' : courses } )
+
+    })        
+    .then((response) => response.json())
+    .then((data) => { 
+      setCCL(data)
+    })
+    .catch((error) => console.error('Error fetching data:', error))
 
   }, []);
 
