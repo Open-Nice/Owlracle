@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { Message } from 'ai'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -8,11 +9,58 @@ import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconOpenAI, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from '@/components/chat-message-actions'
 
+import type { CourseCatalog } from '@prisma/client'
+
 export interface ChatMessageProps {
   message: Message
 }
 
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
+
+  const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
+
+  useEffect(() => {
+    if (courseCatalogs)
+      console.log(courseCatalogs)
+  }, [courseCatalogs]);
+
+  useEffect(() => {
+
+    if (message.role !== 'assistant')
+      return
+    
+    const regexPattern = /\b[A-Z]{4} \d{3}\b/g
+    const content = message.content
+    const courses = content.match(regexPattern)
+
+    if (! courses)
+      return
+
+    for(let course of courses) {
+      const [cField, cNum] = course.split(' ')
+
+      fetch('/api/course', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'cField': cField,
+          'cNum': cNum,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => { 
+          if (! courseCatalogs) 
+            setCCL([data])
+          else 
+            setCCL([...courseCatalogs, data])
+        })
+        .catch((error) => console.error('Error fetching data:', error))
+    }
+
+  }, []);
+
   return (
     <div
       className={cn('group relative mb-4 flex items-start md:-ml-12')}

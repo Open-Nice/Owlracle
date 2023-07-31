@@ -3,10 +3,11 @@ import { auth } from '@/auth'
 
 export const runtime = 'edge'
 
-export async function GET(req: Request) {
-  // console.log("req:", req)
-  // const json = await req.json()
-  // const { cField, cNum } = json
+export async function POST(req: Request) {
+  const json = await req.json()
+  const { cField, cNum } = json
+  // console.log(cField, cNum)
+
   const userId = (await auth())?.user.id
 
   if (!userId) {
@@ -15,23 +16,15 @@ export async function GET(req: Request) {
     })
   }
 
-  // const catalog = await prisma.courseCatalog.findUnique({
-  //   where: {
-  //       cField_cNum: {
-  //         cNum: cNum,
-  //         cField: cField
-  //       }
-  //   }
-  // })
   const catalog = await prisma.courseCatalog.findUnique({
     where: {
         cField_cNum: {
-          cNum: '140',
-          cField: 'COMP'
+          cNum: cNum,
+          cField: cField
         }
     }
   })
-  console.log({ catalog })
+  // console.log({ catalog })
 
   return new Response(
     JSON.stringify(catalog),
