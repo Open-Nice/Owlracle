@@ -21,7 +21,11 @@ export async function POST(req: Request) {
     })
   }
 
-  const catalog = await prisma.courseCatalog.findMany({
+  if (!prisma) {
+    throw new Error("Prisma is not initialized")
+  }
+
+  const catalog = await prisma!.courseCatalog.findMany({
     where: {
       OR: courses.map((course) => ({
         cNum: course.cNum,

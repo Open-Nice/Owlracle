@@ -18,4 +18,4 @@ if (process.env.VERCEL_ENV === 'production') {
   }
 }
 
-export default global.prisma
+export default global.prisma!
