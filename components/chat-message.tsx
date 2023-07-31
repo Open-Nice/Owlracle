@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Message } from 'ai'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -9,20 +9,11 @@ import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconOpenAI, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from '@/components/chat-message-actions'
 
-import type { CourseCatalog } from '@prisma/client'
-
 export interface ChatMessageProps {
   message: Message
 }
 
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
-
-  const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
-
-  useEffect(() => {
-    if (courseCatalogs)
-      console.log(courseCatalogs)
-  }, [courseCatalogs]);
 
   useEffect(() => {
 
@@ -50,7 +41,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
     })        
     .then((response) => response.json())
     .then((data) => { 
-      setCCL(data)
+      console.log(data)
     })
     .catch((error) => console.error('Error fetching data:', error))
 
