@@ -6,11 +6,6 @@ import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { IconPlus, IconClose } from '@/components/ui/icons'
 import DropZoneAreaBtn from './upload-droparea';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from '@/components/ui/tooltip'
 import "@/components/stylings/upload.css"
 import "@/components/stylings/general.css"
 
@@ -21,21 +16,7 @@ export default function UploadFile() {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        {/* <Tooltip 
-        placement='top'
-        title={<div>Teach Athena! <span style={{ fontSize: '25px' }}>😍</span></div>}>
-          <a onClick={(e)=>{e.preventDefault(); setOpen(true)}}
-              style={{cursor: "pointer"}}
-              className={cn(
-                buttonVariants({ size: 'sm', variant: 'outline' }),
-                'absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4'
-              )}
-          >
-            <IconPlus />
-          </a>
-        </Tooltip>  */}
-        <Tooltip>
-          <TooltipTrigger asChild>
+        <div className="tooltip">
             <a onClick={(e)=>{e.preventDefault(); setOpen(true)}}
                 style={{cursor: "pointer"}}
                 className={cn(
@@ -45,9 +26,8 @@ export default function UploadFile() {
             >
               <IconPlus />
             </a>
-          </TooltipTrigger>
-          <TooltipContent>{<div>Teach Athena! <span style={{ fontSize: '25px' }}>😍</span></div>}</TooltipContent>
-        </Tooltip>      
+          <span className="tooltiptext shadow"><div>Teach Athena! <span style={{ fontSize: '25px' }}>😍</span></div></span>
+        </div> 
         
       </Dialog.Trigger>
       <Dialog.Portal>

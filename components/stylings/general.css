@@ -116,3 +116,51 @@
     border-radius: 5px;
     border: none;
   }
+
+
+  .tooltip {
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .tooltiptext {
+    visibility: hidden;
+    width: fit-content;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    font-size: 10pt;
+    background-color: white;
+    color: #000;
+    padding-left: 10px;
+    padding-right: 10px;
+    /* Position the tooltip */
+    position: absolute;
+    top: -40px;
+    left: -30px;
+    z-index: 1;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+  }
+
+  @media only screen and (max-width: 760px)  {
+    .tooltiptext{
+        visibility: hidden;
+        width: fit-content;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        font-size: 10pt;
+        background-color: white;
+        color: #000;
+        padding-left: 10px;
+        padding-right: 10px;
+        /* Position the tooltip */
+        position: absolute;
+        top: -40px;
+        left: 0px;
+        z-index: 1;
+        }
+}
