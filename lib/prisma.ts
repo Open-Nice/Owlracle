@@ -6,6 +6,10 @@ import { PrismaClient } from "@prisma/client/edge"
 // Learn more: 
 // https://pris.ly/d/help/next-js-best-practices
 
+declare global {
+  var prisma: PrismaClient | undefined
+}
+
 let prisma: PrismaClient
 
 if (process.env.VERCEL_ENV === 'production') {
@@ -18,4 +22,4 @@ if (process.env.VERCEL_ENV === 'production') {
 }
 
 
-export default prisma
+export default prisma!
