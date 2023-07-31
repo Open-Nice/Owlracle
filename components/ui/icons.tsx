@@ -4,6 +4,31 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
+function IconNice({ className, ...props }: React.ComponentProps<'svg'>) {
+  return (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95.33 161.07" fill="currentColor" stroke='currentColor' strokeMiterlimit={10} strokeWidth={"3px"} {...props}>
+    <g id="a"/><g id="b"><g id="c"><g>
+      <path fill="currentColor" stroke='currentColor' strokeMiterlimit={10} strokeWidth={"3px"} d="M1.5,34.28V117.69c0,5.68,2.26,11.13,6.28,15.15l24.61,24.61V73.96c0-5.73-2.28-11.22-6.34-15.26L1.5,34.28Z"/>
+      <line fill="currentColor" stroke='currentColor' strokeMiterlimit={10} strokeWidth={"3px"} x1="1.5" y1="34.28" x2="93.84" y2="126.74"/>
+      <path fill="currentColor" stroke='currentColor' strokeMiterlimit={10} strokeWidth={"3px"} d="M93.83,126.78l-24.51-24.39c-4.08-4.06-6.37-9.58-6.37-15.34V43.32c0-5.75,2.29-11.26,6.37-15.32L93.83,3.61V126.78Z"/>
+    </g></g></g></svg>
+  )
+}
+
+function IconSendMsg({ className, ...props }: React.ComponentProps<'svg'>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+    </svg>
+  )
+}
+
+function IconUpload({ className, ...props }: React.ComponentProps<'svg'>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H56V40h88V88a8,8,0,0,0,8,8h48V216Zm-42.34-77.66a8,8,0,0,1-11.32,11.32L136,139.31V184a8,8,0,0,1-16,0V139.31l-10.34,10.35a8,8,0,0,1-11.32-11.32l24-24a8,8,0,0,1,11.32,0Z"></path></svg>
+  )
+}
+
 function IconNextChat({
   className,
   inverted,
@@ -477,6 +502,9 @@ function IconChevronUpDown({
 }
 
 export {
+  IconNice,
+  IconSendMsg,
+  IconUpload,
   IconEdit,
   IconNextChat,
   IconOpenAI,

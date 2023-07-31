@@ -60,7 +60,7 @@ export default function DropZoneAreaBtn () {
             </div>
             {selectedFilesZone}
             <div className='d-flex justify-content-end full-width'>
-                <button className='upload-submit-btn'>Submit</button>
+                <button className='upload-submit-btn shadow'>Submit</button>
             </div>
         </form>
         

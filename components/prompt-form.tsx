@@ -2,8 +2,8 @@ import { UseChatHelpers } from 'ai/react'
 import * as React from 'react'
 import Textarea from 'react-textarea-autosize'
 
-import { Button, buttonVariants } from '@/components/ui/button'
-import { IconArrowElbow, IconPlus } from '@/components/ui/icons'
+import { Button } from '@/components/ui/button'
+import { IconSendMsg } from '@/components/ui/icons'
 import {
   Tooltip,
   TooltipContent,
@@ -69,7 +69,7 @@ export function PromptForm({
                 size="icon"
                 disabled={isLoading || input === ''}
               >
-                <IconArrowElbow />
+                <IconSendMsg />
                 <span className="sr-only">Send message</span>
               </Button>
             </TooltipTrigger>

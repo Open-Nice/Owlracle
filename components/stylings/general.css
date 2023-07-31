@@ -125,6 +125,7 @@
   
   .tooltiptext {
     visibility: hidden;
+    opacity: 0;
     width: fit-content;
     text-align: center;
     border-radius: 6px;
@@ -139,28 +140,16 @@
     top: -40px;
     left: -30px;
     z-index: 1;
+    transition: all 0.5s ease-out;
   }
   
   .tooltip:hover .tooltiptext {
     visibility: visible;
+    opacity: 1;
   }
 
   @media only screen and (max-width: 760px)  {
     .tooltiptext{
-        visibility: hidden;
-        width: fit-content;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px 0;
-        font-size: 10pt;
-        background-color: white;
-        color: #000;
-        padding-left: 10px;
-        padding-right: 10px;
-        /* Position the tooltip */
-        position: absolute;
-        top: -40px;
         left: 0px;
-        z-index: 1;
-        }
+    }
 }
