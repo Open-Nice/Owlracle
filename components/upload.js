@@ -26,7 +26,7 @@ export default function UploadFile() {
             >
               <IconPlus />
             </a>
-          <span className="tooltiptext shadow"><div>Teach Athena! <span style={{ fontSize: '25px' }}>😍</span></div></span>
+          <span className="tooltiptext shadow"><div>Teach Athena! <span style={{ fontSize: '25px' }}>&apos;😍&apos;</span></div></span>
         </div> 
         
       </Dialog.Trigger>
@@ -34,12 +34,12 @@ export default function UploadFile() {
         <Dialog.Overlay className="DialogOverlay">
           <Dialog.Content className="DialogContent">
             <div className='DialogScrollWrapper'>
-                <Dialog.Title className="DialogTitle">Teach me something I don't know <span style={{ fontSize: '25px' }}>🤓</span> </Dialog.Title>
+                <Dialog.Title className="DialogTitle">Teach me something I don't know <span style={{ fontSize: '25px' }}>&apos;🤓&apos;</span> </Dialog.Title>
                 <Dialog.Description className="DialogDescription">
                   Upload info /
                   knowledge /
                   resources
-                  and I will learn them to share with other Rice <span style={{ fontSize: '25px' }}>🦉</span>s!
+                  and I will learn them to share with other Rice <span style={{ fontSize: '25px' }}>&apos;🦉&apos;</span>s!
                 </Dialog.Description>
                 <DropZoneAreaBtn/>
                 <Dialog.Close>
