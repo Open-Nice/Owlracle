@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Sheet,
   SheetContent,
@@ -10,13 +10,16 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet'
-import { IconSidebar } from '@/components/ui/icons'
+import { IconSidebar, IconPlus } from '@/components/ui/icons'
+import { cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
 
 export interface SidebarProps {
   children?: React.ReactNode
 }
 
 export function Sidebar({ children }: SidebarProps) {
+  const router = useRouter();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -27,7 +30,23 @@ export function Sidebar({ children }: SidebarProps) {
       </SheetTrigger>
       <SheetContent className="inset-y-0 flex h-auto w-[300px] flex-col p-0">
         <SheetHeader className="p-4">
-          <SheetTitle className="text-sm">Chat History</SheetTitle>
+          <SheetTitle className="text-sm">
+            <a
+                style={{cursor: "pointer"}}
+                onClick={e => {
+                  e.preventDefault()
+                  router.refresh()
+                  router.push('/')
+                }}
+                className={cn(
+                  buttonVariants({ size: 'sm', variant: 'outline' }),
+                  'bg-background py-2 px-3 sm:left-4'
+                )}
+              >
+                <IconPlus />
+                <div className='px-2'>New Chat</div>
+            </a>
+          </SheetTitle>
         </SheetHeader>
         {children}
       </SheetContent>
