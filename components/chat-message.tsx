@@ -1,3 +1,6 @@
+'use client'
+
+import React, { useEffect, useState } from 'react';
 import { Message } from 'ai'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -7,12 +10,58 @@ import { CodeBlock } from '@/components/ui/codeblock'
 import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconOpenAI, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from '@/components/chat-message-actions'
+import type { CourseCatalog } from '@prisma/client'
 
 export interface ChatMessageProps {
+  isComplete: Boolean
   message: Message
 }
 
-export function ChatMessage({ message, ...props }: ChatMessageProps) {
+export function ChatMessage({ isComplete, message, ...props }: ChatMessageProps) {
+
+  const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
+
+  useEffect(() => {
+    if (courseCatalogs)
+      console.log(courseCatalogs)
+  }, [courseCatalogs]);
+
+  useEffect(() => {
+
+    // console.log(isComplete, message)
+    if (! isComplete)
+      return
+    
+    // console.log('newest message has completed loading: ',message)
+    
+    if (message.role !== 'assistant')
+      return
+    
+    const regexPattern = /\b[A-Z]{4} \d{3}\b/g
+    const content = message.content
+    const coursesNames = content.match(regexPattern)
+
+    if (! coursesNames)
+      return
+
+    const courses = coursesNames.map(course => ({ 'cField': course.split(' ')[0], 'cNum': course.split(' ')[1] }))
+
+    // console.log('courses', courses)
+
+    fetch('/api/course', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify( {'courses' : courses } )
+
+    })        
+    .then((response) => response.json())
+    .then((data) => setCCL(data))
+    .catch((error) => console.error('Error fetching data:', error))
+
+  }, [isComplete]);
+
   return (
     <div
       className={cn('group relative mb-4 flex items-start md:-ml-12')}

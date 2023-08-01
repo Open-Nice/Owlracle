@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("PRISMA_URI")
+}
+
+model CourseCatalog {
+  course_name String @db.VarChar(255)
+  course_credit String @db.VarChar(255)
+  distribution String @db.VarChar(255)
+  course_long_title String
+  course_department String @db.VarChar(255)
+  grade_mode String @db.VarChar(255)
+  language_instruction String @db.VarChar(255)
+  course_type String @db.VarChar(255)
+  cField String @db.VarChar(255)
+  cNum String @db.VarChar(255)
+  description String
+  courseComments CourseComments[]
+  courseScores CourseScores[]
+
+  @@id([cField, cNum])
+}
+
+model CourseComments {
+  id Int @id @default(autoincrement())
+  courseCatalog CourseCatalog @relation(fields: [cField, cNum], references: [cField, cNum])
+
+  cField String @db.VarChar(255)
+  cNum String @db.VarChar(255)
+  year String @db.VarChar(255)
+  semester String @db.VarChar(255)
+  crn String @db.VarChar(255)
+  name String
+  instructor String @db.VarChar(255)
+
+  comments String[]
+  instructor_comments Json[]
+}
+
+model CourseScores {
+  id Int @id @default(autoincrement())
+  courseCatalog CourseCatalog @relation(fields: [cField, cNum], references: [cField, cNum])
+  
+  cField String @db.VarChar(255)
+  cNum String @db.VarChar(255)
+  year String @db.VarChar(255)
+  semester String @db.VarChar(255)
+  crn String @db.VarChar(255)
+  name String
+  instructor String @db.VarChar(255)
+
+  organization Json
+  assignment Json
+  overall_quality Json
+  challenge Json
+  workload Json
+  why_take_this_course Json
+  expected_grade Json
+  expectedPF Json
+  instructor_evaluations Json[]
+}
