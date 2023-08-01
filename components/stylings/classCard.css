@@ -6,8 +6,7 @@
 .course-card{
     border: none;
     transition: transform 0.5s ease-out;
-    width: fit-content;
-    max-width: 12em;
+    width: 12em;
     height: 10em;
     margin-right: 10px;
     margin-bottom: 10px;
@@ -19,7 +18,7 @@
     border-radius: 10px;
     padding: 10px;
     width: fit-content;
-    max-width: 13em;
+    max-width: 12em;
     overflow: hidden;
 }
 

@@ -10,9 +10,10 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet'
-import { IconSidebar, IconPlus } from '@/components/ui/icons'
+import { IconSidebar, IconPlus, IconNiceWithText } from '@/components/ui/icons'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
+import RefreshBtn from '@/components/refreshBtn'
 
 export interface SidebarProps {
   children?: React.ReactNode
@@ -31,21 +32,25 @@ export function Sidebar({ children }: SidebarProps) {
       <SheetContent className="inset-y-0 flex h-auto w-[300px] flex-col p-0">
         <SheetHeader className="p-4">
           <SheetTitle className="text-sm">
-            <a
-                style={{cursor: "pointer"}}
-                onClick={e => {
-                  e.preventDefault()
-                  router.refresh()
-                  router.push('/')
-                }}
-                className={cn(
-                  buttonVariants({ size: 'sm', variant: 'outline' }),
-                  'bg-background py-2 px-3 sm:left-4'
-                )}
-              >
-                <IconPlus />
-                <div className='px-2'>New Chat</div>
-            </a>
+            <IconNiceWithText className='h-12 m-1 mb-3'/>
+            <div className='flex justify-between items-center'> 
+              <a
+                  style={{cursor: "pointer"}}
+                  onClick={e => {
+                    e.preventDefault()
+                    router.refresh()
+                    router.push('/')
+                  }}
+                  className={cn(
+                    buttonVariants({ size: 'sm', variant: 'outline' }),
+                    'bg-background py-2 px-3 sm:left-4'
+                  )}
+                >
+                  <IconPlus />
+                  <div className='px-2'>New Chat</div>
+              </a>
+              <RefreshBtn/>
+            </div>
           </SheetTitle>
         </SheetHeader>
         {children}
