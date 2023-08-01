@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
   const json = await req.json()
   const { course }: { course: Course } = json
-  console.log('courses', course)
+  // console.log('courses', course)
 
   const comments = await prisma.courseComments.findMany({
     where: {

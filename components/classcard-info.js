@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-
+import useSWR from 'swr'
 
 export default function ClassCardInfo( { catalog }) {
   // console.log('catalog: ', catalog)
@@ -16,27 +16,24 @@ export default function ClassCardInfo( { catalog }) {
     grade_mode: `${catalog.grade_mode}`,
     language_instruction: `${catalog.language_instruction}`,
     description: catalog.description  === 'N/A' ? null : `${catalog.description}`,
-  };
-  
-  useEffect(() => {
+  }
 
-    // console.log(catalog)
-
-    fetch('/api/eval', {
+  const fetcher = (url, body) => 
+    fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify( {'course' : {'cField': `${catalog.cField}`, 'cNum': `${catalog.cNum}`} } )
-    })        
-    .then((response) => response.json())
-    .then((data) => {
-      // console.log(data)
-      const {scores, comments} = data
+      body: JSON.stringify(body)
     })
-    .catch((error) => console.error('Error fetching data:', error))
+    .then(res => res.json())
 
-  }, []);
+  const fetchWithBody = (body) => (url) => fetcher(url, body)
+
+  const { data, error } = useSWR(
+    '/api/eval', 
+    fetchWithBody({'course' : {'cField': `${catalog.cField}`, 'cNum': `${catalog.cNum}`}})
+  )
 
   return (
     <div className='p-3 p-lg-5 text-black'>
@@ -57,9 +54,17 @@ export default function ClassCardInfo( { catalog }) {
         </div>
         
         <h4 className='color-light-purple'>Course Evaluation</h4>
-        {/* Evaluation here */}
-        {/* <Evaluation cFieldNum = {cFieldNum.split(' ')[0]} cNum = {cFieldNum.split(' ')[1]}/> */}
-    
+        {
+          error || !data ?
+          // evaluation is still loading
+          <div className="spinner-border text-secondary" role="status">
+              <span className="visually-hidden">Loading...</span>
+          </div>
+          :
+          <span>Eval shown here</span>
+          // Evaluation here
+          // <Evaluation scores = {data.scores} comments = {data.comments}/>
+        }
     </div>
   )
 }
