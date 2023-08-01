@@ -27,7 +27,7 @@ export default function ClassCard( {catalog} ) {
                 <Dialog.Description className="DialogDescription">
                   {`${catalog.course_name}`}
                 </Dialog.Description>
-                <ClassCardInfo/>
+                <ClassCardInfo catalog={catalog}/>
                 <Dialog.Close>
                   <a className="IconButton" aria-label="Close">
                     <IconClose />

@@ -1,18 +1,18 @@
 import React from 'react'
 
-export default function ClassCardInfo() {
+export default function ClassCardInfo( { catalog }) {
+  // console.log('catalog: ', catalog)
   const courseInfo = {
-    cFieldNum: "COMP 140",
-    course_name: "COMP 140",
-    course_long_title: "basics of computer programming",
-    course_credit: 4,
-    course_department: "cs",
-    course_type: "balabala",
-    distribution: "d3",
-    grade_mode: "letter grade",
-    language_instruction: "English",
-    description:"balablablablabflafaea"
-
+    cFieldNum: `${catalog.cField} ${catalog.cNum}`,
+    course_name: `${catalog.course_name}`,
+    course_long_title: `${catalog.course_long_title}`,
+    course_credit: `${catalog.course_credit}`,
+    course_department: `${catalog.course_department}`,
+    course_type: `${catalog.course_type}`,
+    distribution:  catalog.distribution === 'N/A' ? null : `${catalog.distribution}`,
+    grade_mode: `${catalog.grade_mode}`,
+    language_instruction: `${catalog.language_instruction}`,
+    description: catalog.description  === 'N/A' ? null : `${catalog.description}`,
   };
   return (
     <div className='p-3 p-lg-5 text-black'>
