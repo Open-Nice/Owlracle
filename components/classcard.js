@@ -12,20 +12,20 @@ import "@/components/stylings/upload.css"
 import '@/components/stylings/classCard.css'
 
 
-export default function ClassCard() {
+export default function ClassCard( {catalog} ) {
   const [open, setOpen] = React.useState(false)
   const [isPending, startTransition] = React.useTransition()
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <ClassCardTrigger setOpen={setOpen}/>
+      <ClassCardTrigger catalog={catalog} setOpen={setOpen}/>
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay">
           <Dialog.Content className="DialogContent">
               <div style={{padding: "25px", paddingBottom: "0px"}}>
-                <Dialog.Title className="DialogTitle">COMP 140 </Dialog.Title>
+                <Dialog.Title className="DialogTitle"> {`${catalog.cField} ${catalog.cNum}`} </Dialog.Title>
                 <Dialog.Description className="DialogDescription">
-                  Basic computer programming
+                  {`${catalog.course_name}`}
                 </Dialog.Description>
                 <ClassCardInfo/>
                 <Dialog.Close>

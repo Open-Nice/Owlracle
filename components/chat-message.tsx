@@ -135,16 +135,12 @@ export function ChatMessage({ isComplete, message, ...props }: ChatMessageProps)
         </div>
       </div>
       {
-          message.role === 'user' ? 
-          <></> : 
+          courseCatalogs ? 
           <div className='classCardWrapper'>
-            <ClassCard/>
-            <ClassCard/>
-            <ClassCard/>
-            <ClassCard/>
-            <ClassCard/>
+            {courseCatalogs?.map( (courseCatalog, index) => <ClassCard catalog = {courseCatalog} key = {index} />)}
           </div>
-          
+          :
+          <></>
         }
     </div>
     
