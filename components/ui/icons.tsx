@@ -1,17 +1,46 @@
 'use client'
 
 import * as React from 'react'
+import "@/components/stylings/general.css"
 
 import { cn } from '@/lib/utils'
 
+function IconNiceColor({ className, ...props }: React.ComponentProps<'svg'>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 92.33 152.24" {...props} className={className}>
+      <defs>
+        <linearGradient id="d" x1="38.25" y1="51.15" x2="-7.37" y2="130.15" gradientTransform="matrix(1, 0, 0, 1, 0, 0)" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#fff"/>
+          <stop offset=".08" stopColor="#fafeff"/>
+          <stop offset=".17" stopColor="#ecfeff"/>
+          <stop offset=".26" stopColor="#d6feff"/><stop offset=".27" stopColor="#d4feff"/>
+          <stop offset=".41" stopColor="#e2e6ff"/><stop offset=".61" stopColor="#fcbfff"/>
+          <stop offset=".76" stopColor="#e0b2ff"/><stop offset=".9" stopColor="#cfaaff"/>
+          <stop offset="1" stopColor="#c9a8ff"/>
+        </linearGradient>
+        <linearGradient id="e" x1="61.43" y1="105.33" x2="114.76" y2="12.95" gradientTransform="matrix(1, 0, 0, 1, 0, 0)" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#fff"/><stop offset=".08" stopColor="#fdf6ff"/>
+          <stop offset=".23" stopColor="#fae9ff"/><stop offset=".47" stopColor="#fdf4de"/>
+          <stop offset=".62" stopColor="#fffad1"/><stop offset="1" stopColor="#ffe4bf"/>
+        </linearGradient>
+      </defs>
+      <g id="a"/><g id="b"><g id="c">
+      <rect fill="currentColor" stroke='currentColor' strokeWidth={"3px"}  x="45.75" y="13.25" width="1.23" height="126.38" transform="translate(-40.47 55.18) rotate(-45)"/>
+      <path fill='url(#d)' d="M0,29.07V112.48c0,5.68,2.26,11.13,6.28,15.15l24.61,24.61V68.74c0-5.73-2.28-11.22-6.34-15.26L0,29.07Z"/>
+      <path fill='url(#e)' d="M92.33,123.17l-24.51-24.39c-4.08-4.06-6.37-9.58-6.37-15.34V39.71c0-5.75,2.29-11.26,6.37-15.32L92.33,0V123.17Z"/>
+      </g></g>
+    </svg>
+  )
+}
+
+
 function IconNice({ className, ...props }: React.ComponentProps<'svg'>) {
   return (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95.33 161.07" fill="currentColor" stroke='currentColor' strokeMiterlimit={10} strokeWidth={"3px"} {...props}>
-    <g id="a"/><g id="b"><g id="c"><g>
-      <path fill="currentColor" stroke='currentColor' strokeMiterlimit={10} strokeWidth={"3px"} d="M1.5,34.28V117.69c0,5.68,2.26,11.13,6.28,15.15l24.61,24.61V73.96c0-5.73-2.28-11.22-6.34-15.26L1.5,34.28Z"/>
-      <line fill="currentColor" stroke='currentColor' strokeMiterlimit={10} strokeWidth={"3px"} x1="1.5" y1="34.28" x2="93.84" y2="126.74"/>
-      <path fill="currentColor" stroke='currentColor' strokeMiterlimit={10} strokeWidth={"3px"} d="M93.83,126.78l-24.51-24.39c-4.08-4.06-6.37-9.58-6.37-15.34V43.32c0-5.75,2.29-11.26,6.37-15.32L93.83,3.61V126.78Z"/>
-    </g></g></g></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92.33 152.24" {...props} className={className}>
+      <rect fill="currentColor" stroke='currentColor' strokeWidth={"3px"}  x="45.75" y="13.25" width="1.23" height="126.38" transform="translate(-40.47 55.18) rotate(-45)"/>
+      <path fill='currentColor' d="M0,29.07V112.48c0,5.68,2.26,11.13,6.28,15.15l24.61,24.61V68.74c0-5.73-2.28-11.22-6.34-15.26L0,29.07Z"/>
+      <path fill='currentColor' d="M92.33,123.17l-24.51-24.39c-4.08-4.06-6.37-9.58-6.37-15.34V39.71c0-5.75,2.29-11.26,6.37-15.32L92.33,0V123.17Z"/>
+    </svg>
   )
 }
 
@@ -28,6 +57,7 @@ function IconUpload({ className, ...props }: React.ComponentProps<'svg'>) {
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256"><path d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H56V40h88V88a8,8,0,0,0,8,8h48V216Zm-42.34-77.66a8,8,0,0,1-11.32,11.32L136,139.31V184a8,8,0,0,1-16,0V139.31l-10.34,10.35a8,8,0,0,1-11.32-11.32l24-24a8,8,0,0,1,11.32,0Z"></path></svg>
   )
 }
+
 
 function IconNextChat({
   className,
@@ -503,6 +533,7 @@ function IconChevronUpDown({
 
 export {
   IconNice,
+  IconNiceColor,
   IconSendMsg,
   IconUpload,
   IconEdit,

@@ -156,3 +156,13 @@
         left: 0px;
     }
 }
+
+.nice-icon{
+    fill:black;
+    stroke:black;
+    stroke-miterlimit:10;
+}
+
+.nice-icon-bg-dark{
+    background: linear-gradient(-30deg, #fff 0%, #fafeff 8%, #ecfeff 17%,  #d4feff 27%, #e2e6ff 41%, #fcbfff 61%, #e0b2ff 76%, #cfaaff 90%, #c9a8ff 100%);
+}
