@@ -23,12 +23,35 @@ export async function POST(req: Request) {
       cField: course.cField,
       cNum: course.cNum,
     },
+    select: {
+      crn: true,
+      year: true,
+      semester: true,
+      comments: true,
+      instructor: true,
+      instructor_comments: true,
+    },
   })
 
   const scores = await prisma.courseScores.findMany({
     where: {
       cField: course.cField,
       cNum: course.cNum,
+    },
+    select: {
+      crn: true,
+      year: true,
+      semester: true,
+      workload: true,
+      instructor: true,
+      assignment: true,
+      challenge: true,
+      expectedPF: true,
+      expected_grade: true,
+      instructor_evaluations: true,
+      organization: true,
+      overall_quality: true,
+      why_take_this_course: true,
     },
   })
   // console.log({ comments, scores })

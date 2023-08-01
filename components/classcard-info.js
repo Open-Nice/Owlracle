@@ -27,10 +27,13 @@ export default function ClassCardInfo( { catalog }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify( {'course' : {'cField': 'COMP', 'cNum': '140'} } )
+      body: JSON.stringify( {'course' : {'cField': `${catalog.cField}`, 'cNum': `${catalog.cNum}`} } )
     })        
     .then((response) => response.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+      // console.log(data)
+      const {scores, comments} = data
+    })
     .catch((error) => console.error('Error fetching data:', error))
 
   }, []);
