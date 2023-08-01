@@ -13,10 +13,11 @@ import { ChatMessageActions } from '@/components/chat-message-actions'
 import type { CourseCatalog } from '@prisma/client'
 
 export interface ChatMessageProps {
+  isComplete: Boolean
   message: Message
 }
 
-export function ChatMessage({ message, ...props }: ChatMessageProps) {
+export function ChatMessage({ isComplete, message, ...props }: ChatMessageProps) {
 
   const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
 
@@ -27,6 +28,12 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
 
   useEffect(() => {
 
+    // console.log(isComplete, message)
+    if (! isComplete)
+      return
+    
+    // console.log('newest message has completed loading: ',message)
+    
     if (message.role !== 'assistant')
       return
     
@@ -53,7 +60,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
     .then((data) => setCCL(data))
     .catch((error) => console.error('Error fetching data:', error))
 
-  }, []);
+  }, [isComplete]);
 
   return (
     <div
