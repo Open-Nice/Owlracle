@@ -27,10 +27,10 @@ export function ChatMessage({ isComplete, message, ...props }: ChatMessageProps)
   
   const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
 
-  useEffect(() => {
-    if (courseCatalogs)
-      console.log(courseCatalogs)
-  }, [courseCatalogs]);
+  // useEffect(() => {
+  //   if (courseCatalogs)
+  //     console.log(courseCatalogs)
+  // }, [courseCatalogs]);
 
   useEffect(() => {
 

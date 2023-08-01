@@ -1,4 +1,7 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react';
+
 
 export default function ClassCardInfo( { catalog }) {
   // console.log('catalog: ', catalog)
@@ -14,6 +17,24 @@ export default function ClassCardInfo( { catalog }) {
     language_instruction: `${catalog.language_instruction}`,
     description: catalog.description  === 'N/A' ? null : `${catalog.description}`,
   };
+  
+  useEffect(() => {
+
+    // console.log(catalog)
+
+    fetch('/api/eval', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify( {'course' : {'cField': 'COMP', 'cNum': '140'} } )
+    })        
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.error('Error fetching data:', error))
+
+  }, []);
+
   return (
     <div className='p-3 p-lg-5 text-black'>
         <h2>{courseInfo.cFieldNum}</h2>

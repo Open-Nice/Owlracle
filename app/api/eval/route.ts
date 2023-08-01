@@ -1,12 +1,8 @@
 import prisma from '@/lib/prisma'
 import { auth } from '@/auth'
+import {type Course} from '@/app/api/course/route'
 
 export const runtime = 'edge'
-
-export type Course = {
-  cField: string
-  cNum: string
-}
 
 export async function POST(req: Request) {
 
@@ -19,21 +15,27 @@ export async function POST(req: Request) {
   }
 
   const json = await req.json()
-  const { courses }: { courses: Course[] } = json
-  // console.log('courses', courses)
-  
-  const catalog = await prisma.courseCatalog.findMany({
+  const { course }: { course: Course } = json
+  console.log('courses', course)
+
+  const comments = await prisma.courseComments.findMany({
     where: {
-      OR: courses.map((course) => ({
-        cNum: course.cNum,
-        cField: course.cField,
-      })),
+      cField: course.cField,
+      cNum: course.cNum,
     },
   })
-  // console.log({ catalog })
+
+  const scores = await prisma.courseScores.findMany({
+    where: {
+      cField: course.cField,
+      cNum: course.cNum,
+    },
+  })
+  // console.log({ comments, scores })
+
 
   return new Response(
-    JSON.stringify(catalog),
+    JSON.stringify( {comments, scores} ),
     {
       status: 200,
       headers: {
