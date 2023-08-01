@@ -99,20 +99,23 @@
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: #49494978 white;
+    scrollbar-color: #a4a4a481;
   }
 
 *::-webkit-scrollbar {
     width: 5px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
   }
   
   *::-webkit-scrollbar-track {
-    background: white;
     border-radius: 5px;
+    background-color: transparent;
   }
   
   *::-webkit-scrollbar-thumb {
-    background-color: #49494978;
+    background-color: #a4a4a481;
     border-radius: 5px;
     border: none;
   }
@@ -125,6 +128,7 @@
   
   .tooltiptext {
     visibility: hidden;
+    opacity: 0;
     width: fit-content;
     text-align: center;
     border-radius: 6px;
@@ -139,28 +143,26 @@
     top: -40px;
     left: -30px;
     z-index: 1;
+    transition: all 0.5s ease-out;
   }
   
   .tooltip:hover .tooltiptext {
     visibility: visible;
+    opacity: 1;
   }
 
-  @media only screen and (max-width: 760px)  {
+@media only screen and (max-width: 760px)  {
     .tooltiptext{
-        visibility: hidden;
-        width: fit-content;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px 0;
-        font-size: 10pt;
-        background-color: white;
-        color: #000;
-        padding-left: 10px;
-        padding-right: 10px;
-        /* Position the tooltip */
-        position: absolute;
-        top: -40px;
         left: 0px;
-        z-index: 1;
-        }
+    }
+}
+
+.nice-icon{
+    fill:black;
+    stroke:black;
+    stroke-miterlimit:10;
+}
+
+.nice-icon-bg-dark{
+    background: linear-gradient(-30deg, #fff 0%, #fafeff 8%, #ecfeff 17%,  #d4feff 27%, #e2e6ff 41%, #fcbfff 61%, #e0b2ff 76%, #cfaaff 90%, #c9a8ff 100%);
 }
