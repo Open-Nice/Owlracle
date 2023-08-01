@@ -27,10 +27,10 @@ export function ChatMessage({ isComplete, message, ...props }: ChatMessageProps)
   
   const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
 
-  useEffect(() => {
-    if (courseCatalogs)
-      console.log(courseCatalogs)
-  }, [courseCatalogs]);
+  // useEffect(() => {
+  //   if (courseCatalogs)
+  //     console.log(courseCatalogs)
+  // }, [courseCatalogs]);
 
   useEffect(() => {
 
@@ -135,16 +135,12 @@ export function ChatMessage({ isComplete, message, ...props }: ChatMessageProps)
         </div>
       </div>
       {
-          message.role === 'user' ? 
-          <></> : 
+          courseCatalogs ? 
           <div className='classCardWrapper'>
-            <ClassCard/>
-            <ClassCard/>
-            <ClassCard/>
-            <ClassCard/>
-            <ClassCard/>
+            {courseCatalogs?.map( (courseCatalog, index) => <ClassCard catalog = {courseCatalog} key = {index} />)}
           </div>
-          
+          :
+          <></>
         }
     </div>
     

@@ -38,7 +38,7 @@ model CourseComments {
   semester String @db.VarChar(255)
   crn String @db.VarChar(255)
   name String
-  instructor String @db.VarChar(255)
+  instructor String
 
   comments String[]
   instructor_comments Json[]
@@ -54,7 +54,7 @@ model CourseScores {
   semester String @db.VarChar(255)
   crn String @db.VarChar(255)
   name String
-  instructor String @db.VarChar(255)
+  instructor String
 
   organization Json
   assignment Json

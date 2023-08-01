@@ -94,10 +94,12 @@ const enoughContext = async (currentContext: string, userQuery: string): Promise
     ${currentContext}
 
     ${oneLine`
-      Based on the context,
-      I want you to determine if the context is
-      sufficient to answer the following user
-      prompt. If it's sufficient, respond "yes" without explanation.
+      I want you to determine if the context above is
+      sufficient to answer the following user prompt.
+      To be considered sufficient, the context needs to be able to DIRECTLY answer the prompt.
+      If user asked about courses/classes, the context needs to have exact course names (e.g. COMP 140, HIST 200)
+      to be considered sufficient.
+      If it's sufficient, respond "yes" without explanation.
       If the user prompt is about you i.e. the virtual assistant, respond "yes" without explanation.
     `}
 

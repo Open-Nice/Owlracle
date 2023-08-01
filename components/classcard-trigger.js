@@ -6,14 +6,14 @@ import "@/components/stylings/upload.css"
 import "@/components/stylings/general.css"
 
 const hues = ["red", "orange", "yellow", "green", "blue", "purple", "pink"]
-export default function ClassCardTrigger(props) {
+export default function ClassCardTrigger( {catalog, setOpen} ) {
     const courseInfo = {
-        cFieldNum: "COMP 140",
-        course_long_title: "basics of computer programming",
-        course_credit: 4,
-        course_department: "cs",
-        course_type: "balabala",
-        distribution: "d3"
+        cFieldNum: `${catalog.cField} ${catalog.cNum}`,
+        course_long_title: `${catalog.course_long_title}`,
+        course_credit: `${catalog.course_credit}`,
+        course_department: `${catalog.course_department}`,
+        course_type: `${catalog.course_type}`,
+        distribution:  catalog.distribution === 'N/A' ? null : `${catalog.distribution}`
     };
 
     const [cardColor, setCardColor] = useState("");
@@ -46,7 +46,7 @@ export default function ClassCardTrigger(props) {
     <div className="course-card" style={{transform: `${"scale(" + cardScale + ")"}`}}>
         <div className='card-color-cap' style={{backgroundColor: `${cardColor}`}}>
             <div className={'course-code-cap d-flex justify-content-center align-items-center cursor-pt fs-3'} 
-            onClick={()=>props.setOpen("open")}
+            onClick={()=>setOpen("open")}
             >
                 <div className="card-body">
                     <h5 className="card-title" style={{color: `${cardTextColor}`}}>{courseInfo.cFieldNum}</h5>

@@ -35,7 +35,7 @@ export function ChatPanel({
     style={{width: "100vw"}}
     >
       <ButtonScrollToBottom />
-      <div className="mx-auto sm:max-w-3xl sm:px-4">
+      <div className="mx-auto sm:max-w-4xl sm:px-4">
         <div className="flex h-10 items-center justify-center">
           {isLoading ? (
             <Button
