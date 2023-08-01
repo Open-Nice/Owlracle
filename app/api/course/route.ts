@@ -11,7 +11,7 @@ type Course = {
 export async function POST(req: Request) {
   const json = await req.json()
   const { courses }: { courses: Course[] } = json
-  console.log('courses', courses)
+  // console.log('courses', courses)
 
   const userId = (await auth())?.user.id
 
