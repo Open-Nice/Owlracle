@@ -10,10 +10,15 @@ import ClassCardTrigger from './classcard-trigger'
 import "@/components/stylings/general.css"
 import "@/components/stylings/upload.css"
 import '@/components/stylings/classCard.css'
-
+import { coursesOpen } from '@/lib/courseopen'
 
 export default function ClassCard( {catalog} ) {
   const [open, setOpen] = React.useState(false)
+
+  const courseOpen = React.useMemo(()=>
+    coursesOpen.hasOwnProperty(catalog.cField) &&
+      coursesOpen[catalog.cField].includes(parseInt(catalog.cNum))
+  , [])
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
