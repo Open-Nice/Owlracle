@@ -22,7 +22,7 @@ export default function ClassCard( {catalog} ) {
         <Dialog.Overlay className="DialogOverlay">
           <Dialog.Content className="DialogContent">
               <div className='DialogScrollWrapper'>
-                <Dialog.Title className="DialogTitle"> {`${catalog.cField} ${catalog.cNum}`} </Dialog.Title>
+                <Dialog.Title className="DialogTitle text-2xl"> {`${catalog.cField} ${catalog.cNum}`} </Dialog.Title>
                 <Dialog.Description className="DialogDescription">
                   {`${catalog.course_name}`}
                 </Dialog.Description>
