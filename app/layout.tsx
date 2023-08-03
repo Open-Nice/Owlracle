@@ -11,18 +11,18 @@ import { Header } from '@/components/header'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Next.js AI Chatbot',
-    template: `%s - Next.js AI Chatbot`
+    default: 'Athena Rice',
+    template: `%s - Athena Rice`
   },
-  description: 'An AI-powered chatbot template built with Next.js and Vercel.',
+  description: 'My purpose is to leverage Every owl 🦉',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },
     { media: '(prefers-color-scheme: dark)', color: 'black' }
   ],
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png'
+    icon: '/logo.ico',
+    shortcut: '/logo.png',
+    apple: '/logo.png'
   }
 }
 

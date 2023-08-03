@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { type Session } from 'next-auth'
 import { signOut } from 'next-auth/react'
 
@@ -12,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { IconExternalLink } from '@/components/ui/icons'
 
 export interface UserMenuProps {
   user: Session['user']
@@ -41,17 +39,6 @@ export function UserMenu({ user }: UserMenuProps) {
             <div className="text-xs text-zinc-500">{user?.email}</div>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <a
-              href="https://vercel.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-between w-full text-xs"
-            >
-              Vercel Homepage
-              <IconExternalLink className="w-3 h-3 ml-auto" />
-            </a>
-          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() =>
               signOut({
