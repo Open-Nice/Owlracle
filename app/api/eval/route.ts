@@ -56,9 +56,11 @@ export async function POST(req: Request) {
   })
   // console.log({ comments, scores })
 
+  const cField  = course.cField
+  const cNum  = course.cNum
 
   return new Response(
-    JSON.stringify( {comments, scores} ),
+    JSON.stringify( {comments, scores, cField, cNum} ),
     {
       status: 200,
       headers: {

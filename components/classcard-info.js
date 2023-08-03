@@ -57,7 +57,7 @@ export default function ClassCardInfo( { catalog }) {
 
         <div className='color-light-purple' style={{fontSize: "1.25em"}}>Course Evaluation</div>
         {
-          error || !data ?
+          error || !data || ! (data.cField == catalog.cField && data.cNum == catalog.cNum)?
           // evaluation is still loading
           <div className="spinner-border text-secondary" role="status">
               <span className="visually-hidden">Loading...</span>
