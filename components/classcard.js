@@ -14,7 +14,6 @@ import '@/components/stylings/classCard.css'
 
 export default function ClassCard( {catalog} ) {
   const [open, setOpen] = React.useState(false)
-  const [isPending, startTransition] = React.useTransition()
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -22,8 +21,8 @@ export default function ClassCard( {catalog} ) {
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay">
           <Dialog.Content className="DialogContent">
-              <div style={{padding: "25px", paddingBottom: "0px"}}>
-                <Dialog.Title className="DialogTitle"> {`${catalog.cField} ${catalog.cNum}`} </Dialog.Title>
+              <div className='DialogScrollWrapper'>
+                <Dialog.Title className="DialogTitle text-2xl"> {`${catalog.cField} ${catalog.cNum}`} </Dialog.Title>
                 <Dialog.Description className="DialogDescription">
                   {`${catalog.course_name}`}
                 </Dialog.Description>
