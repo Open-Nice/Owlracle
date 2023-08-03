@@ -26,7 +26,7 @@ export default function UploadFile() {
             >
               <IconPlus />
             </a>
-          <span className="tooltiptext tooltip-top shadow border bg-popover text-popover-foreground"><div>Teach Athena! <span style={{ fontSize: '25px' }}>😍</span></div></span>
+          <span className="tooltiptext tooltip-top shadow border bg-popover text-popover-foreground"><div>Teach me! <span style={{ fontSize: '25px' }}>😍</span></div></span>
         </div> 
         
       </Dialog.Trigger>

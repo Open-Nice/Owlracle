@@ -5,6 +5,16 @@ import getContrastRatio from 'get-contrast-ratio';
 import "@/components/stylings/upload.css"
 import "@/components/stylings/general.css"
 
+const preprocess = (distribution) => {
+    const d = ['Distribution Group I', 'Distribution Group II', 'Distribution Group III']
+    const dp = ['d1', 'd2', 'd3']
+
+    if (d.indexOf(distribution) != -1)
+        return dp[d.indexOf(distribution)]
+    else
+        distribution
+}
+
 const hues = ["red", "orange", "yellow", "green", "blue", "purple", "pink"]
 export default function ClassCardTrigger( {catalog, setOpen} ) {
     const courseInfo = {
@@ -13,7 +23,7 @@ export default function ClassCardTrigger( {catalog, setOpen} ) {
         course_credit: `${catalog.course_credit}`,
         course_department: `${catalog.course_department}`,
         course_type: `${catalog.course_type}`,
-        distribution:  catalog.distribution === 'N/A' ? null : `${catalog.distribution}`
+        distribution:  catalog.distribution === 'N/A' ? null : preprocess(`${catalog.distribution}`)
     };
 
     const [cardColor, setCardColor] = useState("");
