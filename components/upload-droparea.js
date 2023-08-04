@@ -46,6 +46,10 @@ export default function DropZoneAreaBtn () {
 
     return (
         <form>
+            <div className='upload-span'>Description *</div>
+            <div style={{paddingRight: "20px"}}>
+                <input placeholder='Give me a one-sentence description of the info you upload!' className='upload-input' required/>
+            </div>
             <div className='upload-span'>Url</div>
             <div style={{paddingRight: "20px"}}>
                 <input placeholder='A link to google doc, website, etc.' className='upload-input'/>
@@ -60,7 +64,7 @@ export default function DropZoneAreaBtn () {
             </div>
             {selectedFilesZone}
             <div className='d-flex justify-content-end full-width'>
-                <button className='upload-submit-btn shadow'>Submit</button>
+                <button className='upload-submit-btn shadow' type='submit'>Submit</button>
             </div>
         </form>
         

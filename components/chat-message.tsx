@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
+import { type UseChatHelpers } from 'ai/react'
 import { Message } from 'ai'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -9,8 +10,10 @@ import { cn } from '@/lib/utils'
 import { CodeBlock } from '@/components/ui/codeblock'
 import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconUser, IconNice, IconNiceColor } from '@/components/ui/icons'
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import { ChatMessageActions } from '@/components/chat-message-actions'
-
+import RelatedQuestionArea from "./related-questions"
 import ClassCard from "@/components/classcard"
 import '@/components/stylings/general.css'
 import '@/components/stylings/classCard.css'
@@ -22,7 +25,7 @@ export interface ChatMessageProps {
   message: Message
 }
 
-export function ChatMessage({ isComplete, message, ...props }: ChatMessageProps) {
+export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) {
   const { setTheme, theme } = useTheme()
   
   const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
@@ -142,6 +145,24 @@ export function ChatMessage({ isComplete, message, ...props }: ChatMessageProps)
           :
           <></>
         }
+      {
+        isComplete && message.role === 'assistant' ?
+        <div>
+          <div className='flex justify-end my-3'>
+            <div className='thumb-icon tooltip'>
+              <ThumbUpOffAltIcon color='inherit'/>
+              <span className='tooltiptext tooltip-top tooltip-thumb shadow border bg-popover text-popover-foreground'>Like the answer</span>
+            </div>
+            <div className='thumb-icon tooltip'>
+              <ThumbDownOffAltIcon color='inherit'/>
+              <span className='tooltiptext tooltip-top tooltip-thumb shadow border bg-popover text-popover-foreground'>Dislike the answer</span>
+            </div>
+          </div>
+          <RelatedQuestionArea/>
+        </div>
+        :
+        <></>
+      }
     </div>
     
   )

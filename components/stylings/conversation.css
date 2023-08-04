@@ -1,0 +1,13 @@
+.related-question-area {
+    width: 100%;
+    height: fit-content;
+    border-radius: 15px;
+    border: 2px dashed rgba(128, 128, 128, 0.479);
+    padding: 25px;
+
+}
+
+.related-question-item{
+    padding-top: 5px;
+    opacity: 0.8;
+}

@@ -6,11 +6,11 @@ import { IconArrowRight } from '@/components/ui/icons'
 
 const exampleMessages = [
   {
-    heading: 'Looking for some class? 📚',
+    heading: 'Looking for classes? 📚',
     message: `Give me some philosophy of mind class?`
   },
   {
-    heading: 'Connect with some faculties? 🤠',
+    heading: 'Want to connect with faculties? 🤠',
     message: `Find me some professors in machine leanring?`
   },
   {
@@ -18,7 +18,7 @@ const exampleMessages = [
     message: `What are some interesting activities recently?`
   },
   {
-    heading: "Join interesting organizations 🎨",
+    heading: "Join various organizations 🎨",
     message: `what design clubs are there?`
   }
 ]
@@ -28,17 +28,18 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
     <div className="mx-auto max-w-2xl px-4">
       <div className="rounded-lg border bg-background p-8">
         <h1 className="mb-2 text-lg font-semibold">
-          I am Owlracle:
+          Meet Owlracle
         </h1>
         <p className="mb-2 leading-normal text-muted-foreground">
-          An Open Source language model started by{' '}
+          Hi! I am Owlracle, your assistant for your life and study at Rice.
+          {/* an open-source language model constructed by{' '}
           <ExternalLink href="https://github.com/Open-Nice">
            Nice
           </ExternalLink>
-          {' '}empowered by Rice<span style={{ fontSize: '25px' }}>🦉</span>s
+          {' '} and empowered by Rice<span style={{ fontSize: '25px' }} placeholder='Owl'>🦉</span>s. */}
         </p>
         <p className="leading-normal text-muted-foreground">
-          Here are some interesting questions to get started:
+          Ask me anything you want to learn about Rice!
         </p>
         <div className="mt-4 flex flex-col items-start space-y-2">
           {exampleMessages.map((message, index) => (
