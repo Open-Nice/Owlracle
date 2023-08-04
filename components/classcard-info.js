@@ -39,23 +39,23 @@ export default function ClassCardInfo( { catalog }) {
   )
 
   return (
-    <div className='p-3 p-lg-5 text-black'>
+    <div className='text-black'>
         <div className='mb-3'>
-            <div className='color-light-purple' style={{fontSize: "1.25em"}}>Course Basic Information</div>
-            <div>Course Name: {courseInfo.course_name}</div>
-            <div>Long Title: {courseInfo.course_long_title}</div>
-            <div>Credit Hours: {courseInfo.course_credit}</div>
+            <div className='color-mid-purple' style={{fontSize: "1.25em"}}>Basic Information</div>
+            <div><b>Course Name:</b> {courseInfo.course_name}</div>
+            <div><b>Long Title:</b> {courseInfo.course_long_title}</div>
+            <div><b>Credit Hours:</b> {courseInfo.course_credit}</div>
 
-            <div>Course Type: {courseInfo.course_type}</div>
-            {courseInfo.distribution ? <div>Distribution: {courseInfo.distribution}</div> : <></>}
-            <div>Grade Mode: {courseInfo.grade_mode}</div>
+            <div><b>Course Type:</b> {courseInfo.course_type}</div>
+            {courseInfo.distribution ? <div><b>Distribution:</b> {courseInfo.distribution}</div> : <></>}
+            <div><b>Grade Mode:</b> {courseInfo.grade_mode}</div>
 
-            <div>Course Department: {courseInfo.course_department}</div>
-            <div>Language of Instruction: {courseInfo.language_instruction}</div>
-            {courseInfo.description ? <div>Course Description: {courseInfo.description}</div> : <></>}
+            <div><b>Course Department:</b> {courseInfo.course_department}</div>
+            <div><b>Language of Instruction:</b> {courseInfo.language_instruction}</div>
+            {courseInfo.description ? <div><b>Course Description:</b> {courseInfo.description}</div> : <></>}
         </div>
 
-        <div className='color-light-purple' style={{fontSize: "1.25em"}}>Course Evaluation</div>
+        <div className='color-mid-purple' style={{fontSize: "1.25em"}}>Evaluation</div>
         {
           error || !data || ! (data.cField == catalog.cField && data.cNum == catalog.cNum)?
           // evaluation is still loading
