@@ -46,9 +46,9 @@ export default function DropZoneAreaBtn () {
 
     return (
         <form>
-            <div className='upload-span'>Info Description *</div>
+            <div className='upload-span'>Description *</div>
             <div style={{paddingRight: "20px"}}>
-                <input placeholder='Give me a one-sentence description of your info!' className='upload-input' required/>
+                <input placeholder='Give me a one-sentence description of the info you upload!' className='upload-input' required/>
             </div>
             <div className='upload-span'>Url</div>
             <div style={{paddingRight: "20px"}}>
