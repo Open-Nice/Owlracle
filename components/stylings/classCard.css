@@ -4,6 +4,7 @@
     flex-wrap: wrap;
 }
 .course-card{
+    position: relative;
     border: none;
     transition: transform 0.5s ease-out;
     width: 12em;
@@ -34,6 +35,7 @@
 }
 
 .card-body{
+    position: relative;
     max-width: 100%;
     position: relative;
     display: flex;
@@ -69,6 +71,31 @@
     .classCardWrapper{
         padding-left: 50px;
     }
+}
+
+.class-trigger-opencourse{
+    position: absolute;
+    right: -0px;
+    bottom: -0px;
+    font-size: 10pt;
+}
+
+.courseOpenIconWrapper{
+    position: relative;
+    border-bottom-right-radius: 10px;
+    width: 60px;
+    height: 50px;
+    overflow: hidden;
+}
+
+.courseOpenIcon{
+    position: absolute;
+    top: -30px;
+    left: 0;
+    font-size: 57pt;
+    color: rgba(0, 0, 0, 0.182);
+    opacity: 0.6;
+    filter: blur(1px);
 }
 
 .classcard-dropdown{

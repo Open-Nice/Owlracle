@@ -23,7 +23,7 @@ export default function ClassCard( {catalog} ) {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <ClassCardTrigger catalog={catalog} setOpen={setOpen}/>
+      <ClassCardTrigger catalog={catalog} setOpen={setOpen} courseOpening = {courseOpening}/>
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay">
           <Dialog.Content className="DialogContent">

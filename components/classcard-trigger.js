@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import {randomColor} from 'randomcolor';
 import getContrastRatio from 'get-contrast-ratio';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import "@/components/stylings/upload.css"
 import "@/components/stylings/general.css"
 
@@ -16,7 +17,7 @@ const preprocess = (distribution) => {
 }
 
 const hues = ["red", "orange", "yellow", "green", "blue", "purple", "pink"]
-export default function ClassCardTrigger( {catalog, setOpen} ) {
+export default function ClassCardTrigger( {catalog, setOpen, courseOpening} ) {
     const courseInfo = {
         cFieldNum: `${catalog.cField} ${catalog.cNum}`,
         course_long_title: `${catalog.course_long_title}`,
@@ -64,10 +65,26 @@ export default function ClassCardTrigger( {catalog, setOpen} ) {
                     <div className='card-tag-wrap'>
                         <div className='tag'>{courseInfo.course_credit} credit hours</div>
                         {courseInfo.distribution ? <div className='tag'>{courseInfo.distribution}</div> : <></>}
-                    </div>
+                    </div>    
                 </div>
             </div>
         </div>
+        {
+            courseOpening?
+            <div className='class-trigger-opencourse'>
+                <div className='tooltip'>
+                    <div className='courseOpenIconWrapper'>
+                        <div className='courseOpenIcon'>
+                            <CheckCircleOutlineRoundedIcon color='inherit' fontSize='inherit'/>
+                        </div>
+                    </div>
+                    <div className='tooltiptext tooltip-top tooltip-opencourse shadow border bg-popover text-popover-foreground'> Opens this semester </div>
+                </div>
+                
+            </div>
+            :
+            <></>
+        }
         
     </div>
   )
