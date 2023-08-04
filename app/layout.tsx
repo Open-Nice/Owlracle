@@ -11,10 +11,10 @@ import { Header } from '@/components/header'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Athena Rice',
-    template: `%s - Athena Rice`
+    default: 'Owlracle',
+    template: `%s - Owlracle`
   },
-  description: 'My purpose is to leverage Every owl 🦉',
+  description: 'My purpose is to connect Rice better',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },
     { media: '(prefers-color-scheme: dark)', color: 'black' }
