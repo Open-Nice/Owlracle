@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useMemo, useState } from 'react'
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 
 const CourseEvalComponent = ({text, dic}) => 
     <tr className="align-middle">
@@ -23,6 +24,7 @@ const InstructorEvalComponent = ({text, dic}) =>
 export default function Evaluation(props) {
     const scores = props.scores;
     const comments = props.comments;
+    const [checkComments, setCheckComments] = useState([])
 
     const [yearSemester, setYearSemester] = useState("0");
     const [instructor, setInstructor] = useState("0");
@@ -80,6 +82,23 @@ export default function Evaluation(props) {
         null
 
     , [instructor, yearSemester]);
+
+    function handleCheckComment(e, idx){
+        e.preventDefault();
+        var checkList = checkComments;
+        checkList[idx] = !checkList[idx]
+        setCheckComments([...checkList]);
+    }
+
+    useEffect(()=>{
+        setCheckComments([]);
+        const checkNum = score?.instructor_evaluations.length + 1;
+        const checkList = [];
+        for (var i = 0; i < checkNum; i++) {
+            checkList.push(false);
+        }
+        setCheckComments([...checkList]);
+    }, [])
 
     return (
         <div>
@@ -147,14 +166,31 @@ export default function Evaluation(props) {
                                     </table>
 
 
-                                    <div className='color-mid-purple' style={{marginTop: "15px"}}>
-                                        Student comments
+                                    <div className='flex justify-between items-center' style={{marginTop: "30px", marginBottom: "5px"}}>
+                                        <div className='color-mid-purple'>Student comments</div>
+                                        <button className='comment-type-btn shadow color-mid-grey' onClick={(e)=>{handleCheckComment(e, 0)}}>
+                                            <SearchRoundedIcon/>
+                                            See comment <span className='color-green'>positivity</span>/<span className='color-red'>negativity</span>
+                                        </button>
                                     </div>
-                                    
+
                                     <div className='student-comment-frame'>
                                         <div className='student-comment-scroll-wrapper'>
                                             {
-                                                comment.comments.map((comment, index) => <div key={index} className='p-3'>{comment}</div>)
+                                                comment.comments.map((comment, idx) => 
+                                                    <div key={idx} className='p-3'>
+                                                        <div className='student-comment'>
+                                                            {
+                                                                checkComments[0] ?
+                                                                <div className='student-comment-judgement bg-red'></div>
+                                                                :
+                                                                <></>
+                                                            }
+                                                            {comment}
+                                                        </div>
+                                                    </div>
+                                                
+                                                )
                                             }
                                         </div>                    
                                     </div>
@@ -190,14 +226,30 @@ export default function Evaluation(props) {
                                                 </tbody>
                                             </table>
 
-                                            <div className='color-mid-purple' style={{marginTop: "15px"}}>
-                                                Student comments
+                                            <div className='flex justify-between items-center' style={{marginTop: "30px", marginBottom: "5px"}}>
+                                                <div className='color-mid-purple'>Student comments</div>
+                                                <button className='comment-type-btn shadow color-mid-grey' onClick={(e)=>{handleCheckComment(e, index + 1)}}>
+                                                    <SearchRoundedIcon/>
+                                                    See comment <span className='color-green'>positivity</span>/<span className='color-red'>negativity</span>
+                                                </button>
                                             </div>
 
                                             <div className='student-comment-frame'>
                                                 <div className='student-comment-scroll-wrapper'>
                                                     {
-                                                        comment.instructor_comments[index].comments.map((comment, index) => <div key={index} className='p-3'>{comment}</div>)
+                                                        comment.instructor_comments[index].comments.map((comment, idx) => 
+                                                        <div key={idx} className='p-3'>
+                                                            <div className='student-comment'>
+                                                                {
+                                                                    checkComments[index + 1] ?
+                                                                    <div className='student-comment-judgement bg-red'></div>
+                                                                    :
+                                                                    <></>
+                                                                }
+                                                                {comment}
+                                                            </div>
+                                                        </div>
+                                                        )
                                                     }
                                                 </div>                                      
                                             </div>

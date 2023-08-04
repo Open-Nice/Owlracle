@@ -47,6 +47,10 @@
     color: #00000063;
 }
 
+.color-blue{
+    color: rgb(16, 150, 218);
+}
+
 
 .color-light-purple{
     color: #e99eff;
@@ -77,8 +81,13 @@
 }
 
 .bg-green{
-    background-color: #99ee99;
+    background-color: #45d245;
 }
+
+.bg-red{
+    background-color:#f47876;
+}
+
 
 .bg-light-purple{
     background-color: #e99eff;
@@ -183,7 +192,7 @@
   }
 
   .tooltip-upload{
-    min-width: 150px;
+    min-width: 155px;
   }
 
 @media only screen and (max-width: 760px)  {

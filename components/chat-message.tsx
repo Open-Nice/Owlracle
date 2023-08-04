@@ -43,14 +43,14 @@ export function ChatMessage({ isComplete, message, ...props }: ChatMessageProps)
     if (message.role !== 'assistant')
       return
     
-    const regexPattern = /\b[A-Z]{4} \d{3}\b/g
+    const regexPattern = /\b[A-Z]{4} \d{3}\b/gi
     const content = message.content
     const coursesNames = content.match(regexPattern)
 
     if (! coursesNames)
       return
 
-    const courses = coursesNames.map(course => ({ 'cField': course.split(' ')[0], 'cNum': course.split(' ')[1] }))
+    const courses = coursesNames.map(course => ({ 'cField': course.split(' ')[0].toUpperCase(), 'cNum': course.split(' ')[1] }))
 
     // console.log('courses', courses)
 

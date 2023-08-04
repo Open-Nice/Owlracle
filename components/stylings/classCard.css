@@ -114,6 +114,42 @@
     overflow-y: auto;
 }
 
+.student-comment-judgement{
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    margin: 5px;
+    margin-top: 7px;
+    padding: 5px;
+    transition: all 0.5s ease;
+}
+
+.student-comment{
+    display: flex;
+    transition: all 0.5s ease;
+}
+
+.comment-type-btn{
+    border-radius: 5px;
+    background-color: white;
+    border: 1px solid rgb(225, 225, 225);
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+    width: fit-content;
+    font-size: 10pt;
+    transition: all 0.5s ease;
+}
+
+.comment-type-btn:hover {
+    background-color: #f8e0ff;
+}
+
+.comment-type-btn:active {
+    background-color: #d8d8d8;
+}
+
 .rate-worse{
     color: #f47876;
 }
