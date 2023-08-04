@@ -39,6 +39,10 @@
     color: #8e8e8e;
 }
 
+.color-dark-grey{
+    color: #4e4e4e
+}
+
 .color-dark-transparent{
     color: #00000063;
 }
@@ -53,11 +57,11 @@
 }
 
 .color-green{
-    color: #99ee99;
+    color: #45d245;
 }
 
 .color-red{
-    color:#ff9a98;
+    color:#f47876;
 }
 
 .color-yellow{
@@ -66,6 +70,10 @@
 
 .bg-dark{
     background-color: #151515;
+}
+
+.bg-white{
+    background-color: white;
 }
 
 .bg-green{
@@ -124,6 +132,7 @@
   .tooltip {
     display: flex;
     justify-content: flex-start;
+    position: relative;
   }
   
   .tooltiptext {
@@ -159,15 +168,34 @@
     z-index: 1;
   }
 
+  .tooltip-reset{
+    position: absolute;
+    border: 1px solid rgb(225, 225, 225);
+    top: 0;
+    left: 30px;
+    z-index: 1;
+  }
+
   .tooltip-refresh{
     min-width: 150px;
     font-size: 9pt;
     font-weight: normal;
   }
 
+  .tooltip-upload{
+    min-width: 150px;
+  }
+
 @media only screen and (max-width: 760px)  {
-    .tooltip-top{
+    .tooltip-upload{
         left: 0px;
+    }
+
+    .tooltip-reset{
+        position: absolute;
+        top: -40px;
+        left: -30px;
+        z-index: 1;
     }
 }
 

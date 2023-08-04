@@ -75,11 +75,27 @@
     outline: none;
     border-radius: 5px;
     background-color: white;
-    border: 0.5px solid rgb(197, 197, 197);
+    border: 1px solid rgb(225, 225, 225);
     padding: 5px;
     padding-left: 8px;
     padding-right: 8px;
     margin-right: 5px;
+    cursor: pointer;
+}
+
+.classcard-table{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    min-width: 80%;
+}
+
+.classcard-table tr:nth-child(even){
+    background-color: #f3f3f3;
+}
+
+.classcard-table tr, thead {
+    padding: 10px;
 }
 
 
@@ -87,13 +103,21 @@
     width: 100%;
     height: 300px;
     border-radius: 15px;
+    box-shadow: inset 0 0 7px #d1d1d1;
+    padding: 5px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.student-comment-scroll-wrapper{
+    height: 100%;
     overflow-y: auto;
 }
 
 .rate-worse{
-    color: #ff9a98;
+    color: #f47876;
 }
 
 .rate-better{
-    color: #99ee99;
+    color: #45d245;
 }
