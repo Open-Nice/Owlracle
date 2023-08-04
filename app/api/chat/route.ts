@@ -1,4 +1,5 @@
 import { kv } from '@vercel/kv'
+import prisma from '@/lib/prisma'
 import { createClient } from "@supabase/supabase-js";
 import { codeBlock, oneLine } from 'common-tags'
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
@@ -50,11 +51,15 @@ const openAiAPIcall = async (prompt: string): Promise<string> => {
 
 const getBetterQuery = async (messages: ChatCompletionRequestMessage[]): Promise<string> => {
 
-  if (messages.length == 1)
-      return messages[0].content!
-
   const query = messages[messages.length-1].content
-  const sanitizedQuery = query!.trim()
+  let sanitizedQuery = query!.trim()
+
+  // Make sure query contains 'Computatinoal thinking' rather than 'COMP 140'
+  sanitizedQuery = await substite(sanitizedQuery)
+  console.log("substitute:", sanitizedQuery)
+
+  if (messages.length == 1)
+      return sanitizedQuery
 
   const message_str: string = messages
     .slice(messages.length < 5 ? 0 : -5, -1)
@@ -84,6 +89,107 @@ const getBetterQuery = async (messages: ChatCompletionRequestMessage[]): Promise
   return openAiAPIcall(prompt)
 }
 
+// substite "... Comp 140 ..." -> "Computational thinking"
+const substite = async (query: string): Promise<string> => {
+  const matches = findAllPatterns(query)
+
+  console.log("matches", matches)
+
+  if (matches.length == 0)
+    return query
+
+  const formatMatches = format(matches)
+
+  console.log("formatMatches", formatMatches)
+
+  const replace = await getSubs(formatMatches)
+
+  console.log("replace", replace)
+
+  const final_query = subQuery(query, replace)
+
+  console.log("final_query", replace)
+
+  return final_query.trim()
+  
+
+
+  function findAllPatterns(sentence: string): string[] {
+    const pattern = /\b[A-Za-z]{4}\s*\d{3}\b/gi
+    const matches = sentence.match(pattern);
+
+    return matches ? matches : [];
+  }
+  function format(matches: string[]): string[] {
+    let formattedMatches: string[] = [];
+    const letterPattern = /[A-Za-z]{4}/i;
+    const numberPattern = /\d{3}/;
+
+    for (let match of matches) {
+        let letters = match.match(letterPattern);
+        let numbers = match.match(numberPattern);
+
+        if (letters && numbers) {
+            let formattedMatch = `${letters[0].toUpperCase()} ${numbers[0]}`;
+            formattedMatches.push(formattedMatch);
+        }
+    }
+
+    return formattedMatches;
+  }
+  async function getSubs(matches: string[]): Promise<string[]> {
+    let replace = []
+
+    const subResults = await prisma.courseCatalog.findMany({
+      where: {
+        OR: matches.map((match) => ({
+          cNum: match.split(' ')[1],
+          cField: match.split(' ')[0],
+        })),
+      },
+      select: {
+        cField: true,
+        cNum: true,
+        course_name: true
+      },
+    })
+
+    for (let match of matches) {
+      let [cField, cNum] = match.split(' ');
+      const course_name = subResults.find(e => e.cField == cField && e.cNum == cNum)?.course_name
+      replace.push(course_name ? `Course(${cField} ${cNum}/${course_name})` : `${cField} ${cNum}`)
+    }
+
+    return replace
+  }
+  function subQuery(query: string, subResults: string[]): string {
+    function replaceSubstring(query: string, startPos: number, endPos: number, subResult: string): string {
+        return query.slice(0, startPos) + subResult + query.slice(endPos);
+    }
+
+    const pattern = /\b[A-Za-z]{4}\s*\d{3}\b/gi
+    let matches = Array.from(query.matchAll(pattern));
+
+    let matchPositions: Array<[string, [number, number]]> = [];
+    for (let match of matches) {
+        let startPos = match.index!;
+        let endPos = match.index! + match[0].length;
+        matchPositions.push([match[0], [startPos, endPos]]);
+    }
+
+    matchPositions.reverse();
+    subResults.reverse();
+
+    for (let i = 0; i < matchPositions.length; i++) {
+        let startPos = matchPositions[i][1][0];
+        let endPos = matchPositions[i][1][1];
+        query = replaceSubstring(query, startPos, endPos, subResults[i]);
+    }
+
+    return query;
+  }
+}
+
 const enoughContext = async (currentContext: string, userQuery: string): Promise<boolean> => {
 
   // console.log('currentContext:', currentContext)
@@ -100,7 +206,6 @@ const enoughContext = async (currentContext: string, userQuery: string): Promise
       If user asked about courses/classes, the context needs to have exact course names (e.g. COMP 140, HIST 200)
       to be considered sufficient.
       If it's sufficient, respond "yes" without explanation.
-      If the user prompt is about you i.e. the virtual assistant, respond "yes" without explanation.
     `}
 
     This is the user prompt:
@@ -129,7 +234,6 @@ const getRelaventDB = async (query: string): Promise<RelevantDBResult> => {
       4. Faculties
       You will be given a question.
       Your job is to give all the relevant databases that are necessary to answer the question.
-      If the question is about you i.e. the virtual assistant, no need to look into any database.
       Generally, more database and more information is better.
       Respond in this format without any explanation, only the name of the database:
       database_1
