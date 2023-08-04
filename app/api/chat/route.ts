@@ -56,7 +56,7 @@ const getBetterQuery = async (messages: ChatCompletionRequestMessage[]): Promise
 
   // Make sure query contains 'Computatinoal thinking' rather than 'COMP 140'
   sanitizedQuery = await substite(sanitizedQuery)
-  console.log("substitute:", sanitizedQuery)
+  // console.log("substitute:", sanitizedQuery)
 
   if (messages.length == 1)
       return sanitizedQuery
@@ -93,22 +93,22 @@ const getBetterQuery = async (messages: ChatCompletionRequestMessage[]): Promise
 const substite = async (query: string): Promise<string> => {
   const matches = findAllPatterns(query)
 
-  console.log("matches", matches)
+  // console.log("matches", matches)
 
   if (matches.length == 0)
     return query
 
   const formatMatches = format(matches)
 
-  console.log("formatMatches", formatMatches)
+  // console.log("formatMatches", formatMatches)
 
   const replace = await getSubs(formatMatches)
 
-  console.log("replace", replace)
+  // console.log("replace", replace)
 
   const final_query = subQuery(query, replace)
 
-  console.log("final_query", replace)
+  // console.log("final_query", replace)
 
   return final_query.trim()
   
