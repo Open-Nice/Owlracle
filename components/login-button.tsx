@@ -6,6 +6,7 @@ import { signIn } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { Button, type ButtonProps } from '@/components/ui/button'
 import { IconGitHub, IconSpinner } from '@/components/ui/icons'
+import GoogleIcon from '@mui/icons-material/Google';
 
 interface LoginButtonProps extends ButtonProps {
   showGithubIcon?: boolean
@@ -34,7 +35,10 @@ export function LoginButton({
       {isLoading ? (
         <IconSpinner className="mr-2 animate-spin" />
       ) : showGithubIcon ? (
-        <IconGitHub className="mr-2" />
+        <div className="mr-2">
+          <GoogleIcon fontSize='inherit' color='inherit'/>
+        </div>
+        
       ) : null}
       {text}
     </Button>

@@ -14,7 +14,7 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
     >
       Open Source LLM developed by{' '}
       <ExternalLink href="https://github.com/Open-Nice">Nice</ExternalLink>
-      Join us to connect Rice better
+      Join us to make Rice community better
     </p>
   )
 }

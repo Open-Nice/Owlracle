@@ -10,6 +10,7 @@ import { SidebarList } from '@/components/sidebar-list'
 import {
   IconGitHub,
   IconNextChat,
+  IconNice,
   IconSeparator,
   IconVercel
 } from '@/components/ui/icons'
@@ -37,8 +38,9 @@ export async function Header() {
           </Sidebar>
         ) : (
           <Link href="/" target="_blank" rel="nofollow">
-            <IconNextChat className="w-6 h-6 mr-2 dark:hidden" inverted />
-            <IconNextChat className="hidden w-6 h-6 mr-2 dark:block" />
+            {/* <IconNextChat className="w-6 h-6 mr-2 dark:hidden" inverted />
+            <IconNextChat className="hidden w-6 h-6 mr-2 dark:block" /> */}
+            <IconNice className='h-5'/>
           </Link>
         )}
         <div className="flex items-center">
