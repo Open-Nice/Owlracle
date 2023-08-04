@@ -33,10 +33,15 @@ export default function ClassCard( {catalog} ) {
                     <div className='text-2xl'>
                       {`${catalog.cField} ${catalog.cNum}`}
                     </div>
-                    <div className='flex items-center color-blue' style={{marginLeft: "5px"}}>
-                      <CheckCircleOutlineRoundedIcon color='inherit'/>
-                      <div> Open this semester </div>
-                    </div>
+                    {
+                      courseOpening?
+                      <div className='flex items-center color-blue' style={{marginLeft: "5px"}}>
+                        <CheckCircleOutlineRoundedIcon color='inherit'/>
+                        <div> Open this semester </div>
+                      </div>
+                      :
+                      <></>
+                    }
                   </div>
                 </Dialog.Title>
                 <Dialog.Description className="DialogDescription">
