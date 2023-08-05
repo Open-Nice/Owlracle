@@ -1,4 +1,4 @@
-<a href="https://www.owlracle.com/">
+<a href="https://www.owlracle.com/opengraph-image.png">
   <img alt="Owracle - LLM develped by Nice Team." src="https://www.owlracle.com/opengraph-image.png">
   <h1 align="center">Owlracle</h1>
 </a>
