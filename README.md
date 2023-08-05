@@ -1,5 +1,5 @@
 <a href="https://www.owlracle.com">
-  <img alt="Owracle - LLM develped by Nice Team." src="(/app/opengraph-image.png)">
+  <img alt="Owracle - LLM develped by Nice Team." src="(app/opengraph-image.png)">
   <h1 align="center">Owlracle</h1>
 </a>
 
