@@ -159,7 +159,7 @@ export default function Evaluation(props) {
                                             <CourseEvalComponent text={"Overall Rating:"} dic={score.overall_quality} />
                                             <CourseEvalComponent text={"Course Challenge:"} dic={score.challenge} />
                                             <CourseEvalComponent text={"Course Workload:"} dic={score.workload} />
-                                            <CourseEvalComponent text={"Why take this course:"} dic={score.why_take_this_course} />
+                                            {/* <CourseEvalComponent text={"Why take this course:"} dic={score.why_take_this_course} /> */}
                                             <CourseEvalComponent text={"Expected grade:"} dic={score.expected_grade} />
                                             <CourseEvalComponent text={"Expected P&F:"} dic={score.expectedPF} />
                                         </tbody>

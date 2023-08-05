@@ -1,7 +1,8 @@
 import { auth } from '@/auth'
 import { LoginButton } from '@/components/login-button'
+import { ExternalLink } from '@/components/external-link'
 import { redirect } from 'next/navigation'
-import LoginImage from '@/components/loginImage'
+import SigninAnimation from "@/components/signin-animation"
 
 export default async function SignInPage() {
   const session = await auth()
@@ -11,9 +12,12 @@ export default async function SignInPage() {
   }
   return (
     <div className="flex flex-col h-[calc(100vh-theme(spacing.16))] items-center justify-center py-10">
-      <div className='text-3xl pb-3'>Welcome to Owlracle.</div>
-      <div className='pb-7'>
-        <LoginImage/>
+      <SigninAnimation/>
+      <div className='text-4xl pt-3 pb-2'>Welcome to Owlracle.</div>
+      <div className='pb-4' style={{opacity: 0.5}}>Open Source LLM developed by {' '}
+      <ExternalLink href="https://github.com/Open-Nice">Nice</ExternalLink></div>
+      <div className='text-xl text-center pb-4' style={{opacity: 0.8}}>
+        Unlock the full potential of your Rice experience.
       </div>
       <LoginButton />
     </div>

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     default: 'Owlracle',
     template: `%s - Owlracle`
   },
-  description: 'My purpose is to connect Rice better',
+  description: 'Connect with Rice resources effortlessly and excel in your academic journey like never before.',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },
     { media: '(prefers-color-scheme: dark)', color: 'black' }

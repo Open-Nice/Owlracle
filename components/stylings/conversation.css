@@ -11,3 +11,155 @@
     padding-top: 5px;
     opacity: 0.8;
 }
+
+.signin-ball-wrapper{
+    position: relative;
+    display: flex;
+    height: 50px;
+    margin-bottom: 15px;
+}
+
+.signin-ball{
+    width: 50px;
+    height: 50px;
+    padding: 25px;
+    border-radius: 30px;
+}
+
+.signin-leftball{
+    position: absolute;
+    top: 0;
+    right: -6px;
+    opacity: 1;
+    background-color: currentColor;
+    animation: left-to-right 1.8s ease-in-out;
+    /* background-color: currentColor; */
+}
+
+.signin-rightball{
+    position: absolute;
+    top: 0;
+    left: -6px;
+    opacity: 1;
+    background-color: currentColor;
+    animation: right-to-left 1.8s ease-in-out;
+}
+
+.signin-intersection-wrapper{
+    position: absolute;
+    top: 0;
+    right: -6px;
+    background-color: transparent;
+    overflow: hidden;
+}
+
+.signin-intersection{
+    position: absolute;
+    top: 0;
+    right: -38px;
+    animation: middle-appear 1.8s ease-in-out
+}
+
+.eyes{
+    width: 9px;
+    height: 9px;
+    padding: 5px;
+    border-radius: 9px;
+    /* overflow: hidden; */
+    position: absolute;
+    top: 19px;
+    animation: middle-appear 1.8s ease-in-out
+}
+
+.eyes::after{
+    content: "";
+    width: 10px;
+    height: 10px;
+    padding: 5px;
+    background-color: currentColor;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: blink 5s linear infinite;
+}
+
+.eye-left{
+    right: -25px;
+}
+
+.eye-right{
+    left: -25px;
+}
+
+@keyframes left-to-right{
+    0%{
+        opacity: 0;
+        transform: translateX(-60px);
+        background-color: #0eb7ff;
+    }
+    30%{
+        opacity: 0.2;
+        transform: translateX(-60px);
+        background-color: #0eb7ff;
+    }
+    70%{
+        opacity: 0.6;
+        transform: translateX(0px);
+        background-color: #0eb7ff;
+    }
+    100%{
+        opacity: 1;
+        background-color: currentColor;
+    }
+    
+}
+
+@keyframes right-to-left{
+    0%{
+        opacity: 0;
+        transform: translateX(60px);
+        background-color: #d20bff;
+    }
+    30%{
+        opacity: 0.2;
+        transform: translateX(60px);
+        background-color: #d20bff;
+    }
+    70%{
+        opacity: 0.6;
+        transform: translateX(0px);
+        background-color: #d20bff;
+    }
+    100%{
+        opacity: 1;
+        background-color: currentColor;
+    }
+}
+
+@keyframes middle-appear {
+    0%, 70%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+@keyframes blink {
+    0%, 70%{
+        transform: translateY(-12px);
+        opacity: 0;
+    } 85%{
+        transform: translateY(-12px);
+        opacity: 1;
+    }
+    87%{
+        transform: translateY(-0px);
+    }89%, 95%{
+        transform: translateY(-12px);
+    }97%{
+            transform: translateY(-0px);
+    }99%, 100%{
+            transform: translateY(-12px);
+    }
+}
