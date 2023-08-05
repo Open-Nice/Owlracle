@@ -1,6 +1,6 @@
 <a href="https://www.owlracle.com">
   <p align="center">
-    <img alt="Owracle - LLM develped by Nice Team." src="./app/opengraph-image.png">
+    <img alt="Owracle - LLM develped by Nice Team." src="./components/images/owlracleLogo.png">
   </p>
   <h1 align="center">Owlracle</h1>
 </a>
@@ -70,6 +70,6 @@ Your app template should now be running on [localhost:3000](http://localhost:300
 This library is created by [NICE](https://github.com/Open-Nice) team members, with contributions from:
 
 - Peter Cao ([Ye Cao](https://www.linkedin.com/in/ye-peter-cao-98870920b/))
-- Alexia Huang ([Yuening Huang](www.linkedin.com/in/alexia-yuening-huang))
+- Alexia Huang ([Yuening Huang](https://www.linkedin.com/in/alexia-yuening-huang))
 - Ningzhi Xu ([Ningzhi Xu](https://www.linkedin.com/in/ningzhi-xu-0914/))
 - Jinyu Pei ([Jinyu Pei](https://www.linkedin.com/in/jinyu-pei-b92b80249/))
