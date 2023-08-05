@@ -67,8 +67,9 @@ Your app template should now be running on [localhost:3000](http://localhost:300
 
 ## Authors
 
-This library is created by [Vercel](https://vercel.com) and [Next.js](https://nextjs.org) team members, with contributions from:
+This library is created by [NICE](https://github.com/Open-Nice) team members, with contributions from:
 
-- Jared Palmer ([@jaredpalmer](https://twitter.com/jaredpalmer)) - [Vercel](https://vercel.com)
-- Shu Ding ([@shuding\_](https://twitter.com/shuding_)) - [Vercel](https://vercel.com)
-- shadcn ([@shadcn](https://twitter.com/shadcn)) - [Contractor](https://shadcn.com)
+- Peter Cao ([Ye Cao](https://www.linkedin.com/in/ye-peter-cao-98870920b/))
+- Alexia Huang ([Yuening Huang](www.linkedin.com/in/alexia-yuening-huang))
+- Ningzhi Xu ([Ningzhi Xu](https://www.linkedin.com/in/ningzhi-xu-0914/))
+- Jinyu Pei ([Jinyu Pei](https://www.linkedin.com/in/jinyu-pei-b92b80249/))
