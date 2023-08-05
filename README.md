@@ -1,5 +1,7 @@
 <a href="https://www.owlracle.com">
-  <img alt="Owracle - LLM develped by Nice Team." src="https://github.com/Mr-Ye-Cao/Owlracle/blob/alexia/app/opengraph-image.png?raw=true">
+  <p align="center">
+    <img alt="Owracle - LLM develped by Nice Team." src="https://github.com/Mr-Ye-Cao/Owlracle/blob/alexia/app/opengraph-image.png?raw=true">
+  </p>
   <h1 align="center">Owlracle</h1>
 </a>
 
