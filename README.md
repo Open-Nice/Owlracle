@@ -1,6 +1,6 @@
 <a href="https://www.owlracle.com">
   <img alt="Next.js 13 and app template Router-ready AI chatbot." src="https://www.owlracle.com/opengraph-image.png">
-  <h1 align="center">Next.js AI Chatbot</h1>
+  <h1 align="center">Owlracle</h1>
 </a>
 
 <p align="center">
