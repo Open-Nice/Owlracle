@@ -27,9 +27,9 @@ The architecture is 3 parts: llm, vectorDB, and server manager. The server manag
 
 ## Features
 - [Prompt Engineering](https://supabase.com/docs/guides/ai): codifies how LLM reasons about users question given provided contexts from VectorDB.
-- [Supabase VectorDB](https://supabase.com/docs/guides/ai): augmented information retrieval for LLM.
-- [Modal](https://modal.com/home) manages(create, update, delete) VectorDB information.
-- [Perplexity AI](https://www.perplexity.ai/) does due diligence to teach vectorDB new information.
+- [Supabase VectorDB](https://supabase.com/docs/guides/ai): augments information retrieval for LLM.
+- [Modal](https://modal.com/home): manages(create, update, delete) VectorDB information.
+- [Perplexity AI](https://www.perplexity.ai/): does due diligence every night to teach vectorDB new information.
 
 ## LLM
 This LLM is built using `gpt-3.5-turbo`. We are working on migrating to fine-tuned Llama-v2. Join us [here](https://github.com/Open-Nice/Owlracle-llama2.c).
