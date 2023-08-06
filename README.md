@@ -10,6 +10,7 @@
 </p>
 
 <p align="center">
+  <a href="#documentation"><strong>Documentation</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
   <a href="#model-providers"><strong>Model Providers</strong></a> ·
   <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
@@ -17,6 +18,9 @@
   <a href="#authors"><strong>Authors</strong></a>
 </p>
 <br/>
+
+## Documentation
+Check our latest documentation [here](https://google.com).
 
 ## Features
 
