@@ -26,10 +26,10 @@ Check our latest documentation [here](https://owlracle-documentation-deploy.verc
 The architecture is 3 parts: llm, vectorDB, and server manager. The server manager constantly listens to different sources of websites (e.g. including rice Servery menu, owlnest events, esther courses) and updates the vectorDB. This is one way to update the vectorDB knowledge. Another way is through teaching: Rice students can upload files/urls to teach DB new knowledge. Alternatively, the Perplexity AI will teach the vectorDB: every evening the server manager will get all of the conversation histories and determine which one weren't answered perfectly, then we will use Perplexity AI to train this specific question and uploads the question answer pair to vectorDB. This way when some other students asked similar question next time, the retrieved knowledge would be better.
 
 ## Features
-- [Prompt Engineering](https://supabase.com/docs/guides/ai): codifies how LLM reasons about users question given provided contexts from VectorDB.
-- [Supabase VectorDB](https://supabase.com/docs/guides/ai): augments information retrieval for LLM.
-- [Modal](https://modal.com/home): manages(create, update, delete) VectorDB information.
-- [Perplexity AI](https://www.perplexity.ai/): does due diligence every night to teach vectorDB new information.
+- [Prompt Engineering](https://supabase.com/docs/guides/ai){:target="_blank"}: codifies how LLM reasons about users question given provided contexts from VectorDB.
+- [Supabase VectorDB](https://supabase.com/docs/guides/ai){:target="_blank"}: augments information retrieval for LLM.
+- [Modal](https://modal.com/home){:target="_blank"}: manages(create, update, delete) VectorDB information.
+- [Perplexity AI](https://www.perplexity.ai/){:target="_blank"}: does due diligence every night to teach vectorDB new information.
 
 ## LLM
 This LLM is built using `gpt-3.5-turbo`. We are working on migrating to fine-tuned Llama-v2. Join us [here](https://github.com/Open-Nice/Owlracle-llama2.c).
