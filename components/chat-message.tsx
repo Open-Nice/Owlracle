@@ -13,7 +13,6 @@ import { IconUser, IconNice, IconNiceColor } from '@/components/ui/icons'
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import { ChatMessageActions } from '@/components/chat-message-actions'
-import RelatedQuestionArea from "./related-questions"
 import ClassCard from "@/components/classcard"
 import '@/components/stylings/general.css'
 import '@/components/stylings/classCard.css'
@@ -23,10 +22,9 @@ import type { CourseCatalog } from '@prisma/client'
 export interface ChatMessageProps {
   isComplete: Boolean
   message: Message,
-  setInput: (input: string) => void
 }
 
-export function ChatMessage({ isComplete, message, setInput, ...props}: ChatMessageProps) {
+export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) {
   const { setTheme, theme } = useTheme()
   
   const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
@@ -159,7 +157,6 @@ export function ChatMessage({ isComplete, message, setInput, ...props}: ChatMess
               <span className='tooltiptext tooltip-top tooltip-thumb shadow border bg-popover text-popover-foreground'>Dislike the answer</span>
             </div>
           </div>
-          <RelatedQuestionArea setInput = {setInput}/>
         </div>
         :
         <></>
