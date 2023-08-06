@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
-import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
+import CardGiftcardRoundedIcon from '@mui/icons-material/CardGiftcardRounded';
 import { cn } from '@/lib/utils'
 import { auth } from '@/auth'
 import { clearChats } from '@/app/actions'
@@ -12,6 +12,7 @@ import {
   IconNextChat,
   IconNiceWithText,
   IconSeparator,
+  IconGift,
   IconVercel
 } from '@/components/ui/icons'
 import { SidebarFooter } from '@/components/sidebar-footer'
@@ -60,8 +61,7 @@ export async function Header() {
             rel="noopener noreferrer"
             className={cn(buttonVariants({ variant: 'outline' }))}
           >
-              <PaidRoundedIcon color="inherit"/>
-              <span className="hidden ml-2 md:flex">Donate</span>
+              <IconGift className='h-5'/>
               <div className='tooltiptext tooltip-header shadow border bg-popover text-popover-foreground'>
                 Your support will directly cover the cost of running LLM, ensuring an enhanced Owlracle experience for all!
               </div>
