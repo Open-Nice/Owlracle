@@ -20,7 +20,7 @@
 <br/>
 
 ## Documentation
-Check our latest documentation [here](https://owlracle-documentation-deploy.vercel.app/).
+Check our latest documentation [here](https://docs.owlracle.com/).
 
 ## Architecture
 The architecture is 3 parts: llm, vectorDB, and server manager. The server manager constantly listens to different sources of websites (e.g. including rice Servery menu, owlnest events, esther courses) and updates the vectorDB. This is one way to update the vectorDB knowledge. Another way is through teaching: Rice students can upload files/urls to teach DB new knowledge. Alternatively, the Perplexity AI will teach the vectorDB: every evening the server manager will get all of the conversation histories and determine which one weren't answered perfectly, then we will use Perplexity AI to train this specific question and uploads the question answer pair to vectorDB. This way when some other students asked similar question next time, the retrieved knowledge would be better.
