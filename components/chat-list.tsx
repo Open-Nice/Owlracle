@@ -5,10 +5,11 @@ import { ChatMessage } from '@/components/chat-message'
 
 export interface ChatList {
   isLoading: Boolean
-  messages: Message[]
+  messages: Message[],
+  setInput: (input: string) => void
 }
 
-export function ChatList({ isLoading, messages}: ChatList) {
+export function ChatList({ isLoading, messages, setInput }: ChatList) {
   if (!messages.length) {
     return null
   }
@@ -17,7 +18,7 @@ export function ChatList({ isLoading, messages}: ChatList) {
     <div className="relative mx-auto max-w-2xl px-4">
       {messages.map((message, index) => (
         <div key={index}>
-          <ChatMessage isComplete = {! (isLoading && index === messages.length - 1)} message={message}/>
+          <ChatMessage isComplete = {! (isLoading && index === messages.length - 1)} message={message} setInput = {setInput}/>
           {index < messages.length - 1 && (
             <Separator className="my-4 md:my-8" />
           )}
