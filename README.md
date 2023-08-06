@@ -6,44 +6,35 @@
 </a>
 
 <p align="center">
-  An open-source large language model (LLM) chatbot app built with Next.js, the Vercel AI SDK, OpenAI, and Vercel KV.
+  An open-source large language model (LLM) chatbot app built with Next.js, Vercel KV, Supabase, and Modal.
 </p>
 
 <p align="center">
   <a href="#documentation"><strong>Documentation</strong></a> ·
+  <a href="#Architecture"><strong>Architecture</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
+  <a href="#model-providers"><strong>LLM</strong></a> ·
   <a href="#running-locally"><strong>Running locally</strong></a> ·
   <a href="#authors"><strong>Authors</strong></a>
 </p>
 <br/>
 
 ## Documentation
-Check our latest documentation [here](https://google.com).
+Check our latest documentation [here](https://owlracle-documentation-deploy.vercel.app/).
+
+## Architecture
+The architecture is 3 parts: llm, vectorDB, and server manager. The server manager constantly listens to different sources of websites (e.g. including rice Servery menu, owlnest events, esther courses) and updates the vectorDB. This is one way to update the vectorDB knowledge. Another way is through teaching: Rice students can upload files/urls to teach DB new knowledge. Alternatively, the Perplexity AI will teach the vectorDB: every evening the server manager will get all of the conversation histories and determine which one weren't answered perfectly, then we will use Perplexity AI to train this specific question and uploads the question answer pair to vectorDB. This way when some other students asked similar question next time, the retrieved knowledge would be better.
 
 ## Features
+<ul>
+  <li><a href="https://github.com/Mr-Ye-Cao/Owlracle/blob/yc/app/api/chat/route.ts" target="_blank">Prompt Engineering</a>: codifies how LLM reasons about users question given provided contexts from VectorDB.</li>
+  <li><a href="https://supabase.com/docs/guides/ai" target="_blank">Supabase VectorDB</a>: augments information retrieval for LLM.</li>
+  <li><a href="https://modal.com/home" target="_blank">Modal</a>: manages(create, update, delete) VectorDB information.</li>
+  <li><a href="https://www.perplexity.ai/" target="_blank">Perplexity AI</a>: does due diligence every night to teach vectorDB new information.</li>
+</ul>
 
-- [Next.js](https://nextjs.org) App Router
-- React Server Components (RSCs), Suspense, and Server Actions
-- [Vercel AI SDK](https://sdk.vercel.ai/docs) for streaming chat UI
-- Support for OpenAI (default), Anthropic, Hugging Face, or custom AI chat models and/or LangChain
-- Edge runtime-ready
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - [Radix UI](https://radix-ui.com) for headless component primitives
-  - Icons from [Phosphor Icons](https://phosphoricons.com)
-- Chat History, rate limiting, and session storage with [Vercel KV](https://vercel.com/storage/kv)
-- [NextAuth.js](https://github.com/nextauthjs/next-auth) for authentication
-
-## Model Providers
-This LLM is built based on [Next.js AI Chatbot](https://github.com/vercel-labs/ai-chatbot) and OpenAI `gpt-4.0`.
-
-## Deploy Your Own
-
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-title=Next.js+Chat&demo-description=A+full-featured%2C+hackable+Next.js+AI+chatbot+built+by+Vercel+Labs&demo-url=https%3A%2F%2Fchat.vercel.ai%2F&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4aVPvWuTmBvzM5cEdRdqeW%2F4234f9baf160f68ffb385a43c3527645%2FCleanShot_2023-06-16_at_17.09.21.png&project-name=Next.js+Chat&repository-name=nextjs-chat&repository-url=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fai-chatbot&from=templates&skippable-integrations=1&env=OPENAI_API_KEY%2CAUTH_GITHUB_ID%2CAUTH_GITHUB_SECRET%2CAUTH_SECRET&envDescription=How+to+get+these+env+vars&envLink=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fai-chatbot%2Fblob%2Fmain%2F.env.example&teamCreateStatus=hidden&stores=[{"type":"kv"}])
+## LLM
+This LLM is built using `gpt-3.5-turbo`. We are working on migrating to fine-tuned Llama-v2. Join us [here](https://github.com/Open-Nice/Owlracle-llama2.c).
 
 ## Creating a KV Database Instance
 
