@@ -59,8 +59,10 @@ export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaPr
                                 className="h-auto p-0 text-base cursor-pt"
                                 onClick={() => {setInput ? setInput(question.message) : ()=>{}} }
                             >
-                                <IconArrowRight className="mr-2 text-muted-foreground" />
-                                {question.heading}
+                                <div className='flex items-start justify-start'>
+                                    <IconArrowRight className="mr-2 text-muted-foreground w-5 mt-1" />
+                                    {question.heading}
+                                </div>
                             </Button>
                         </div>
                         
