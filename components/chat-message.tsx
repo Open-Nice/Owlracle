@@ -22,10 +22,11 @@ import type { CourseCatalog } from '@prisma/client'
 
 export interface ChatMessageProps {
   isComplete: Boolean
-  message: Message
+  message: Message,
+  setInput: (input: string) => void
 }
 
-export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) {
+export function ChatMessage({ isComplete, message, setInput, ...props}: ChatMessageProps) {
   const { setTheme, theme } = useTheme()
   
   const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
@@ -158,7 +159,7 @@ export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) 
               <span className='tooltiptext tooltip-top tooltip-thumb shadow border bg-popover text-popover-foreground'>Dislike the answer</span>
             </div>
           </div>
-          <RelatedQuestionArea/>
+          <RelatedQuestionArea setInput = {setInput}/>
         </div>
         :
         <></>
