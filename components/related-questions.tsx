@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
 import { UseChatHelpers } from 'ai/react'
 import { Button } from '@/components/ui/button'
 import { IconArrowRight } from '@/components/ui/icons'
@@ -6,28 +8,48 @@ import "@/components/stylings/general.css"
 import "@/components/stylings/conversation.css"
 
 interface RelatedQuestionAreaProps {
-    setInput: (input: string) => void
+    setInput: ((input: string) => void ) | null
+}
+
+type Question = {
+    heading : string,
+    message : string
 }
 
 export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaProps) {
-    const questions = [
-        {
-            heading: 'Looking for classes? 📚',
-            message: `Give me some philosophy of mind class?`
-        },
-        {
-            heading: 'Want to connect with faculties? 🤠',
-            message: `Find me some professors in machine leanring?`
-        },
-        {
-            heading: "Find interesting stuff to do 🎮",
-            message: `What are some interesting activities recently?`
-        },
-    ]
+  const [questions, setQ] = useState<Question[]>([]);
+    
+    useEffect(() => {
+        fetch('/api/recommend', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },      
+          })        
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('data', data)
+
+            const { questions } = data
+            let q : Question[] = []
+
+            for(let question of questions) {
+                question = question.substring('question: '.length, question.indexOf('answer:')).trim()
+
+                q.push({
+                    heading: question,
+                    message: question,
+                })
+            }
+
+            setQ(q)
+          })
+          .catch((error) => console.error('Error fetching data:', error))
+    }, [])
 
     return (
         <div className='related-question-area'>
-            <b>Related questions:</b>
+            <b>Recommended questions:</b>
             {
                 questions.map((question, idx)=>{
                     return(
@@ -35,7 +57,7 @@ export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaPr
                             <Button
                                 variant="link"
                                 className="h-auto p-0 text-base cursor-pt"
-                                onClick={() => setInput(question.message)}
+                                onClick={() => {setInput ? setInput(question.message) : ()=>{}} }
                             >
                                 <IconArrowRight className="mr-2 text-muted-foreground" />
                                 {question.heading}

@@ -45,7 +45,7 @@ export default async function SharePage({ params }: SharePageProps) {
             </div>
           </div>
         </div>
-        <ChatList isLoading={false} messages={chat.messages} setInput = {()=>{}} />
+        <ChatList isLoading={false} messages={chat.messages} setInput = {null} />
       </div>
       <FooterText className="py-8" />
     </>
