@@ -56,13 +56,13 @@ export default function ClassCardInfo( { catalog }) {
             {courseInfo.description ? <div><b>Course Description:</b> {courseInfo.description}</div> : <></>}
         </div>
 
-        <div className='color-mid-purple' style={{fontSize: "1.25em"}}>Evaluation</div>
+        <div className='color-mid-purple' style={{fontSize: "1.25em", marginTop: "15px"}}>Evaluation</div>
         {
           error || !data || ! (data.cField == catalog.cField && data.cNum == catalog.cNum)?
           // evaluation is still loading
           <div className="spinner-border text-secondary" role="status">
               {/* <span className="visually-hidden">Loading...</span> */}
-              <CircularProgress color='inherit'/>
+              <CircularProgress color='inherit' size={20}/>
           </div>
           :
           // Evaluation here
