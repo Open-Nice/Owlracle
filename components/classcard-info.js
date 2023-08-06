@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import useSWR from 'swr'
 import Evaluation from "./classcard-evaluation"
+import CircularProgress from '@mui/material/CircularProgress';
 import "@/components/stylings/general.css"
 import '@/components/stylings/classCard.css'
 
@@ -60,7 +61,8 @@ export default function ClassCardInfo( { catalog }) {
           error || !data || ! (data.cField == catalog.cField && data.cNum == catalog.cNum)?
           // evaluation is still loading
           <div className="spinner-border text-secondary" role="status">
-              <span className="visually-hidden">Loading...</span>
+              {/* <span className="visually-hidden">Loading...</span> */}
+              <CircularProgress color='inherit'/>
           </div>
           :
           // Evaluation here

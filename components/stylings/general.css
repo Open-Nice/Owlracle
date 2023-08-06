@@ -1,6 +1,3 @@
-.text-black{
-    color: #000;
-}
 
 
 .full-width{
@@ -29,6 +26,14 @@
 
 .fit-height{
     height: fit-content !important;
+}
+
+.text-black{
+    color: #000;
+}
+
+.text-white{
+    content: white;
 }
 
 .color-light-grey{

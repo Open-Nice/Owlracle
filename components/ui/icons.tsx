@@ -57,6 +57,15 @@ function IconNice({ className, ...props }: React.ComponentProps<'svg'>) {
   )
 }
 
+function IconOwlracle({ className, ...props }: React.ComponentProps<'svg'>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 251" {...props} className={className}>
+      <path fill='currentColor' d="M220,42.92C197,16.62,163.19,0,125.5,0,56.19,0,0,56.19,0,125.5s56.19,125.5,125.5,125.5c37.69,0,71.5-16.62,94.5-42.92-19.3-22.07-31-50.96-31-82.58s11.7-60.51,31-82.58Zm-101.5,104.08c-13.25,0-24-11.42-24-25.5s10.75-25.5,24-25.5,24,11.42,24,25.5-10.75,25.5-24,25.5Z"/>
+      <path fill='currentColor' d="M314.5,0c-37.69,0-71.5,16.62-94.5,42.92,19.3,22.07,31,50.96,31,82.58s-11.7,60.51-31,82.58c23,26.3,56.81,42.92,94.5,42.92,69.31,0,125.5-56.19,125.5-125.5S383.81,0,314.5,0Zm4,147c-13.25,0-24-11.42-24-25.5s10.75-25.5,24-25.5,24,11.42,24,25.5-10.75,25.5-24,25.5Z"/>
+    </svg>
+  )
+}
+
 function IconSendMsg({ className, ...props }: React.ComponentProps<'svg'>) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -548,6 +557,7 @@ export {
   IconNice,
   IconNiceColor,
   IconNiceWithText,
+  IconOwlracle,
   IconSendMsg,
   IconUpload,
   IconEdit,
