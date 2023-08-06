@@ -49,7 +49,7 @@ export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaPr
 
     return (
         <div className='related-question-area'>
-            <b>Related questions:</b>
+            <b>Recommended questions:</b>
             {
                 questions.map((question, idx)=>{
                     return(
