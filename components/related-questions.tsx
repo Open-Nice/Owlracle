@@ -60,7 +60,10 @@ export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaPr
                                 onClick={() => {setInput ? setInput(question.message) : ()=>{}} }
                             >
                                 <div className='flex items-start justify-start'>
-                                    <IconArrowRight className="mr-2 text-muted-foreground w-5 mt-1" />
+                                    <div style={{width: "10px", marginTop: "4px", marginRight: "10px"}}>
+                                        <IconArrowRight className="text-muted-foreground" />
+                                    </div>
+                                    
                                     {question.heading}
                                 </div>
                             </Button>

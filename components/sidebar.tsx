@@ -34,7 +34,7 @@ export function Sidebar({ children }: SidebarProps) {
         <SheetHeader className="p-4">
           <SheetTitle className="text-sm">
             <div className='flex items-center my-3 mb-5' style={{fontWeight: "bold"}}>
-                <IconOwlracle className='h-9'/>
+                <IconOwlracle className='h-8'/>
                 <div style={{marginLeft: "5px", fontSize: "16pt"}}>Owlracle</div>
             </div>
             <div className='flex justify-between items-center'> 
