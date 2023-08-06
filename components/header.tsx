@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
-
+import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import { cn } from '@/lib/utils'
 import { auth } from '@/auth'
 import { clearChats } from '@/app/actions'
@@ -19,6 +19,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { ClearHistory } from '@/components/clear-history'
 import { UserMenu } from '@/components/user-menu'
 import { LoginButton } from '@/components/login-button'
+import "@/components/stylings/general.css"
 
 export async function Header() {
   const session = await auth()
@@ -52,15 +53,35 @@ export async function Header() {
         </div>
       </div>
       <div className="flex items-center justify-end space-x-2">
-        <a
-          target="_blank"
-          href="https://github.com/Open-Nice"
-          rel="noopener noreferrer"
-          className={cn(buttonVariants({ variant: 'outline' }))}
-        >
-          <IconGitHub />
-          <span className="hidden ml-2 md:flex">Contribute</span>
-        </a>
+        <div className='tooltip'>
+          <a
+            target="_blank"
+            href="https://buy.stripe.com/9AQ2areKfgPl3sI000"
+            rel="noopener noreferrer"
+            className={cn(buttonVariants({ variant: 'outline' }))}
+          >
+              <PaidRoundedIcon color="inherit"/>
+              <span className="hidden ml-2 md:flex">Donate</span>
+              <div className='tooltiptext tooltip-header shadow border bg-popover text-popover-foreground'>
+                Your support will directly cover the cost of running LLM, ensuring an enhanced Owlracle experience for all!
+              </div>
+            
+          </a>
+        </div>
+        <div className='tooltip'>
+          <a
+            target="_blank"
+            href="https://github.com/Open-Nice"
+            rel="noopener noreferrer"
+            className={cn(buttonVariants({ variant: 'outline' }))}
+          >
+            <IconGitHub />
+            <span className="hidden ml-2 md:flex">Contribute</span>
+            <div className='tooltiptext tooltip-header shadow border bg-popover text-popover-foreground'>
+              The future is yours. Explore our open-source GitHub.
+            </div>
+          </a>
+        </div>
       </div>
     </header>
   )
