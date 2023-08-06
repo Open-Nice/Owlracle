@@ -1,13 +1,16 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 13 and app template Router-ready AI chatbot." src="https://chat.vercel.ai/opengraph-image.png">
-  <h1 align="center">Next.js AI Chatbot</h1>
+<a href="https://www.owlracle.com">
+  <p align="center">
+    <img alt="Owracle - LLM develped by Nice Team." src="./components/images/owlracleLogo.png" width="163" height="89">
+  </p>
+  <h1 align="center">Owlracle</h1>
 </a>
 
 <p align="center">
-  An open-source AI chatbot app template built with Next.js, the Vercel AI SDK, OpenAI, and Vercel KV.
+  An open-source large language model (LLM) chatbot app built with Next.js, the Vercel AI SDK, OpenAI, and Vercel KV.
 </p>
 
 <p align="center">
+  <a href="#documentation"><strong>Documentation</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
   <a href="#model-providers"><strong>Model Providers</strong></a> ·
   <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
@@ -15,6 +18,9 @@
   <a href="#authors"><strong>Authors</strong></a>
 </p>
 <br/>
+
+## Documentation
+Check our latest documentation [here](https://google.com).
 
 ## Features
 
@@ -31,8 +37,7 @@
 - [NextAuth.js](https://github.com/nextauthjs/next-auth) for authentication
 
 ## Model Providers
-
-This template ships with OpenAI `gpt-3.5-turbo` as the default. However, thanks to the [Vercel AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [Anthropic](https://anthropic.com), [Hugging Face](https://huggingface.co), or using [LangChain](https://js.langchain.com) with just a few lines of code.
+This LLM is built based on [Next.js AI Chatbot](https://github.com/vercel-labs/ai-chatbot) and OpenAI `gpt-4.0`.
 
 ## Deploy Your Own
 
@@ -66,8 +71,9 @@ Your app template should now be running on [localhost:3000](http://localhost:300
 
 ## Authors
 
-This library is created by [Vercel](https://vercel.com) and [Next.js](https://nextjs.org) team members, with contributions from:
+This library is created by [NICE](https://github.com/Open-Nice) team members, with contributions from:
 
-- Jared Palmer ([@jaredpalmer](https://twitter.com/jaredpalmer)) - [Vercel](https://vercel.com)
-- Shu Ding ([@shuding\_](https://twitter.com/shuding_)) - [Vercel](https://vercel.com)
-- shadcn ([@shadcn](https://twitter.com/shadcn)) - [Contractor](https://shadcn.com)
+- Peter Cao ([Ye Cao](https://www.linkedin.com/in/ye-peter-cao-98870920b/))
+- Alexia Huang ([Yuening Huang](https://www.linkedin.com/in/alexia-yuening-huang))
+- Ningzhi Xu ([Ningzhi Xu](https://www.linkedin.com/in/ningzhi-xu-0914/))
+- Jinyu Pei ([Jinyu Pei](https://www.linkedin.com/in/jinyu-pei-b92b80249/))
