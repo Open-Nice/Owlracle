@@ -6,7 +6,7 @@ import "@/components/stylings/general.css"
 import "@/components/stylings/conversation.css"
 
 interface RelatedQuestionAreaProps {
-    setInput: (input: string) => void
+    setInput: ((input: string) => void ) | null
 }
 
 export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaProps) {
@@ -35,7 +35,7 @@ export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaPr
                             <Button
                                 variant="link"
                                 className="h-auto p-0 text-base cursor-pt"
-                                onClick={() => setInput(question.message)}
+                                onClick={() => {setInput ? setInput(question.message) : ()=>{}} }
                             >
                                 <IconArrowRight className="mr-2 text-muted-foreground" />
                                 {question.heading}

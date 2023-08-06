@@ -23,7 +23,7 @@ import type { CourseCatalog } from '@prisma/client'
 export interface ChatMessageProps {
   isComplete: Boolean
   message: Message,
-  setInput: (input: string) => void
+  setInput: ((input: string) => void ) | null
 }
 
 export function ChatMessage({ isComplete, message, setInput, ...props}: ChatMessageProps) {

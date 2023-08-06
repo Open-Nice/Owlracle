@@ -6,7 +6,7 @@ import { ChatMessage } from '@/components/chat-message'
 export interface ChatList {
   isLoading: Boolean
   messages: Message[],
-  setInput: (input: string) => void
+  setInput: ((input: string) => void ) | null
 }
 
 export function ChatList({ isLoading, messages, setInput }: ChatList) {
