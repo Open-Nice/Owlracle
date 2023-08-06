@@ -1,6 +1,6 @@
 <a href="https://www.owlracle.com">
   <p align="center">
-    <img alt="Owracle - LLM develped by Nice Team." src="./components/images/owlracleLogo.png" width="50%" height="50%">
+    <img alt="Owracle - LLM develped by Nice Team." src="./components/images/owlracleLogo.png" width="244" height="134">
   </p>
   <h1 align="center">Owlracle</h1>
 </a>
