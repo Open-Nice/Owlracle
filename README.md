@@ -27,7 +27,7 @@ The architecture is 3 parts: llm, vectorDB, and server manager. The server manag
 
 ## Features
 <ul>
-  <li><a href="https://supabase.com/docs/guides/ai" target="_blank">Prompt Engineering</a>: codifies how LLM reasons about users question given provided contexts from VectorDB.</li>
+  <li><a href="https://github.com/Mr-Ye-Cao/Owlracle/blob/yc/app/api/chat/route.ts" target="_blank">Prompt Engineering</a>: codifies how LLM reasons about users question given provided contexts from VectorDB.</li>
   <li><a href="https://supabase.com/docs/guides/ai" target="_blank">Supabase VectorDB</a>: augments information retrieval for LLM.</li>
   <li><a href="https://modal.com/home" target="_blank">Modal</a>: manages(create, update, delete) VectorDB information.</li>
   <li><a href="https://www.perplexity.ai/" target="_blank">Perplexity AI</a>: does due diligence every night to teach vectorDB new information.</li>
