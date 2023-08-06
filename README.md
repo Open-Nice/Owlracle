@@ -11,6 +11,7 @@
 
 <p align="center">
   <a href="#documentation"><strong>Documentation</strong></a> ·
+  <a href="#Architecture"><strong>Architecture</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
   <a href="#model-providers"><strong>LLM</strong></a> ·
   <a href="#running-locally"><strong>Running locally</strong></a> ·
@@ -21,22 +22,17 @@
 ## Documentation
 Check our latest documentation [here](https://owlracle-documentation-deploy.vercel.app/).
 
-## Features
+## Architecture
+The architecture is 3 parts: llm, vectorDB, and server manager. The server manager constantly listens to different sources of websites (e.g. including rice Servery menu, owlnest events, esther courses) and updates the vectorDB. This is one way to update the vectorDB knowledge. Another way is through teaching: Rice students can upload files/urls to teach DB new knowledge. Alternatively, the Perplexity AI will teach the vectorDB: every evening the server manager will get all of the conversation histories and determine which one weren't answered perfectly, then we will use Perplexity AI to train this specific question and uploads the question answer pair to vectorDB. This way when some other students asked similar question next time, the retrieved knowledge would be better.
 
-- [Next.js](https://nextjs.org) App Router
-- React Server Components (RSCs), Suspense, and Server Actions
-- [Vercel AI SDK](https://sdk.vercel.ai/docs) for streaming chat UI
-- Support for OpenAI (default), Anthropic, Hugging Face, or custom AI chat models and/or LangChain
-- Edge runtime-ready
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - [Radix UI](https://radix-ui.com) for headless component primitives
-  - Icons from [Phosphor Icons](https://phosphoricons.com)
-- Chat History, rate limiting, and session storage with [Vercel KV](https://vercel.com/storage/kv)
-- [NextAuth.js](https://github.com/nextauthjs/next-auth) for authentication
+## Features
+- [Prompt Engineering](https://supabase.com/docs/guides/ai): codifies how LLM reasons about users question given provided contexts from VectorDB.
+- [Supabase VectorDB](https://supabase.com/docs/guides/ai): augmented information retrieval for LLM.
+- [Modal](https://modal.com/home) manages(create, update, delete) VectorDB information.
+- [Perplexity AI](https://www.perplexity.ai/) does due diligence to teach vectorDB new information.
 
 ## LLM
-This LLM is built using `gpt-3.5-turbo`. We are working on migrating to fine-tuned Llama-v2: join us [here](https://github.com/Open-Nice/Owlracle-llama2.c).
+This LLM is built using `gpt-3.5-turbo`. We are working on migrating to fine-tuned Llama-v2. Join us [here](https://github.com/Open-Nice/Owlracle-llama2.c).
 
 ## Creating a KV Database Instance
 
