@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { type UseChatHelpers } from 'ai/react'
+import { toast } from 'react-hot-toast'
 import { Message } from 'ai'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
@@ -29,10 +29,13 @@ export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) 
   
   const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
 
-  // useEffect(() => {
-  //   if (courseCatalogs)
-  //     console.log(courseCatalogs)
-  // }, [courseCatalogs]);
+  function handleLike(){
+    toast.success("Thanks! Your encouraging words mean a lot to me.")
+  }
+
+  function handleDislike(){
+    toast.success("Thanks for the feedback, I will continue to self-learn to give a more satifatory answer.")
+  }
 
   useEffect(() => {
 
@@ -148,11 +151,11 @@ export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) 
         isComplete && message.role === 'assistant' ?
         <div>
           <div className='flex justify-end my-3'>
-            <div className='thumb-icon tooltip'>
+            <div className='thumb-icon tooltip' onClick={handleLike}>
               <ThumbUpOffAltIcon color='inherit'/>
               <span className='tooltiptext tooltip-top tooltip-thumb shadow border bg-popover text-popover-foreground'>Like the answer</span>
             </div>
-            <div className='thumb-icon tooltip'>
+            <div className='thumb-icon tooltip' onClick={handleDislike}>
               <ThumbDownOffAltIcon color='inherit'/>
               <span className='tooltiptext tooltip-top tooltip-thumb shadow border bg-popover text-popover-foreground'>Dislike the answer</span>
             </div>

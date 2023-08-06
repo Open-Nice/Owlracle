@@ -181,6 +181,10 @@ input {
 
 .upload-submit-btn{
     cursor: pointer;
+    width: 55px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
     background-color: #ca1cff;
     color: #ffffff;
     padding: 15px;

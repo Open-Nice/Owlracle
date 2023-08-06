@@ -1,7 +1,9 @@
 "use client"
 import React, {useState, useEffect} from 'react'
+import { toast } from 'react-hot-toast'
 import {useDropzone} from 'react-dropzone'
 import {CloudUploadOutlined} from '@mui/icons-material';
+import CircularProgress from '@mui/material/CircularProgress';
 import Chip from '@mui/material/Chip';
 import "../components/stylings/general.css"
 import "../components/stylings/upload.css"
@@ -9,6 +11,17 @@ import "../components/stylings/upload.css"
 export default function DropZoneAreaBtn () {
   const [files, setFiles] = useState([]);
   const [selectedFilesZone, setSelectedFilesZone] = useState(<></>)
+  const [submitBtn, setSubmitBtn] = useState("Submit")
+
+  function handleSubmit(){
+    setSubmitBtn(
+        <div className='text-white'><CircularProgress color='inherit' size={20}/></div>
+    )
+    setTimeout(()=>{
+        setSubmitBtn("Submit");
+        toast.success("Info successfully uploaded!")
+    }, 1000)
+  }
 
   const handleDelete = (deleteFile) => {
     setFiles(files.filter((file)=>{return (file.name !== deleteFile.name)}))
@@ -45,7 +58,7 @@ export default function DropZoneAreaBtn () {
   }, [files])
 
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <div className='upload-span'>Description *</div>
             <div style={{paddingRight: "20px"}}>
                 <input placeholder='Give me a one-sentence description of the info you upload!' className='upload-input' required/>
@@ -64,7 +77,7 @@ export default function DropZoneAreaBtn () {
             </div>
             {selectedFilesZone}
             <div className='d-flex justify-content-end full-width'>
-                <button className='upload-submit-btn shadow' type='submit'>Submit</button>
+                <button className='upload-submit-btn shadow' type='submit'>{submitBtn}</button>
             </div>
         </form>
         
