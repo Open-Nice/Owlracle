@@ -35,8 +35,6 @@ async function getQuestions() {
 
   const randomeQ = res['data']?.map(x => x['content']);
 
-  // console.log("randomeQ: ", randomeQ)
-
   return randomeQ;
 }
 
@@ -47,7 +45,7 @@ const openAiAPIcall = async (message: string): Promise<string> => {
 
   ${`
     Can you list 3 relevant questions regarding the message provided? 
-    Please make sure that the questions are diverse so that people WANT to ask them all.
+    Please make sure that the questions are diverse so that user WANT to ask them all.
   `}
 `;
 
@@ -58,7 +56,9 @@ const openAiAPIcall = async (message: string): Promise<string> => {
 
   // const contextMessage : ChatCompletionRequestMessage = {
   //   role: 'system',
-  //   content: prompt,
+  //   content: `
+  //   Please respond the question in a list separated by '|'
+  //   `
   // }
 
   const response = await openai.createChatCompletion({
@@ -86,16 +86,15 @@ export async function POST(req: NextRequest) {
 
   const json = await req.json();
   const { messages }: { messages: Message[] } = json;
-  // process.stdout.write(JSON.stringify(messages));
 
   // const questions = await getQuestions()
   const message_str = messages.map((i, _) => i.content).join(',');
   const questions = await openAiAPIcall(message_str);
 
-  messages.map((i, _) => console.log(i.content));
-  console.log(questions);
+  // messages.map((i, _) => console.log(i.content));
+  // console.log(questions);
 
-  return new Response(JSON.stringify({ questions }), {
+  return new Response(JSON.stringify({questions: questions }), {
     status: 200,
     headers: {
       'content-type': 'application/json',
