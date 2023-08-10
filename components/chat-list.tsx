@@ -1,7 +1,6 @@
-import { type Message } from 'ai'
-import { type UseChatHelpers } from 'ai/react'
-import { Separator } from '@/components/ui/separator'
 import { ChatMessage } from '@/components/chat-message'
+import { Separator } from '@/components/ui/separator'
+import { type Message } from 'ai'
 import RelatedQuestionArea from "./related-questions"
 
 export interface ChatList {
@@ -27,7 +26,7 @@ export function ChatList({ isLoading, messages, setInput }: ChatList) {
       ))}
       {
         ! isLoading && setInput ?
-          <RelatedQuestionArea setInput = {setInput}/>
+          <RelatedQuestionArea setInput = {setInput} messages={messages}/>
         :
         <></>
       }

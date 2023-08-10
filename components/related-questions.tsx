@@ -1,14 +1,15 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { UseChatHelpers } from 'ai/react'
+import "@/components/stylings/conversation.css"
+import "@/components/stylings/general.css"
 import { Button } from '@/components/ui/button'
 import { IconArrowRight } from '@/components/ui/icons'
-import "@/components/stylings/general.css"
-import "@/components/stylings/conversation.css"
+import { type Message } from 'ai'
+import { useEffect, useState } from 'react'
 
 interface RelatedQuestionAreaProps {
     setInput: ((input: string) => void ) | null
+    messages: Message[]
 }
 
 type Question = {
@@ -16,7 +17,7 @@ type Question = {
     message : string
 }
 
-export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaProps) {
+export default function RelatedQuestionArea({ setInput, messages } : RelatedQuestionAreaProps) {
   const [questions, setQ] = useState<Question[]>([]);
     
     useEffect(() => {
@@ -25,6 +26,7 @@ export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaPr
             headers: {
               'Content-Type': 'application/json',
             },      
+            body: JSON.stringify( {'messages' : messages })
           })        
           .then((response) => response.json())
           .then((data) => {
@@ -34,7 +36,7 @@ export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaPr
             let q : Question[] = []
 
             for(let question of questions) {
-                question = question.substring('question: '.length, question.indexOf('answer:')).trim()
+                // question = question.substring('question: '.length, question.indexOf('answer:')).trim()
 
                 q.push({
                     heading: question,
