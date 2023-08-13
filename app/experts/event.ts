@@ -22,9 +22,9 @@ export async function eventEx(userPrompt: string, dbs: number[]) : Promise<Respo
             const { error: matchError, data: pageSections } = await supabaseClient.rpc(
                 `${dbIdRpcMap[dbId]}`,
                 {
-                query_embedding: embed,
-                match_threshold: 0.78,
-                match_count: Math.floor(5),
+                    query_embedding: embed,
+                    match_threshold: 0.3,
+                    match_count: 5,
                 }
             )
             if (matchError) {
@@ -44,6 +44,9 @@ export async function eventEx(userPrompt: string, dbs: number[]) : Promise<Respo
       const content = pageSection.content
       const encoded = tokenizer.encode(content)
       tokenCount += encoded.text.length
+
+      if (tokenCount >= 4000)
+        break
 
       contextText += `${content.trim()}\n---\n`
     }
@@ -65,6 +68,7 @@ export async function eventEx(userPrompt: string, dbs: number[]) : Promise<Respo
         
         Context:
         ${contextText}
+        Answer in markdown:
     `
 
     return openAiAPIStream(userPrompt, 'gpt-3.5-turbo')

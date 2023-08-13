@@ -135,6 +135,7 @@ const whichEaK = async (userPrompt: string) : Promise<string> => {
     10. Academic resources: rice internal resources to support each major.
     11. Course roadmap: what coureses to take for each semester for different majors.
     12. Program resources: unique programs to boost student growth, such as leadership development.
+    13. Major requirements: what courses are needed to complete a specific major degree.
     `}
 
     Format your answer as:

@@ -45,6 +45,9 @@ export async function noteEx(userPrompt: string, dbs: number[]) : Promise<Respon
       const encoded = tokenizer.encode(content)
       tokenCount += encoded.text.length
 
+      if (tokenCount >= 4000)
+        break
+
       contextText += `${content.trim()}\n---\n`
     }
 
@@ -62,6 +65,7 @@ export async function noteEx(userPrompt: string, dbs: number[]) : Promise<Respon
         
         Context:
         ${contextText}
+        Answer in markdown:
     `
 
     return openAiAPIStream(userPrompt, 'gpt-3.5-turbo')

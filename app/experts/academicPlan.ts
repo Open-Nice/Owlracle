@@ -22,9 +22,9 @@ export async function academicPlanEx(userPrompt: string, dbs: number[]) : Promis
             const { error: matchError, data: pageSections } = await supabaseClient.rpc(
                 `${dbIdRpcMap[dbId]}`,
                 {
-                query_embedding: embed,
-                match_threshold: 0.78,
-                match_count: Math.floor(3),
+                    query_embedding: embed,
+                    match_threshold: 0.78,
+                    match_count: 3,
                 }
             )
             if (matchError) {
@@ -44,6 +44,9 @@ export async function academicPlanEx(userPrompt: string, dbs: number[]) : Promis
       const content = pageSection.content
       const encoded = tokenizer.encode(content)
       tokenCount += encoded.text.length
+
+      if (tokenCount >= 4000)
+        break
 
       contextText += `${content.trim()}\n---\n`
     }
@@ -68,6 +71,7 @@ export async function academicPlanEx(userPrompt: string, dbs: number[]) : Promis
         
         Context:
         ${contextText}
+        Answer in markdown:
     `
 
     return openAiAPIStream(userPrompt, 'gpt-3.5-turbo')

@@ -24,7 +24,7 @@ export async function careerEx(userPrompt: string, dbs: number[]) : Promise<Resp
                 {
                 query_embedding: embed,
                 match_threshold: 0.78,
-                match_count: Math.floor(3),
+                match_count: 3,
                 }
             )
             if (matchError) {
@@ -44,6 +44,9 @@ export async function careerEx(userPrompt: string, dbs: number[]) : Promise<Resp
       const content = pageSection.content
       const encoded = tokenizer.encode(content)
       tokenCount += encoded.text.length
+
+      if (tokenCount >= 4000)
+        break
 
       contextText += `${content.trim()}\n---\n`
     }
@@ -65,6 +68,7 @@ export async function careerEx(userPrompt: string, dbs: number[]) : Promise<Resp
         
         Context:
         ${contextText}
+        Answer in markdown:
     `
 
     return openAiAPIStream(userPrompt, 'gpt-3.5-turbo')
