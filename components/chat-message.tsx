@@ -38,10 +38,9 @@ export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) 
   }
 
   useEffect(() => {
-
-    // console.log(isComplete, message)
-    if (! isComplete)
-      return
+    if (! isComplete){
+      return;
+    }
     
     // console.log('newest message has completed loading: ',message)
     
@@ -140,7 +139,7 @@ export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) 
         </div>
       </div>
       {
-          courseCatalogs ? 
+          isComplete && courseCatalogs ? 
           <div className='classCardWrapper'>
             {courseCatalogs?.map( (courseCatalog, index) => <ClassCard catalog = {courseCatalog} key = {index} />)}
           </div>

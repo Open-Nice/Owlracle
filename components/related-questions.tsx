@@ -28,7 +28,7 @@ export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaPr
           })        
           .then((response) => response.json())
           .then((data) => {
-            console.log('data', data)
+            // console.log('data', data)
 
             const { questions } = data
             let q : Question[] = []

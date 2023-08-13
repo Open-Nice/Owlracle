@@ -25,12 +25,12 @@ export function ChatList({ isLoading, messages, setInput }: ChatList) {
           )}
         </div>
       ))}
-      {
+      {/* {
         ! isLoading && setInput ?
           <RelatedQuestionArea setInput = {setInput}/>
         :
         <></>
-      }
+      } */}
     </div>
   )
 }
