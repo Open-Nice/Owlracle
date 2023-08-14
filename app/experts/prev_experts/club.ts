@@ -1,7 +1,7 @@
 import { codeBlock, oneLine } from 'common-tags'
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import GPT3Tokenizer from 'gpt3-tokenizer'
-import { dbIdRpcMap } from '@/app/experts/course'
+import { dbIdRpcMap } from '../base';
 import { supabaseClient } from '@/app/supaClient'
 import { openAiAPIStream } from '@/app/openaiApiCall'
 
@@ -9,7 +9,7 @@ export const runtime = 'edge'
 
 const embeddingFn = new OpenAIEmbeddings()
 
-export async function programEx(userPrompt: string, dbs: number[]) : Promise<Response> {
+export async function clubEx(userPrompt: string, dbs: number[]) : Promise<Response> {
     
     // Create embedding for prompt
     const embed = await embeddingFn.embedQuery(userPrompt.replaceAll('\n', ' '))
@@ -22,9 +22,9 @@ export async function programEx(userPrompt: string, dbs: number[]) : Promise<Res
             const { error: matchError, data: pageSections } = await supabaseClient.rpc(
                 `${dbIdRpcMap[dbId]}`,
                 {
-                query_embedding: embed,
-                match_threshold: 0.78,
-                match_count: Math.floor(3),
+                    query_embedding: embed,
+                    match_threshold: 0.3,
+                    match_count: 5,
                 }
             )
             if (matchError) {
@@ -55,14 +55,14 @@ export async function programEx(userPrompt: string, dbs: number[]) : Promise<Res
         Student question: ${userPrompt}
 
         ${oneLine`
-        You are a program recommender to Rice Univ. student.
-        Answer above question using context below concisely and accurately.
+        You are a club and organization expert for Rice Univ. students.
+        Answer question above using context below concisely and accurately.
         In your answer:
-        1. Format your answer in chunks for readability.
-        2. Include all relevant resources from context. For each one, give a concise description.
-        3. Include url that appeared in the context for each relavent resource.
-        5. At the end of your answer, mention some aspect of the programs you gave and ask if the student's interested in learning more about it.
-        6. If you are unsure how to answer, say 
+        1. Present clubs bundled in categories: e.g. academics, entertianment, social, sports, etc. Show the category first coupled with emojis you see fit.
+        2. Include all relevant clubs from context. For each one, give a concise description.
+        3. Include url that appeared in the context for each relavent club.
+        4. At the end of your answer, mention some aspect of the clubs you gave and ask if the student's interested in learning more about it.
+        5. If you are unsure how to answer, say 
         "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
         `}
         

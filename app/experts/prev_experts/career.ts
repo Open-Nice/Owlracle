@@ -1,7 +1,7 @@
 import { codeBlock, oneLine } from 'common-tags'
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import GPT3Tokenizer from 'gpt3-tokenizer'
-import { dbIdRpcMap } from '@/app/experts/course'
+import { dbIdRpcMap } from '../base';
 import { supabaseClient } from '@/app/supaClient'
 import { openAiAPIStream } from '@/app/openaiApiCall'
 

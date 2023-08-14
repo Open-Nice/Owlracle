@@ -1,15 +1,15 @@
 import { codeBlock, oneLine } from 'common-tags'
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import GPT3Tokenizer from 'gpt3-tokenizer'
-import { dbIdRpcMap } from '@/app/experts/course'
+import { dbIdRpcMap } from '../base';
 import { supabaseClient } from '@/app/supaClient'
-import { openAiAPIcall, openAiAPIStream } from '@/app/openaiApiCall'
+import { openAiAPIStream } from '@/app/openaiApiCall'
 
 export const runtime = 'edge'
 
 const embeddingFn = new OpenAIEmbeddings()
 
-export async function noteEx(userPrompt: string, dbs: number[]) : Promise<Response> {
+export async function programEx(userPrompt: string, dbs: number[]) : Promise<Response> {
     
     // Create embedding for prompt
     const embed = await embeddingFn.embedQuery(userPrompt.replaceAll('\n', ' '))
@@ -24,7 +24,7 @@ export async function noteEx(userPrompt: string, dbs: number[]) : Promise<Respon
                 {
                 query_embedding: embed,
                 match_threshold: 0.78,
-                match_count: Math.floor(5),
+                match_count: Math.floor(3),
                 }
             )
             if (matchError) {
@@ -55,11 +55,14 @@ export async function noteEx(userPrompt: string, dbs: number[]) : Promise<Respon
         Student question: ${userPrompt}
 
         ${oneLine`
-        Your goal is to give notes resources to Rice Univ. students based on their request.
-        Answer student's question above about Rice Univ. events using context below concisely and accurately.
-        Include in your answer all relevant information from context.
-        At the end of your response, mention some aspect of the info you gave and ask if student's interested in learning more about it.
-        If you are unsure about your answer, say 
+        You are a program recommender to Rice Univ. student.
+        Answer above question using context below concisely and accurately.
+        In your answer:
+        1. Format your answer in chunks for readability.
+        2. Include all relevant resources from context. For each one, give a concise description.
+        3. Include url that appeared in the context for each relavent resource.
+        5. At the end of your answer, mention some aspect of the programs you gave and ask if the student's interested in learning more about it.
+        6. If you are unsure how to answer, say 
         "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
         `}
         

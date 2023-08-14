@@ -1,15 +1,15 @@
 import { codeBlock, oneLine } from 'common-tags'
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import GPT3Tokenizer from 'gpt3-tokenizer'
-import { dbIdRpcMap } from '@/app/experts/course'
+import { dbIdRpcMap } from '../base';
 import { supabaseClient } from '@/app/supaClient'
-import { openAiAPIStream } from '@/app/openaiApiCall'
+import { openAiAPIcall, openAiAPIStream } from '@/app/openaiApiCall'
 
 export const runtime = 'edge'
 
 const embeddingFn = new OpenAIEmbeddings()
 
-export async function academicPlanEx(userPrompt: string, dbs: number[]) : Promise<Response> {
+export async function noteEx(userPrompt: string, dbs: number[]) : Promise<Response> {
     
     // Create embedding for prompt
     const embed = await embeddingFn.embedQuery(userPrompt.replaceAll('\n', ' '))
@@ -22,9 +22,9 @@ export async function academicPlanEx(userPrompt: string, dbs: number[]) : Promis
             const { error: matchError, data: pageSections } = await supabaseClient.rpc(
                 `${dbIdRpcMap[dbId]}`,
                 {
-                    query_embedding: embed,
-                    match_threshold: 0.78,
-                    match_count: 3,
+                query_embedding: embed,
+                match_threshold: 0.78,
+                match_count: Math.floor(5),
                 }
             )
             if (matchError) {
@@ -51,21 +51,15 @@ export async function academicPlanEx(userPrompt: string, dbs: number[]) : Promis
       contextText += `${content.trim()}\n---\n`
     }
 
-    // console.log(contextText)
-
     userPrompt = codeBlock`
         Student question: ${userPrompt}
 
         ${oneLine`
-        You are an academic plan expert for Rice Univ. students.
-        Answer question above using context below concisely and accurately.
-        In your answer:
-        1. Format your answer in chunks for readability.
-        2. Use detailed reasoning in your answer to provide the best possible guidance.
-        3. Include all relevant sources from context.
-        4. Include url that appeared in the context for each relavent reference.
-        5. At the end of your answer, mention some aspect of the plan you gave and ask if the student's interested in learning more about it.
-        6. If you are unsure how to answer, say 
+        Your goal is to give notes resources to Rice Univ. students based on their request.
+        Answer student's question above about Rice Univ. events using context below concisely and accurately.
+        Include in your answer all relevant information from context.
+        At the end of your response, mention some aspect of the info you gave and ask if student's interested in learning more about it.
+        If you are unsure about your answer, say 
         "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
         `}
         
