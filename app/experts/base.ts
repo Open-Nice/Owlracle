@@ -28,7 +28,8 @@ export const dbIdRpcMap: { [key: number]: string } = {
 export async function BaseEx(
   userPrompt: string,
   dbs: number[],
-  expertPrompt: string
+  expertPrompt: string,
+  spcScale: number
 ): Promise<Response> {
   userPrompt = await substitute(userPrompt)
   console.log(userPrompt)
@@ -42,8 +43,8 @@ export async function BaseEx(
       const { error: matchError, data: pageSections } =
         await supabaseClient.rpc(`${dbIdRpcMap[dbId]}`, {
           query_embedding: embed,
-          match_threshold: 0.78,
-          match_count: 3
+          match_threshold: spcScale,
+          match_count: 4
         })
       if (matchError) {
         console.log('Failed to match page sections', matchError)
