@@ -5,7 +5,6 @@ import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 import { openAiAPIcall, openAiAPIStream } from '@/app/openaiApiCall'
 
-
 import { chillEx } from '@/app/experts/chill'
 // import { courseEx } from '@/app/experts/course'
 // import { clubEx } from '@/app/experts/club'
@@ -18,8 +17,12 @@ import { BaseEx } from '@/app/experts/base'
 
 // import { noteEx } from '@/app/experts/note'
 
-
 export const runtime = 'edge'
+
+type Message = {
+  role: 'user' | 'assistant';
+  content: string;
+};
 
 export async function POST(req: Request) {
   const json = await req.json()
@@ -32,7 +35,18 @@ export async function POST(req: Request) {
     })
   }
 
-  const userPrompt = messages[messages.length-1].content
+  const chatHistory: Message[]  = messages.slice(-3, -1)
+  let userPrompt = messages[messages.length - 1].content
+
+  const eHist = await enableHistory(userPrompt)
+  const hist = eHist.match(/Q: (\d+)/)
+  const enableHist: number = (hist && parseInt(hist[1])) ?? 0
+
+  userPrompt += enableHist == 1 && chatHistory.length > 0 ?`
+    \nHere are the last messages exchange as additional context to answer the prompt:
+      ${chatHistory.map(entry => `${entry.role}: "${entry.content}"`).join('\n')}
+      Answer normally, not in this format
+    ` : ''
 
   const eAk = await whichEaK(userPrompt)
 
@@ -40,14 +54,13 @@ export async function POST(req: Request) {
   const dbs = eAk.match(/K: \[(.*?)\]/)
   const spc = eAk.match(/S: (\d+)/)
 
-  if (!(expert && dbs))
-      throw new Error('whichEaK returns an anomaly string.')
+  if (!(expert && dbs)) throw new Error('whichEaK returns an anomaly string.')
 
   const expertId: number = parseInt(expert[1])
   //If spcScale is null, that default is 3
-  const spcScale = (spc && Math.max(3, Math.min(7, parseInt(spc[1])))) ?? 3;
+  const spcScale = (spc && Math.max(3, Math.min(7, parseInt(spc[1])))) ?? 3
   const dbIds: number[] = dbs[1].split(',').map(Number)
-  const answer = await consultExpert(expertId, dbIds, userPrompt, spcScale/10)
+  const answer = await consultExpert(expertId, dbIds, userPrompt, spcScale / 10)
 
   const stream = OpenAIStream(answer, {
     async onCompletion(completion) {
@@ -80,14 +93,19 @@ export async function POST(req: Request) {
   return new StreamingTextResponse(stream)
 }
 
-const consultExpert = async (expert: number, dbs: number[], userPrompt: string, spcScale: number) : Promise<Response> => {
+const consultExpert = async (
+  expert: number,
+  dbs: number[],
+  userPrompt: string,
+  spcScale: number
+): Promise<Response> => {
   console.log('expertId', expert)
   console.log('dbIds', dbs)
-  console.log('spcScale',spcScale)
+  console.log('spcScale', spcScale)
 
-  const expertIdFnMap : {[key: number] : string } = {
+  const expertIdFnMap: { [key: number]: string } = {
     // 1: chillEx,
-    // 2: , 
+    // 2: ,
     3: `You are a course expert to Rice Univ. student.`,
     4: `You are an event expert for Rice Univ. students.`,
     5: `You are a club and organization expert for Rice Univ. students.`,
@@ -100,15 +118,15 @@ const consultExpert = async (expert: number, dbs: number[], userPrompt: string, 
 
   if (expert in expertIdFnMap)
     return BaseEx(userPrompt, dbs, expertIdFnMap[expert], spcScale)
-  else if (expert == 1)
-    return chillEx(userPrompt, dbs)
+  else if (expert == 1) return chillEx(userPrompt, dbs)
 
-  return openAiAPIStream('say "Sorry I cannot solve this problem currently. I have noted it down on my things to learn."', 'gpt-3.5-turbo')
+  return openAiAPIStream(
+    'say "Sorry I cannot solve this problem currently. I have noted it down on my things to learn."',
+    'gpt-3.5-turbo'
+  )
 }
 
-
-const whichEaK = async (userPrompt: string) : Promise<string> => {
-
+const whichEaK = async (userPrompt: string): Promise<string> => {
   const prompt = codeBlock`
     ${oneLine`
     You are in command of a group of experts from rice university and knowledge database. The experts and databases are decoupled.
@@ -149,10 +167,25 @@ const whichEaK = async (userPrompt: string) : Promise<string> => {
     E: one single expert id (1-9)
     K: [db_id1, db_id2, ...] (1-12)
     S: a scalar (1-10)
-
+      
     This is the user prompt:
     ${userPrompt}
   `
 
+  console.log(prompt)
+
+  return openAiAPIcall(prompt, 'gpt-4')
+}
+
+const enableHistory = async (userPrompt: string): Promise<string> => {
+  const prompt = codeBlock`
+    Do you think the user is referring to a query in the past conversation?
+
+    Format your answer as:
+    Q: a scalar [0, 1]
+
+    This is the user prompt: 
+    ${userPrompt}
+  `
   return openAiAPIcall(prompt, 'gpt-4')
 }
