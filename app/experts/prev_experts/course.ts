@@ -4,22 +4,7 @@ import { codeBlock, oneLine } from 'common-tags'
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import GPT3Tokenizer from 'gpt3-tokenizer'
 import { openAiAPIStream } from '@/app/openaiApiCall'
-
-export const dbIdRpcMap : { [key: number]: string } = {
-  1: 'match_courses', // Course basic info
-  2: 'match_open_courses', // Course open status
-  3: 'match_eval_comments', // Course evaluation comments
-  4: 'match_eval_scores', // Course evaluation scores
-  5: 'match_faculties', // Faculties
-  // 6: '', // Notes
-  7: 'match_events', // Events
-  8: 'match_organizations', // Clubs
-  9: 'match_careers', // Career
-  10: 'match_academic_resources', // Academic resources
-  11: 'match_course_roadmap', // Course roadmap
-  12: 'match_program_resources' // Program resources
-  // 13: '' // Major requirement
-}
+import { dbIdRpcMap } from '../base';
 
 export const runtime = 'edge'
 

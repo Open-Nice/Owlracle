@@ -7,13 +7,14 @@ import { openAiAPIcall, openAiAPIStream } from '@/app/openaiApiCall'
 
 
 import { chillEx } from '@/app/experts/chill'
-import { courseEx } from '@/app/experts/course'
-import { clubEx } from '@/app/experts/club'
-import { eventEx } from '@/app/experts/event'
-import { facultyEx } from '@/app/experts/faculty'
-import { careerEx } from '@/app/experts/career'
-import { academicPlanEx } from '@/app/experts/academicPlan'
-import { programEx } from '@/app/experts/program'
+// import { courseEx } from '@/app/experts/course'
+// import { clubEx } from '@/app/experts/club'
+// import { eventEx } from '@/app/experts/event'
+// import { facultyEx } from '@/app/experts/faculty'
+// import { careerEx } from '@/app/experts/career'
+// import { academicPlanEx } from '@/app/experts/academicPlan'
+// import { programEx } from '@/app/experts/program'
+import { BaseEx } from '@/app/experts/base'
 
 // import { noteEx } from '@/app/experts/note'
 
@@ -80,22 +81,24 @@ const consultExpert = async (expert: number, dbs: number[], userPrompt: string) 
   console.log('expertId', expert)
   console.log('dbIds', dbs)
 
-  const expertIdFnMap : {[key: number]: (prompt : string, dbs: number[]) => Promise<Response> } = {
-    1: chillEx,
+  const expertIdFnMap : {[key: number] : string } = {
+    // 1: chillEx,
     // 2: , 
-    3: courseEx,
-    4: eventEx,
-    5: clubEx,
-    6: facultyEx,
-    // 7: ,
-    8: careerEx,
-    9: academicPlanEx,
-    10: programEx
+    3: `You are a course expert to Rice Univ. student.`,
+    4: `You are an event expert for Rice Univ. students.`,
+    5: `You are a club and organization expert for Rice Univ. students.`,
+    6: `You are a faculty expert for Rice Univ. students.`,
+    // // 7: ,
+    8: `You are a career expert for Rice Univ. students.`,
+    9: `You are an academic plan expert for Rice Univ. students.`,
+    10: `You are a program recommender to Rice Univ. student.`
   }
 
   if (expert in expertIdFnMap)
-    return expertIdFnMap[expert](userPrompt, dbs)
-
+    return BaseEx(userPrompt, dbs, expertIdFnMap[expert])
+   // return expertIdFnMap[expert](userPrompt, dbs)
+  else if (expert == 1)
+    return chillEx(userPrompt, dbs)
 
   return openAiAPIStream('say "Sorry I cannot solve this problem currently. I have noted it down on my things to learn."', 'gpt-3.5-turbo')
 }

@@ -1,7 +1,7 @@
 import { codeBlock, oneLine } from 'common-tags'
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import GPT3Tokenizer from 'gpt3-tokenizer'
-import { dbIdRpcMap } from '@/app/experts/course'
+import { dbIdRpcMap } from '../base';
 import { supabaseClient } from '@/app/supaClient'
 import { openAiAPIStream } from '@/app/openaiApiCall'
 
@@ -9,7 +9,7 @@ export const runtime = 'edge'
 
 const embeddingFn = new OpenAIEmbeddings()
 
-export async function clubEx(userPrompt: string, dbs: number[]) : Promise<Response> {
+export async function eventEx(userPrompt: string, dbs: number[]) : Promise<Response> {
     
     // Create embedding for prompt
     const embed = await embeddingFn.embedQuery(userPrompt.replaceAll('\n', ' '))
@@ -55,13 +55,13 @@ export async function clubEx(userPrompt: string, dbs: number[]) : Promise<Respon
         Student question: ${userPrompt}
 
         ${oneLine`
-        You are a club and organization expert for Rice Univ. students.
+        You are an event expert for Rice Univ. students.
         Answer question above using context below concisely and accurately.
         In your answer:
-        1. Present clubs bundled in categories: e.g. academics, entertianment, social, sports, etc. Show the category first coupled with emojis you see fit.
-        2. Include all relevant clubs from context. For each one, give a concise description.
-        3. Include url that appeared in the context for each relavent club.
-        4. At the end of your answer, mention some aspect of the clubs you gave and ask if the student's interested in learning more about it.
+        1. Present events bundled in categories: e.g. academics, entertianment, social, sports, etc. Show the category first coupled with emojis you see fit.
+        2. Include all relevant events from context. For each one, give a concise description.
+        3. Include url that appeared in the context for each relavent event.
+        4. At the end of your answer, mention some aspect of the events you gave and ask if the student's interested in learning more about it.
         5. If you are unsure how to answer, say 
         "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
         `}
