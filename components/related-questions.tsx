@@ -2,15 +2,13 @@
 
 import React, { useEffect, useState } from 'react'
 import { UseChatHelpers } from 'ai/react'
-import { type Message } from 'ai'
 import { Button } from '@/components/ui/button'
 import { IconArrowRight } from '@/components/ui/icons'
 import "@/components/stylings/general.css"
 import "@/components/stylings/conversation.css"
 
 interface RelatedQuestionAreaProps {
-    setInput: ((input: string) => void ) | null,
-    messages: Message[]
+    setInput: ((input: string) => void ) | null
 }
 
 type Question = {
@@ -18,7 +16,7 @@ type Question = {
     message : string
 }
 
-export default function RelatedQuestionArea({ setInput, messages } : RelatedQuestionAreaProps) {
+export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaProps) {
   const [questions, setQ] = useState<Question[]>([]);
     
     useEffect(() => {
@@ -26,18 +24,17 @@ export default function RelatedQuestionArea({ setInput, messages } : RelatedQues
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ messages: messages })
-          })
+            },      
+          })        
           .then((response) => response.json())
           .then((data) => {
             // console.log('data', data)
 
-            const { questionList } = data
+            const { questions } = data
             let q : Question[] = []
 
-            for(let question of questionList) {
-                question = question.trim()
+            for(let question of questions) {
+                question = question.substring('question: '.length, question.indexOf('answer:')).trim()
 
                 q.push({
                     heading: question,

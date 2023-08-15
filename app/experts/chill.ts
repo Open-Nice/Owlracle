@@ -1,7 +1,7 @@
 import { codeBlock, oneLine } from 'common-tags'
 import { openAiAPIStream } from '@/app/openaiApiCall'
 
-export async function chillEx(userPrompt: string, _: number[], __: number) : Promise<Response> {
+export async function chillEx(userPrompt: string, _: number[]) : Promise<Response> {
 
     userPrompt = codeBlock`
         ${oneLine`

@@ -1,46 +1,5 @@
 import prisma from '@/lib/prisma'
-import { codeBlock, oneLine } from 'common-tags'
-import { openAiAPIStream } from '@/app/openaiApiCall'
-import { investigate , getSafeTurboPrompt } from '@/app/knowledge/investigate'
 
-export const runtime = 'edge'
-
-export async function courseEx(userPrompt: string, dbs: number[], specificity: number) : Promise<Response> {
-    
-    // Convert unrecognized tokens 'COMP 140' -> 'computational thinking'
-    userPrompt = await substitute(userPrompt)
-
-    const contextText = await investigate(userPrompt, dbs, specificity)
-
-    // console.log(contextText)
-
-    userPrompt = codeBlock`
-        Student question: ${userPrompt}
-
-        ${oneLine`
-        You are a course expert to Rice Univ. student.
-        Answer above question using context below concisely and accurately.
-        In your answer:
-        1. Format your answer in chunks for readability.
-        2. Use detailed reasoning in your answer to provide the best possible guidance.
-        3. Don't include url unless they appear in the context.
-        4. At the end of your answer, mention some aspect of the courses you gave and ask if the student's interested in learning more about it.
-        5. If you are unsure how to answer, say 
-        "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
-        `}
-        
-        Context:
-        ${contextText}
-        Answer in markdown:
-    `
-
-    userPrompt = await getSafeTurboPrompt(userPrompt)
-
-    return openAiAPIStream(userPrompt, 'gpt-3.5-turbo-16k')
-}
-
-
-// substitute "... Comp 140 ..." -> "Computational thinking"
 export const substitute = async (query: string): Promise<string> => {
     const matches = findAllPatterns(query)
   

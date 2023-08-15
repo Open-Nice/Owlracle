@@ -11,7 +11,7 @@ if (!openaiKey) throw new Error(`Expected env var OPENAI_API_KEY`)
 const configuration = new Configuration({apiKey: openaiKey})
 const openai = new OpenAIApi(configuration)
 
-export const openAiAPIcall = async (prompt: string, model: string, temperature: number = 0.7): Promise<string> => {
+export const openAiAPIcall = async (prompt: string, model: string): Promise<string> => {
 
     const chatMessage : ChatCompletionRequestMessage = {
       role: 'user',
@@ -21,7 +21,7 @@ export const openAiAPIcall = async (prompt: string, model: string, temperature: 
     const response = await openai.createChatCompletion({
       model: model,
       messages: [chatMessage],
-      temperature: temperature,
+      temperature: 0.7,
     })
   
     if (! response.ok) {
