@@ -38,13 +38,16 @@ export async function POST(req: Request) {
 
   const expert = eAk.match(/E: (\d+)/)
   const dbs = eAk.match(/K: \[(.*?)\]/)
+  const spc = eAk.match(/S: (\d+)/)
 
   if (!(expert && dbs))
       throw new Error('whichEaK returns an anomaly string.')
 
   const expertId: number = parseInt(expert[1])
+  //If spcScale is null, that default is 3
+  const spcScale = (spc && Math.max(3, Math.min(7, parseInt(spc[1])))) ?? 3;
   const dbIds: number[] = dbs[1].split(',').map(Number)
-  const answer = await consultExpert(expertId, dbIds, userPrompt)
+  const answer = await consultExpert(expertId, dbIds, userPrompt, spcScale/10)
 
   const stream = OpenAIStream(answer, {
     async onCompletion(completion) {
@@ -77,9 +80,10 @@ export async function POST(req: Request) {
   return new StreamingTextResponse(stream)
 }
 
-const consultExpert = async (expert: number, dbs: number[], userPrompt: string) : Promise<Response> => {
+const consultExpert = async (expert: number, dbs: number[], userPrompt: string, spcScale: number) : Promise<Response> => {
   console.log('expertId', expert)
   console.log('dbIds', dbs)
+  console.log('spcScale',spcScale)
 
   const expertIdFnMap : {[key: number] : string } = {
     // 1: chillEx,
@@ -95,8 +99,7 @@ const consultExpert = async (expert: number, dbs: number[], userPrompt: string) 
   }
 
   if (expert in expertIdFnMap)
-    return BaseEx(userPrompt, dbs, expertIdFnMap[expert])
-   // return expertIdFnMap[expert](userPrompt, dbs)
+    return BaseEx(userPrompt, dbs, expertIdFnMap[expert], spcScale)
   else if (expert == 1)
     return chillEx(userPrompt, dbs)
 
@@ -108,10 +111,11 @@ const whichEaK = async (userPrompt: string) : Promise<string> => {
 
   const prompt = codeBlock`
     ${oneLine`
-    You are in command of a group of experts from rice university and knowledge database. The experts and database are decoupled.
+    You are in command of a group of experts from rice university and knowledge database. The experts and databases are decoupled.
     The user asked a question To answer the question, you job is to come up with
     1. only ONE single expert.
     2. all knowledge databases you think would be important. This could be zero.
+    3. On a scale of 1 to 10 how specific is the student's question? 1 being not specific and 10 being very specific.
 
     Here are the experts' numeric id and what they can do:
     1. Everyday conversation expert: "good at normal conversation and doesn't accept any knowledge database."
@@ -144,6 +148,7 @@ const whichEaK = async (userPrompt: string) : Promise<string> => {
     Format your answer as:
     E: one single expert id (1-9)
     K: [db_id1, db_id2, ...] (1-12)
+    S: a scalar (1-10)
 
     This is the user prompt:
     ${userPrompt}
