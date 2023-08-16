@@ -134,6 +134,9 @@ dependencies:
   remark-math:
     specifier: ^5.1.1
     version: 5.1.1
+  sentiment:
+    specifier: ^5.0.2
+    version: 5.0.2
   swr:
     specifier: ^2.2.0
     version: 2.2.0(react@18.2.0)
@@ -5666,6 +5669,11 @@ packages:
     dependencies:
       lru-cache: 6.0.0
     dev: true
+
+  /sentiment@5.0.2:
+    resolution: {integrity: sha512-ZeC3y0JsOYTdwujt5uOd7ILJNilbgFzUtg/LEG4wUv43LayFNLZ28ec8+Su+h3saHlJmIwYxBzfDHHZuiMA15g==}
+    engines: {node: '>=8.0'}
+    dev: false
 
   /shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
