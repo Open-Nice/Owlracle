@@ -15,6 +15,7 @@
     "postinstall": "prisma generate --data-proxy"
   },
   "dependencies": {
+    "@dqbd/tiktoken": "^1.0.7",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.1",
@@ -39,7 +40,6 @@
     "common-tags": "^1.8.2",
     "focus-trap-react": "^10.1.1",
     "get-contrast-ratio": "^0.2.1",
-    "gpt3-tokenizer": "^1.1.5",
     "langchain": "^0.0.116",
     "nanoid": "^4.0.2",
     "next": "13.4.7-canary.1",

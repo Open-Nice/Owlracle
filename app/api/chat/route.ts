@@ -1,28 +1,15 @@
 import { kv } from '@vercel/kv'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
+import { Message, OpenAIStream, StreamingTextResponse } from 'ai'
 import { codeBlock, oneLine } from 'common-tags'
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 import { openAiAPIcall, openAiAPIStream } from '@/app/openaiApiCall'
+import { getSafeGPT4Prompt } from '@/app/knowledge/investigate'
 
-import { chillEx } from '@/app/experts/chill'
-// import { courseEx } from '@/app/experts/course'
-// import { clubEx } from '@/app/experts/club'
-// import { eventEx } from '@/app/experts/event'
-// import { facultyEx } from '@/app/experts/faculty'
-// import { careerEx } from '@/app/experts/career'
-// import { academicPlanEx } from '@/app/experts/academicPlan'
-// import { programEx } from '@/app/experts/program'
-import { BaseEx } from '@/app/experts/base'
-
-// import { noteEx } from '@/app/experts/note'
+import { dbsInfo } from '@/app/knowledge/knowledge'
+import { expertsInfo } from '@/app/experts/expert'
 
 export const runtime = 'edge'
-
-type Message = {
-  role: 'user' | 'assistant';
-  content: string;
-};
 
 export async function POST(req: Request) {
   const json = await req.json()
@@ -35,32 +22,36 @@ export async function POST(req: Request) {
     })
   }
 
-  const chatHistory: Message[]  = messages.slice(-3, -1)
+  // const chatHistory: Message[]  = messages.slice(-3, -1)
   let userPrompt = messages[messages.length - 1].content
 
-  const eHist = await enableHistory(userPrompt)
-  const hist = eHist.match(/Q: (\d+)/)
-  const enableHist: number = (hist && parseInt(hist[1])) ?? 0
+  // const ifHistory = (await enableHistory(userPrompt)).match(/Q: (\d+)/)
+  // const enableHist: number = (ifHistory && parseInt(ifHistory[1])) ?? 0
 
-  userPrompt += enableHist == 1 && chatHistory.length > 0 ?`
-    \nHere are the last messages exchange as additional context to answer the prompt:
-      ${chatHistory.map(entry => `${entry.role}: "${entry.content}"`).join('\n')}
-      Answer normally, not in this format
-    ` : ''
+  // if ( enableHist == 1 && chatHistory.length > 0 ) {
+  //   userPrompt += `\n
+  //     ${oneLine`
+  //         Here are some additional context about the prompt:
+  //         ${chatHistory.map(entry => `${entry.role}: "${entry.content}"`).join('\n')}
+  //     `}
+  //   `
+  // }
+
+  // console.log(userPrompt)
 
   const eAk = await whichEaK(userPrompt)
 
   const expert = eAk.match(/E: (\d+)/)
   const dbs = eAk.match(/K: \[(.*?)\]/)
-  const spc = eAk.match(/S: (\d+)/)
+  const specificity = eAk.match(/S: (\d+)/)
 
-  if (!(expert && dbs)) throw new Error('whichEaK returns an anomaly string.')
+  if (!(expert && dbs && specificity))
+      throw new Error('whichEaK returns an anomaly string.')
 
   const expertId: number = parseInt(expert[1])
-  //If spcScale is null, that default is 3
-  const spcScale = (spc && Math.max(3, Math.min(7, parseInt(spc[1])))) ?? 3
   const dbIds: number[] = dbs[1].split(',').map(Number)
-  const answer = await consultExpert(expertId, dbIds, userPrompt, spcScale / 10)
+  const specScaler: number = parseInt(specificity[1])
+  const answer = await consultExpert(expertId, dbIds, specScaler, userPrompt)
 
   const stream = OpenAIStream(answer, {
     async onCompletion(completion) {
@@ -93,99 +84,67 @@ export async function POST(req: Request) {
   return new StreamingTextResponse(stream)
 }
 
-const consultExpert = async (
-  expert: number,
-  dbs: number[],
-  userPrompt: string,
-  spcScale: number
-): Promise<Response> => {
+const consultExpert = async (expert: number, dbs: number[], specScaler: number, userPrompt: string) : Promise<Response> => {
   console.log('expertId', expert)
   console.log('dbIds', dbs)
-  console.log('spcScale', spcScale)
+  console.log('specificity', specScaler)
 
-  const expertIdFnMap: { [key: number]: string } = {
-    // 1: chillEx,
-    // 2: ,
-    3: `You are a course expert to Rice Univ. student.`,
-    4: `You are an event expert for Rice Univ. students.`,
-    5: `You are a club and organization expert for Rice Univ. students.`,
-    6: `You are a faculty expert for Rice Univ. students.`,
-    // // 7: ,
-    8: `You are a career expert for Rice Univ. students.`,
-    9: `You are an academic plan expert for Rice Univ. students.`,
-    10: `You are a program recommender to Rice Univ. student.`
-  }
+  if (expertsInfo[expert] && expertsInfo[expert].expert_function)
+    return expertsInfo[expert].expert_function!(userPrompt, dbs, specScaler)
 
-  if (expert in expertIdFnMap)
-    return BaseEx(userPrompt, dbs, expertIdFnMap[expert], spcScale)
-  else if (expert == 1) return chillEx(userPrompt, dbs)
-
-  return openAiAPIStream(
-    'say "Sorry I cannot solve this problem currently. I have noted it down on my things to learn."',
-    'gpt-3.5-turbo'
-  )
+  return openAiAPIStream('say "Sorry I cannot solve this problem currently. I have noted it down on my things to learn."', 'gpt-3.5-turbo')
 }
 
-const whichEaK = async (userPrompt: string): Promise<string> => {
-  const prompt = codeBlock`
+
+const whichEaK = async (userPrompt: string) : Promise<string> => {
+
+  let prompt = codeBlock`
     ${oneLine`
-    You are in command of a group of experts from rice university and knowledge database. The experts and databases are decoupled.
-    The user asked a question To answer the question, you job is to come up with
+    You are in command of a group of experts from rice university and knowledge database. The experts and database are decoupled.
+    The student asked a question. To answer the question, you job is to come up with
     1. only ONE single expert.
     2. all knowledge databases you think would be important. This could be zero.
-    3. On a scale of 1 to 10 how specific is the student's question? 1 being not specific and 10 being very specific.
+    3. On the scale of 1 to 10 how specific is the student's question? 1 being not specific and 10 being very specific.
 
     Here are the experts' numeric id and what they can do:
-    1. Everyday conversation expert: "good at normal conversation and doesn't accept any knowledge database."
-    2. Confusion/ambiguity expert: "Sometimes user asked something or used a term we don't understand. I can ask user what he meant."
-    3. Course expert: "answer questions or recommend courses."
-    4. Event expert: "answer questions or recommend recent school events."
-    5. Club expert: "answer questions or recommend school clubs."
-    6. Faculty expert: "answer questions or recommend faculty."
-    7. Notes expert: "answer requests that ask for lecture notes."
-    8. Career expert: "answer questions or recommend resources for career in industry or PHD."
-    9. Academic planner: "help students plan their major, e.g. what courses to take in each semester."
-    10. Resource recommender: "Recommend programs inside Rice Univeristy ot help students."
+    ${Object.entries(expertsInfo)
+      .map(([key, { expert_name, expert_description }]) => `${key}. ${expert_name}: "${expert_description}"`)
+      .join('\n  ')
+    }
 
     Here are the knowledge databases' numeric id and what they contain:
-    1. Courses: course name, credit hour, department, description, grade_mode.
-    2. Course open status: which courses open in the upcoming semester.
-    3. Course evaluation comments: students' comments on course and instructor.
-    4. Course evaluation scores: students' scores on course and instructor e.g. course workload, quality and difficulty.
-    5. Faculties: faculty research background.
-    6. Notes: urls that points to lecture notes.
-    7. Events: recent school events.
-    8. Clubs: school clubs and their description.
-    9. Career: industry and PHD career resources for each different majors.
-    10. Academic resources: rice internal resources to support each major.
-    11. Course roadmap: what coureses to take for each semester for different majors.
-    12. Program resources: unique programs to boost student growth, such as leadership development.
-    13. Major requirements: what courses are needed to complete a specific major degree.
+    ${Object.entries(dbsInfo)
+      .map(([key, { db_name, db_description }]) => `${key}. ${db_name}: ${db_description}`)
+      .join('\n  ')}
     `}
 
     Format your answer as:
-    E: one single expert id (1-9)
+    E: one single expert id (1-10)
     K: [db_id1, db_id2, ...] (1-12)
     S: a scalar (1-10)
-      
-    This is the user prompt:
+
+    This is the student prompt:
     ${userPrompt}
   `
 
-  console.log(prompt)
+  prompt = await getSafeGPT4Prompt(prompt)
 
   return openAiAPIcall(prompt, 'gpt-4')
 }
 
-const enableHistory = async (userPrompt: string): Promise<string> => {
-  const prompt = codeBlock`
-    Do you think the user is referring to a query in the past conversation?
+// const enableHistory = async (userPrompt: string): Promise<string> => {
+//   let prompt = codeBlock`
+//     ${oneLine`
+//       Do you think the user is referring to a query in the past conversation?
+//       This is the user prompt:
+//       ${userPrompt}
+//     `}
 
-    Format your answer as:
-    Q: a scalar [0, 1]
+//     Format your answer as:
+//     Q: a boolean [0 (false), 1 (true)]
+//   `
 
-    This is the user prompt: 
-    ${userPrompt}
-  `
-  return openAiAPIcall(prompt, 'gpt-4')
-}
+//   prompt = await getSafeGPT4Prompt(prompt)
+
+//   return openAiAPIcall(prompt, 'gpt-4')
+// }

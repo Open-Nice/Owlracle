@@ -7,6 +7,7 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
+import type { CourseCatalog } from '@prisma/client'
 import { CodeBlock } from '@/components/ui/codeblock'
 import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconUser, IconNice, IconNiceColor } from '@/components/ui/icons'
@@ -16,8 +17,7 @@ import { ChatMessageActions } from '@/components/chat-message-actions'
 import ClassCard from "@/components/classcard"
 import '@/components/stylings/general.css'
 import '@/components/stylings/classCard.css'
-import type { CourseCatalog } from '@prisma/client'
-
+import useHasMounted from '@/components/useHasMounted'
 
 export interface ChatMessageProps {
   isComplete: Boolean
@@ -27,6 +27,8 @@ export interface ChatMessageProps {
 export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) {
   const { setTheme, theme } = useTheme()
   
+  const hasMounted = useHasMounted()
+
   const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
 
   function handleLike(){
@@ -83,12 +85,12 @@ export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) 
             'flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow',
             message.role === 'user'
               ? 'bg-background'
-              : `${theme === "light" ? "bg-primary text-primary-foreground" : "nice-icon-bg-dark text-primary-foreground"}`
+              : `${hasMounted && theme === "light" ? "bg-primary text-primary-foreground" : "nice-icon-bg-dark text-primary-foreground"}`
           )}
         >
           {message.role === 'user' ? <IconUser /> : 
             <>
-            {theme === "dark" ? <IconNice className='h-4/6'/>:<IconNiceColor className='h-4/6'/>}
+            {hasMounted && theme === "dark" ? <IconNice className='h-4/6'/>:<IconNiceColor className='h-4/6'/>}
             </>
           }
         </div>
@@ -147,7 +149,7 @@ export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) 
           <></>
         }
       {
-        isComplete && message.role === 'assistant' ?
+        hasMounted && isComplete && message.role === 'assistant' ?
         <div>
           <div className='flex justify-end my-3'>
             <div className='thumb-icon tooltip' onClick={handleLike}>

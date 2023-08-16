@@ -6,21 +6,21 @@ import { IconArrowRight } from '@/components/ui/icons'
 
 const exampleMessages = [
   {
-    heading: 'Looking for classes? 📚',
-    message: `Give me some philosophy of mind class?`
+    heading: "Events 🎮",
+    message: `What are some interesting events recently? Ideally it's both relaxing and academical. Some free foods would be really awesome!`
   },
   {
-    heading: 'Want to connect with faculties? 🤠',
-    message: `Find me some professors in machine leanring?`
+    heading: "Clubs 🎨",
+    message: `I love climbing. Can you help me find a club for that and give me their GroupMe`
   },
   {
-    heading: "Find interesting stuff to do 🎮",
-    message: `What are some interesting activities recently?`
+    heading: 'Class 📚',
+    message: `Find me a robotics class open next semester. Give me the past students' comments and evaluation. In addition, it's ideal that the lecturer also has research background in robotics.`
   },
   {
-    heading: "Join various organizations 🎨",
-    message: `what design clubs are there?`
-  }
+    heading: 'Faculty 🤠',
+    message: `I want to do research in machine learning related areas. Specifically, I want to study deep neural networks. Find me a professor who ideally both teaches class and does research in neural network.`
+  },
 ]
 
 export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
@@ -31,15 +31,7 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
           Meet Owlracle
         </h1>
         <p className="mb-2 leading-normal text-muted-foreground">
-          Hi! I am Owlracle, your assistant for your life and study at Rice.
-          {/* an open-source language model constructed by{' '}
-          <ExternalLink href="https://github.com/Open-Nice">
-           Nice
-          </ExternalLink>
-          {' '} and empowered by Rice<span style={{ fontSize: '25px' }} placeholder='Owl'>🦉</span>s. */}
-        </p>
-        <p className="leading-normal text-muted-foreground">
-          Ask me anything you want to learn about Rice!
+          Hi! I am Owlracle, your assistant for life and study at Rice.
         </p>
         <div className="mt-4 flex flex-col items-start space-y-2">
           {exampleMessages.map((message, index) => (

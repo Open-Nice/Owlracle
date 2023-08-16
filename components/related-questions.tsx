@@ -1,14 +1,15 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { UseChatHelpers } from 'ai/react'
+import { type Message } from 'ai'
 import { Button } from '@/components/ui/button'
 import { IconArrowRight } from '@/components/ui/icons'
 import "@/components/stylings/general.css"
 import "@/components/stylings/conversation.css"
 
 interface RelatedQuestionAreaProps {
-    setInput: ((input: string) => void ) | null
+    setInput: ((input: string) => void ) | null,
+    messages: Message[]
 }
 
 type Question = {
@@ -16,25 +17,51 @@ type Question = {
     message : string
 }
 
-export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaProps) {
+export default function RelatedQuestionArea({ setInput, messages } : RelatedQuestionAreaProps) {
   const [questions, setQ] = useState<Question[]>([]);
     
     useEffect(() => {
+        
+        // console.log(messages)
+
+        let userChatIdx = []
+        let contextList = []
+        let chatHistory = ''
+
+        for (let i = 0; i < messages.length - 1; i++)
+            if (messages[i].role === 'user' && messages[i + 1].role === 'assistant')
+                userChatIdx.push(i)
+
+        if (userChatIdx.length == 0)
+            return
+        else if (userChatIdx.length == 1)
+            contextList = userChatIdx
+        else
+            // Random select 2 dialogues from userChatIdx
+            contextList = userChatIdx.sort(() => Math.random() - 0.5).slice(0, 2)
+
+        for (let idx of contextList)
+            chatHistory += `${messages[idx].role}: ${messages[idx].content}; ${messages[idx+1].role}: ${messages[idx+1].content}\n`
+        
+        // console.log(contextList)
+        // console.log(chatHistory)
+
         fetch('/api/recommend', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-            },      
-          })        
+            },
+            body: JSON.stringify({ chatHistory: chatHistory })
+          })
           .then((response) => response.json())
           .then((data) => {
             // console.log('data', data)
 
-            const { questions } = data
+            const { questionList } = data
             let q : Question[] = []
 
-            for(let question of questions) {
-                question = question.substring('question: '.length, question.indexOf('answer:')).trim()
+            for(let question of questionList) {
+                question = question.trim()
 
                 q.push({
                     heading: question,
@@ -49,7 +76,7 @@ export default function RelatedQuestionArea({ setInput } : RelatedQuestionAreaPr
 
     return (
         <div className='related-question-area'>
-            <b>Recommended questions:</b>
+            <b>You may be interested:</b>
             {
                 questions.map((question, idx)=>{
                     return(
