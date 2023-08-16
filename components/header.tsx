@@ -63,7 +63,7 @@ export async function Header() {
           >
               <IconGift className='h-5'/>
               <div className='tooltiptext tooltip-header shadow border bg-popover text-popover-foreground'>
-                Your support will directly cover the cost of running LLM, ensuring an enhanced Owlracle experience for all!
+                Your support will directly fund the cost of running this platform.
               </div>
             
           </a>
@@ -78,7 +78,7 @@ export async function Header() {
             <IconGitHub />
             <span className="hidden ml-2 md:flex">Contribute</span>
             <div className='tooltiptext tooltip-header shadow border bg-popover text-popover-foreground'>
-              The future is yours. Explore our open-source GitHub.
+              Join our open-source community to redefine the future of Owls
             </div>
           </a>
         </div>

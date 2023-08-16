@@ -14,8 +14,7 @@ export default async function SignInPage() {
     <div className="flex flex-col h-[calc(100vh-theme(spacing.16))] items-center justify-center py-10">
       <SigninAnimation/>
       <div className='text-4xl pt-3 pb-2'>Welcome to Owlracle.</div>
-      <div className='pb-4' style={{opacity: 0.5}}>Open Source LLM developed by {' '}
-      <ExternalLink href="https://github.com/Open-Nice">Nice</ExternalLink></div>
+      <div className='pb-4' style={{opacity: 0.5}}>Open Source LLM developed by Nice</div>
       <div className='text-xl text-center pb-4' style={{opacity: 0.8}}>
         Unlock the full potential of your Rice experience.
       </div>
