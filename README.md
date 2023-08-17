@@ -10,6 +10,20 @@
 </p>
 
 <p align="center">
+  <a href="https://docs.owlracle.com/" target="_blank">
+      <img src="https://img.shields.io/badge/docs-view-blue" alt="Documentation">
+  </a>
+  
+  <a href="https://discord.com/invite/aHRxTK5jHG" target="_blank">
+      <img src="https://img.shields.io/badge/discord-join-blue.svg?logo=discord&logoColor=white" alt="Discord">
+  </a>
+
+  <a href="yc127@rice.edu" target="_blank">
+      <img src="https://img.shields.io/badge/email-contact-blue" alt="Discord">
+  </a>
+</p>
+
+<p align="center">
   <a href="#documentation"><strong>Documentation</strong></a> ·
   <a href="#Architecture"><strong>Architecture</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
