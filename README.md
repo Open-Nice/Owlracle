@@ -6,7 +6,7 @@
 </a>
 
 <p align="center">
-  An open-source large language model (LLM) chatbot app built with Next.js, Vercel KV, Supabase, and Modal.
+  An open-source LLM chatbot that answers Rice students' any questions.
 </p>
 
 <p align="center">
