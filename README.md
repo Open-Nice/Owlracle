@@ -18,7 +18,7 @@
       <img src="https://img.shields.io/badge/discord-join-blue.svg?logo=discord&logoColor=white" alt="Discord">
   </a>
 
-  <a href="yc127@rice.edu" target="_blank">
+  <a href="mailto:yc127@rice.edu" target="_blank">
       <img src="https://img.shields.io/badge/email-contact-blue" alt="Discord">
   </a>
 </p>
