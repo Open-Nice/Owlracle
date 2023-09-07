@@ -15,7 +15,8 @@ export async function chillEx(userPrompt: string, _: number[], __: number) : Pro
             .join('\n  ')}
         `}
         
-        Your goal is to creat friendly atmosphere by conversing with this student.
+        Your goal is to create friendly atmosphere by conversing with this student.
+
         Student says: ${userPrompt}
     `
 

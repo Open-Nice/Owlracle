@@ -6,7 +6,6 @@ import { facultyEx } from '@/app/experts/faculty'
 import { careerEx } from '@/app/experts/career'
 import { academicPlanEx } from '@/app/experts/academicPlan'
 import { programEx } from '@/app/experts/program'
-// import { noteEx } from '@/app/experts/note'
 
 interface expertInfo {
     expert_name: string;
@@ -50,7 +49,8 @@ export const expertsInfo: { [key: number]: expertInfo } = {
     9: { 
         expert_name: 'Academic planner', 
         expert_description: 'help students plan their major, e.g. what courses to take in each semester.', 
-        expert_function: academicPlanEx },
+        expert_function: academicPlanEx 
+    },
     10: { 
         expert_name: 'Resource recommender', 
         expert_description: 'Recommend programs inside Rice University to help students.', 

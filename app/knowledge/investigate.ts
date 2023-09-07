@@ -19,7 +19,7 @@ const getSafeRetrievalPrompt = (retrievalPrompt: string, tokenizer: Tiktoken) : 
   return tokens.length < 8191 ? retrievalPrompt : new TextDecoder().decode(tokenizer.decode(tokens.slice(-8191)))
 }
 
-export async function investigate(userPrompt: string, dbs: number[], specificity: number): Promise<string> {
+export async function investigate(userPrompt: string, dbs: number[], specificity: number, meta_filter: Object | null = null): Promise<string> {
     // Sort dbs to investigate based on their dependency
     dbs.sort((a, b) => dbsInfo[a].db_dependency - dbsInfo[b].db_dependency)
 
@@ -44,8 +44,19 @@ export async function investigate(userPrompt: string, dbs: number[], specificity
 
         const retrievalPromptEmbedding = await embeddingFn.embedQuery(retrievalPrompt)
         
+        // console.log(`used: ${dbId != 7 ? `${dbsInfo[dbId].db_rpc}` : (meta_filter != null ? `match_events_meta` : `match_events`)}`)
+
         const { error: matchError, data: pageSections } = await supabaseClient.rpc(
-          `${dbsInfo[dbId].db_rpc}`,
+          dbId != 7 ? `${dbsInfo[dbId].db_rpc}` : (meta_filter != null ? `match_events_meta` : `match_events`),
+          meta_filter?
+          {
+            query_embedding: retrievalPromptEmbedding,
+            // Make sure threshold never higher than .68
+            match_threshold: Math.min((specificity-1) / 10, 0.68),
+            match_count: 5,
+            filter: meta_filter
+          }
+          :
           {
             query_embedding: retrievalPromptEmbedding,
             // Make sure threshold never higher than .68

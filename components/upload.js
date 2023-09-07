@@ -4,19 +4,30 @@ import * as React from 'react'
 import * as Dialog from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
-import { IconPlus, IconClose } from '@/components/ui/icons'
-import DropZoneAreaBtn from './upload-droparea';
+import {IconClose } from '@/components/ui/icons'
+import CampaignRoundedIcon from '@mui/icons-material/CampaignRounded';
+import SuggestionArea from "./upload-suggestion"
+import useHasMounted from "@/components/useHasMounted"
 import "@/components/stylings/upload.css"
 import "@/components/stylings/general.css"
 
 
-export default function UploadFile() {
+export default function UploadFile({propOpen = false, question = "", triggerHidden = false}) {
   const [open, setOpen] = React.useState(false)
+  const hasMounted = useHasMounted()
+
+  React.useEffect(()=>{
+    if (propOpen) {
+      setOpen(true)
+    }
+  }, [propOpen])
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <div className="tooltip">
+        <div className="tooltip" 
+            style={{display: `${triggerHidden? "none" : ""}`}} 
+            >
             <a onClick={(e)=>{e.preventDefault(); setOpen(true)}}
                 style={{cursor: "pointer"}}
                 className={cn(
@@ -24,9 +35,14 @@ export default function UploadFile() {
                   'absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4'
                 )}
             >
-              <IconPlus />
+              <div style={{opacity: "0.8"}}>
+                {
+                  hasMounted ? <CampaignRoundedIcon color='inherit'/> : <></>
+                }
+
+              </div>
             </a>
-          <span className="tooltiptext tooltip-top tooltip-upload shadow border bg-popover text-popover-foreground"><div>Teach Owlracle! <span style={{ fontSize: '25px' }}>😍</span></div></span>
+          <span className="tooltiptext tooltip-top tooltip-upload shadow border bg-popover text-popover-foreground"><div>Give me feedback! <span style={{ fontSize: '25px' }}>😍</span></div></span>
         </div> 
         
       </Dialog.Trigger>
@@ -34,14 +50,11 @@ export default function UploadFile() {
         <Dialog.Overlay className="DialogOverlay">
           <Dialog.Content className="DialogContent">
             <div className='DialogScrollWrapper'>
-                <Dialog.Title className="DialogTitle">Teach me something I do not know <span style={{ fontSize: '25px' }}>🤓</span> </Dialog.Title>
+                <Dialog.Title className="DialogTitle">Tell me where I should improve. I am constantly learning! <span style={{ fontSize: '25px' }}>🤓</span> </Dialog.Title>
                 <Dialog.Description className="DialogDescription">
-                  Upload info /
-                  knowledge /
-                  resources
-                  and I will learn them to share with other Rice <span style={{ fontSize: '25px' }}>🦉</span>s!
+                  I would love to hear your feedback! I will self-learn and give you more precise answers.
                 </Dialog.Description>
-                <DropZoneAreaBtn/>
+                <SuggestionArea question = {question}/>
                 <Dialog.Close>
                   <a className="IconButton" aria-label="Close">
                     <IconClose />

@@ -19,7 +19,7 @@ export function ChatList({ isLoading, messages, setInput }: ChatList) {
     <div className="relative mx-auto max-w-2xl px-4">
       {messages.map((message, index) => (
         <div key={index}>
-          <ChatMessage isComplete = {! (isLoading && index === messages.length - 1)} message={message}/>
+          <ChatMessage isComplete = {! (isLoading && index === messages.length - 1)} message={message} messages = {messages} num = {index}/>
           {index < messages.length - 1 && (
             <Separator className="my-4 md:my-8" />
           )}

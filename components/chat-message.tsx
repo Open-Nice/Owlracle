@@ -17,27 +17,65 @@ import { ChatMessageActions } from '@/components/chat-message-actions'
 import ClassCard from "@/components/classcard"
 import '@/components/stylings/general.css'
 import '@/components/stylings/classCard.css'
-import useHasMounted from '@/components/useHasMounted'
+import useHasMounted from "@/components/useHasMounted"
+import {getUser, updateReport} from "@/app/upload"
+import UploadFile from './upload';
+
 
 export interface ChatMessageProps {
   isComplete: Boolean
   message: Message,
+  messages: Message[],
+  num: number
 }
 
-export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) {
+export function ChatMessage({ isComplete, message, messages, num, ...props}: ChatMessageProps) {
   const { setTheme, theme } = useTheme()
-  
+  const [userId, setUserId] = useState("");
   const hasMounted = useHasMounted()
-
+  const [openModal, setOpenModal] = useState(false)
+  const [question, setQuestion] = useState("")
   const [courseCatalogs, setCCL] = useState<CourseCatalog[] | null>(null);
 
-  function handleLike(){
-    toast.success("Thanks! Your encouraging words mean a lot to me.")
+  async function setId(){
+    await getUser().then(
+      (result) =>{
+        setUserId(result);
+      }
+    );
+    
   }
 
-  function handleDislike(){
-    toast.success("Thanks for the feedback, I will continue to self-learn to give a more satifatory answer.")
+  async function handleLike(){
+    await updateReport(userId, messages[num - 1].content, message.content, true).then(
+      (result) =>{
+        if (result !== 0) {
+          toast.error(result);
+        } else {
+          toast.success("Thanks! Your encouraging words mean a lot to me.")
+        }
+      }
+    )
   }
+
+  async function handleDislike(){ 
+    setOpenModal(true)
+    setQuestion(messages[num - 1].content)
+    setTimeout(()=>{setOpenModal(false)}, 10)
+    await updateReport(userId, messages[num - 1].content, message.content, false).then(
+      (result) =>{
+        if (result !== 0) {
+          toast.error(result);
+        } else {
+          toast.success("Thanks for the feedback, I will continue to self-learn to give a more satifatory answer.")
+        }
+      }
+    )
+  }
+
+  useEffect(()=>{
+    setId();
+  }, [])
 
   useEffect(() => {
     if (! isComplete){
@@ -160,6 +198,7 @@ export function ChatMessage({ isComplete, message, ...props}: ChatMessageProps) 
               <ThumbDownOffAltIcon color='inherit'/>
               <span className='tooltiptext tooltip-top tooltip-thumb shadow border bg-popover text-popover-foreground'>Dislike the answer</span>
             </div>
+            <UploadFile propOpen={openModal} question = {question} triggerHidden = {true}/>
           </div>
         </div>
         :

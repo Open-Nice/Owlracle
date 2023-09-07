@@ -5,7 +5,7 @@ import { supabaseClient } from '@/app/supaClient'
 
 export async function getUser(){
   const session = await auth()
-  return session.user;
+  return session.user.id;
 }
 
 // Upload file using standard upload
@@ -39,4 +39,20 @@ export async function getUserFileEntries(user : string) {
 //files should be a list of file location, which is in the location column from data you get from getUserFileEntries
 export async function deleteFile(files: string[]) {
     const { data, error } = await supabaseClient.storage.from('UserFile').remove(files)
+    if (error) {
+      return error.message
+    } else {
+      return 0
+    }
+
+}
+
+export async function updateReport(user: string, question: string, answer: string, isLike: boolean) {
+  const { error } = await supabaseClient.from('Feedback').insert({ user: user, question: question, answer: answer, like: isLike})
+  //Error handling
+  if (error) {
+    return error.message
+  } else {
+    return 0
+  }
 }

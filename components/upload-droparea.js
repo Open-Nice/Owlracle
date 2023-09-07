@@ -19,7 +19,7 @@ export default function DropZoneAreaBtn () {
 
   async function setId(){
     const getUserId = await getUser();
-    setUserId(getUserId.id);
+    setUserId(getUserId);
   }
   
   function calcFileTotalSize(uploadFiles){
@@ -94,8 +94,8 @@ export default function DropZoneAreaBtn () {
 
 
   const onDrop = (acceptedFiles) => {
-    if (calcFileTotalSize(files) + calcFileTotalSize(acceptedFiles) > 52428800){
-        toast.error("Total file size excceed limit. Maximum total file size: 50MB.");
+    if (calcFileTotalSize(files) + calcFileTotalSize(acceptedFiles) > 4500000){
+        toast.error("Total file size excceed limit. Maximum total file size: 4.5MB.");
         return;
     }
     setFiles([...files, ...acceptedFiles])

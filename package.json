@@ -35,9 +35,11 @@
     "@vercel/analytics": "^1.0.0",
     "@vercel/kv": "^0.2.1",
     "ai": "^2.1.6",
+    "chrono-node": "^2.6.6",
     "class-variance-authority": "^0.4.0",
     "clsx": "^1.2.1",
     "common-tags": "^1.8.2",
+    "dayjs": "^1.11.9",
     "focus-trap-react": "^10.1.1",
     "get-contrast-ratio": "^0.2.1",
     "langchain": "^0.0.116",
@@ -59,7 +61,8 @@
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
     "sentiment": "^5.0.2",
-    "swr": "^2.2.0"
+    "swr": "^2.2.0",
+    "timezone": "link:dayjs/plugin/timezone"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
