@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://docs.owlracle.com/" target="_blank">
-      <img src="https://img.shields.io/badge/docs-view-blue" alt="Documentation">
+      <img src="https://img.shields.io/badge/docs-view-red" alt="Documentation">
   </a>
   
   <a href="https://discord.com/invite/aHRxTK5jHG" target="_blank">
@@ -19,7 +19,7 @@
   </a>
 
   <a href="mailto:yc127@rice.edu" target="_blank">
-      <img src="https://img.shields.io/badge/email-contact-blue" alt="Discord">
+      <img src="https://img.shields.io/badge/email-contact-green" alt="Discord">
   </a>
 </p>
 
@@ -37,39 +37,24 @@
 Check our latest documentation [here](https://docs.owlracle.com/).
 
 ## Architecture
-The architecture is 3 parts: llm, vectorDB, and server manager. The server manager constantly listens to different sources of websites (e.g. including rice Servery menu, owlnest events, esther courses) and updates the vectorDB. This is one way to update the vectorDB knowledge. Another way is through teaching: Rice students can upload files/urls to teach DB new knowledge. Alternatively, the Perplexity AI will teach the vectorDB: every evening the server manager will get all of the conversation histories and determine which one weren't answered perfectly, then we will use Perplexity AI to train this specific question and uploads the question answer pair to vectorDB. This way when some other students asked similar question next time, the retrieved knowledge would be better.
+The application is 3 parts: llm, vectorDB, and server manager. The server manager constantly listens&scrapes various sources and updates the vectorDB. The sources include owlnest events, clubs instagram, and esther courses. In addition to these sources, all rice students can add new sources. For example, if there is a site posting finance career fair I want to share, I can do so within Owlracle using the functionality called Teaching. Then the server manager will automatically scrape that info and share it with the next student who asks about some relavent questions.
 
 ## Features
 <ul>
-  <li><a href="https://github.com/Mr-Ye-Cao/Owlracle/blob/yc/app/api/chat/route.ts" target="_blank">Prompt Engineering</a>: codifies how LLM reasons about users question given provided contexts from VectorDB.</li>
+  <li><a href="https://github.com/Open-Nice/Owlracle/tree/main/app/experts" target="_blank">Prompt Engineering</a>: codifies how LLM reasons about users question given provided contexts from VectorDB.</li>
   <li><a href="https://supabase.com/docs/guides/ai" target="_blank">Supabase VectorDB</a>: augments information retrieval for LLM.</li>
   <li><a href="https://modal.com/home" target="_blank">Modal</a>: manages(create, update, delete) VectorDB information.</li>
-  <li><a href="https://www.perplexity.ai/" target="_blank">Perplexity AI</a>: does due diligence every night to teach vectorDB new information.</li>
 </ul>
-
-## LLM
-This LLM is built using `gpt-3.5-turbo`. We are working on migrating to fine-tuned Llama-v2. Join us [here](https://github.com/Open-Nice/Owlracle-llama2.c).
-
-## Creating a KV Database Instance
-
-Follow the steps outlined in the [quick start guide](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database) provided by Vercel. This guide will assist you in creating and configuring your KV database instance on Vercel, enabling your application to interact with it.
-
-Remember to update your environment variables (`KV_URL`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `KV_REST_API_READ_ONLY_TOKEN`) in the `.env` file with the appropriate credentials provided during the KV database setup.
 
 
 ## Running locally
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables) for this, but a `.env` file is all that is necessary.
-
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various OpenAI and authentication provider accounts.
-
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+You will need to use the environment variables [defined in `.env.example`](.env.example) to run Owlracle. If you're interested in joining us, join the [discord](https://discord.com/invite/aHRxTK5jHG) where we open sourced the env variables. After that, run following commmands:
 
 ```bash
-pnpm install
-pnpm dev
+pnpm i . #(run everytime to install new node modules)
+npx prisma generate --data-proxy #(run only once)
+pnpm dev #(run every time to start the app on local host)
 ```
 
 Your app template should now be running on [localhost:3000](http://localhost:3000/).
