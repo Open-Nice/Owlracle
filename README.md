@@ -57,7 +57,7 @@ npx prisma generate --data-proxy #(run only once)
 pnpm dev #(run every time to start the app on local host)
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000/).
+Owlracle should now be running on [localhost:3000](http://localhost:3000/).
 
 ## Authors
 
