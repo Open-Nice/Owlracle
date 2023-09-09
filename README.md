@@ -68,3 +68,4 @@ This library is created by [NICE](https://github.com/Open-Nice) team members, wi
 - Ningzhi Xu ([Ningzhi Xu](https://www.linkedin.com/in/ningzhi-xu-0914/)) -- backend
 - Jinyu Pei ([Jinyu Pei](https://www.linkedin.com/in/jinyu-pei-b92b80249/)) -- backend
 - Arihan Varanasi ([Arihan Varanasi](https://www.linkedin.com/in/arihanvaranasi/)) -- architecture & knowledge Retrieval
+- Jasmine Lu ([Jasmine Lu](https://www.linkedin.com/in/jasmine-lu-b01b4726a/)) -- server manager
