@@ -39,7 +39,7 @@ Check our latest documentation [here](https://docs.owlracle.com/).
 ## Architecture
 The application is 3 parts: llm, vectorDB, and server manager. The server manager constantly listens&scrapes various sources and updates the vectorDB. The sources include owlnest events, clubs instagram, and esther courses. In addition to these sources, all rice students can add new sources. For example, if there is a site posting finance career fair I want to share, I can do so within Owlracle using the functionality called Teaching. Then the server manager will automatically scrape that info and share it with the next student who asks about some relavent questions.
 
-## Features
+## Implementation
 <ul>
   <li><a href="https://github.com/Open-Nice/Owlracle/tree/main/app/experts" target="_blank">Prompt Engineering</a>: codifies how LLM reasons about users question given provided contexts from VectorDB.</li>
   <li><a href="https://supabase.com/docs/guides/ai" target="_blank">Supabase VectorDB</a>: augments information retrieval for LLM.</li>
