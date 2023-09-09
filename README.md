@@ -6,7 +6,7 @@
 </a>
 
 <p align="center">
-  An open-source LLM chatbot that answers Rice students' any questions.
+  An open-source LLM chatbot that answers Rice students' questions.
 </p>
 
 <p align="center">
