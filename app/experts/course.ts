@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma'
 import { codeBlock, oneLine } from 'common-tags'
 import { openAiAPIStream } from '@/app/openaiApiCall'
 import { investigate , getSafeTurboPrompt } from '@/app/knowledge/investigate'
+import { promptPrinciple } from '@/app/experts/expert'
 
 export const runtime = 'edge'
 
@@ -23,10 +24,9 @@ export async function courseEx(userPrompt: string, dbs: number[], specificity: n
         In your answer:
         1. Format your answer in chunks for readability.
         2. Use detailed reasoning in your answer to provide the best possible guidance.
-        3. Don't include url unless they appear in the context.
-        4. At the end of your answer, mention some aspect of the courses you gave and ask if the student's interested in learning more about it.
-        5. If you are unsure how to answer, say 
-        "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
+        3. Only include relevant courses from context. No need to cover all courses.
+        4. Don't include url unless they appear in the context.
+        5. ${promptPrinciple['Ask what you do not know']}
         `}
         
         Context:

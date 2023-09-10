@@ -2,6 +2,7 @@ import { codeBlock, oneLine } from 'common-tags'
 import { openAiAPIStream } from '@/app/openaiApiCall'
 import { investigate , getSafeTurboPrompt } from '@/app/knowledge/investigate'
 import { substitute } from '@/app/experts/course'
+import { promptPrinciple } from '@/app/experts/expert'
 
 export const runtime = 'edge'
 
@@ -23,10 +24,9 @@ export async function facultyEx(userPrompt: string, dbs: number[], specificity: 
         In your answer:
         1. Present faculties in different categories based on their research background similarity and differences. Show the category first.
         2. Only include urls that appeared in the context for each relavent faculty.
-        3. Include all relevant faculties from context. For each faculty, give a concise description for what is special about him/her compared to other professors.
-        4. At the end of your answer, mention some aspect of the faculties you gave and ask if the student's interested in learning more about it.
-        5. If you are unsure how to answer, say 
-        "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
+        3. Only include relevant faculties from context. No need to cover all faculties.
+        4. Give a concise description for each professor especially what is special about him/her.
+        5. ${promptPrinciple['Ask what you do not know']}
         `}
         
         Context:

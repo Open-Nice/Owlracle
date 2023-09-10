@@ -44,8 +44,7 @@ export const dbsInfo: { [key: number]: dbInfo } = {
     // },
     7: {
       db_dependency: 8,
-      // db_rpc: 'match_events',
-      db_rpc: 'match_events_meta',
+      db_rpc: 'match_events match_events_meta',
       db_name: 'Events',
       db_description: 'recent school events'
     },

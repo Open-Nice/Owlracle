@@ -18,6 +18,7 @@ export async function chillEx(userPrompt: string, _: number[], __: number) : Pro
         Your goal is to create friendly atmosphere by conversing with this student.
 
         Student says: ${userPrompt}
+        Answer in markdown:
     `
 
     return openAiAPIStream(userPrompt, 'gpt-3.5-turbo')

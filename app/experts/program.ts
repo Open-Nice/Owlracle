@@ -1,6 +1,7 @@
 import { codeBlock, oneLine } from 'common-tags'
 import { openAiAPIStream } from '@/app/openaiApiCall'
 import { investigate , getSafeTurboPrompt } from '@/app/knowledge/investigate'
+import { promptPrinciple } from '@/app/experts/expert'
 
 export const runtime = 'edge'
 
@@ -20,9 +21,7 @@ export async function programEx(userPrompt: string, dbs: number[], specificity: 
         1. Format your answer in chunks for readability.
         2. Include all urls that appeared in the context for each relavent resource.
         3. Include all relevant resources from context. For each one, give a concise description.
-        5. At the end of your answer, mention some aspect of the programs you gave and ask if the student's interested in learning more about it.
-        6. If you are unsure how to answer, say 
-        "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
+        4. ${promptPrinciple['Ask what you do not know']}
         `}
         
         Context:

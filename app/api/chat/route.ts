@@ -22,24 +22,13 @@ export async function POST(req: Request) {
     })
   }
 
-  // const chatHistory: Message[]  = messages.slice(-3, -1)
+  // Contexual memory for the previous conversation
+  const chatHistory: Message[]  = messages.slice(-3, -1)
+  let memory = ''
+  memory += `${chatHistory.map(entry => `${entry.role}: "${entry.content}"`).join('\n')}`
+
   let userPrompt = messages[messages.length - 1].content
-
-  // const ifHistory = (await enableHistory(userPrompt)).match(/Q: (\d+)/)
-  // const enableHist: number = (ifHistory && parseInt(ifHistory[1])) ?? 0
-
-  // if ( enableHist == 1 && chatHistory.length > 0 ) {
-  //   userPrompt += `\n
-  //     ${oneLine`
-  //         Here are some additional context about the prompt:
-  //         ${chatHistory.map(entry => `${entry.role}: "${entry.content}"`).join('\n')}
-  //     `}
-  //   `
-  // }
-
-  // console.log(userPrompt)
-
-  const eAk = await whichEaK(userPrompt)
+  const eAk = await whichEaK(userPrompt, memory)
 
   const expert = eAk.match(/E: (\d+)/)
   const dbs = eAk.match(/K: \[(.*?)\]/)
@@ -51,6 +40,14 @@ export async function POST(req: Request) {
   const expertId: number = parseInt(expert[1])
   const dbIds: number[] = dbs[1].split(',').map(Number)
   const specScaler: number = parseInt(specificity[1])
+
+  if ( chatHistory.length > 0 ) {
+    userPrompt += `
+      Here are the past conversation between you and user:
+      ${memory}
+    `
+  }
+
   const answer = await consultExpert(expertId, dbIds, specScaler, userPrompt)
 
   const stream = OpenAIStream(answer, {
@@ -88,6 +85,7 @@ const consultExpert = async (expert: number, dbs: number[], specScaler: number, 
   console.log('expertId', expert)
   console.log('dbIds', dbs)
   console.log('specificity', specScaler)
+  console.log('userPrompt', userPrompt)
 
   if (expertsInfo[expert] && expertsInfo[expert].expert_function)
     return expertsInfo[expert].expert_function!(userPrompt, dbs, specScaler)
@@ -96,7 +94,7 @@ const consultExpert = async (expert: number, dbs: number[], specScaler: number, 
 }
 
 
-const whichEaK = async (userPrompt: string) : Promise<string> => {
+const whichEaK = async (userPrompt: string, memory: string) : Promise<string> => {
 
   let prompt = codeBlock`
     ${oneLine`
@@ -125,26 +123,14 @@ const whichEaK = async (userPrompt: string) : Promise<string> => {
 
     This is the student prompt:
     ${userPrompt}
+    ${
+      memory != '' 
+      ?
+      `This is the history conversation between you and student in case you need: ${memory}`:''
+    }
   `
 
   prompt = await getSafeGPT4Prompt(prompt)
 
   return openAiAPIcall(prompt, 'gpt-4')
 }
-
-// const enableHistory = async (userPrompt: string): Promise<string> => {
-//   let prompt = codeBlock`
-//     ${oneLine`
-//       Do you think the user is referring to a query in the past conversation?
-//       This is the user prompt:
-//       ${userPrompt}
-//     `}
-
-//     Format your answer as:
-//     Q: a boolean [0 (false), 1 (true)]
-//   `
-
-//   prompt = await getSafeGPT4Prompt(prompt)
-
-//   return openAiAPIcall(prompt, 'gpt-4')
-// }

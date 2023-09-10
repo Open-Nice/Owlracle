@@ -1,6 +1,7 @@
 import { codeBlock, oneLine } from 'common-tags'
 import { openAiAPIStream } from '@/app/openaiApiCall'
 import { investigate , getSafeTurboPrompt } from '@/app/knowledge/investigate'
+import { promptPrinciple } from '@/app/experts/expert'
 
 export const runtime = 'edge'
 
@@ -18,17 +19,11 @@ function getDatesFromPrompt(prompt: string): string[] {
 
     const chicagoTimeInUTC = new Date(chicagoTime)
 
-    // console.log('chicago time in UTC:', chicagoTimeInUTC)
-
     const parsedDate = chrono.parseDate(prompt, chicagoTimeInUTC)
-
-    // console.log('parsedDate is', parsedDate)
 
     if ( parsedDate ) {
         // Convert parsedDate to chicago time
         const parsedDateInChicagoTime = dayjs(parsedDate).tz('America/Chicago')
-        // console.log('parsedDate in Chicago time:', parsedDateInChicagoTime.format('YYYY-MM-DD'))
-
         return [parsedDateInChicagoTime.format('YYYY-MM-DD')]
     }
 
@@ -39,11 +34,8 @@ export async function eventEx(userPrompt: string, dbs: number[], specificity: nu
 
     const dates = getDatesFromPrompt(userPrompt)
 
-    // console.log(dates)
-
-    const contextText = await investigate(userPrompt, dbs, specificity, dates.length > 0 ? {'date': dates[0]} : null)
-
-    // console.log(contextText)
+    // Set specificy = 1 -> Only get specific events
+    const contextText = await investigate(userPrompt, dbs, 1, dates.length > 0 ? {'date': dates[0]} : null)
 
     userPrompt = codeBlock`
         Student question: ${userPrompt}
@@ -54,11 +46,9 @@ export async function eventEx(userPrompt: string, dbs: number[], specificity: nu
         You are a event expert for Rice Univ. students.
         Answer question above using context below concisely and accurately.
         In your answer:
-        1. First filter events with date that meets student's question.
+        1. Include all relevant events from context with date and type meeting student's question.
         2. For each event, give a concise description, date, urls, and location.
-        3. At the end of your answer, mention some aspect of the events you gave and ask if the student's interested in learning more about it.
-        4. If you are unsure how to answer, say 
-        "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
+        3. ${promptPrinciple['Ask what you do not know']}
         `}
 
         Here are some events:

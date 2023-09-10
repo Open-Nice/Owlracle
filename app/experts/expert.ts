@@ -13,6 +13,10 @@ interface expertInfo {
     expert_function?: (prompt: string, dbs: number[], specificity: number) => Promise<Response>;
 }
 
+export const promptPrinciple: { [key: string]: string } = {
+    'Ask what you do not know': 'If you think you have insufficient information to answer the question. Your answer should be a question asking for the info you need.'
+}
+
 export const expertsInfo: { [key: number]: expertInfo } = {
     1: { 
         expert_name: 'Everyday conversation expert', 

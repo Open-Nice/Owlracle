@@ -1,6 +1,7 @@
 import { codeBlock, oneLine } from 'common-tags'
 import { openAiAPIStream } from '@/app/openaiApiCall'
 import { investigate , getSafeTurboPrompt } from '@/app/knowledge/investigate'
+import { promptPrinciple } from '@/app/experts/expert'
 
 export const runtime = 'edge'
 
@@ -19,10 +20,8 @@ export async function clubEx(userPrompt: string, dbs: number[], specificity: num
         In your answer:
         1. Present clubs bundled in categories: e.g. academics, entertianment, social, sports, etc. Show the category first coupled with emojis you see fit.
         2. Only include urls that appeared in the context for each relavent club.
-        3. Include all relevant clubs from context. For each one, give a concise description.
-        4. At the end of your answer, mention some aspect of the clubs you gave and ask if the student's interested in learning more about it.
-        5. If you are unsure how to answer, say 
-        "Sorry, I don't know how to help with that. I have kept in mind to learn this next time we meet."
+        3. Only include relevant clubs from context. No need to cover all faculties.
+        4. ${promptPrinciple['Ask what you do not know']}
         `}
         
         Context:

@@ -13,22 +13,9 @@ export const config = { runtime: "edge" }
 
 const embeddingFn = new OpenAIEmbeddings()
 
-const getSafeRetrievalPrompt = (retrievalPrompt: string, tokenizer: Tiktoken) : string => {
-  const tokens = tokenizer.encode(retrievalPrompt)
-
-  return tokens.length < 8191 ? retrievalPrompt : new TextDecoder().decode(tokenizer.decode(tokens.slice(-8191)))
-}
-
 export async function investigate(userPrompt: string, dbs: number[], specificity: number, meta_filter: Object | null = null): Promise<string> {
     // Sort dbs to investigate based on their dependency
     dbs.sort((a, b) => dbsInfo[a].db_dependency - dbsInfo[b].db_dependency)
-
-    await init((imports) => WebAssembly.instantiate(wasm, imports))
-    const tokenizer = new Tiktoken(
-      model.bpe_ranks,
-      model.special_tokens,
-      model.pat_str
-    )
 
     let investigationContext = ''
     
@@ -40,54 +27,65 @@ export async function investigate(userPrompt: string, dbs: number[], specificity
 
         let retrievalPrompt = codeBlock`${oneLine`${userPrompt} ${investigationContext}`}`.replaceAll('\n', ' ')
         
-        retrievalPrompt = getSafeRetrievalPrompt(retrievalPrompt, tokenizer)
+        retrievalPrompt = await getSafeRetrievalPrompt(retrievalPrompt)
 
         const retrievalPromptEmbedding = await embeddingFn.embedQuery(retrievalPrompt)
         
-        // console.log(`used: ${dbId != 7 ? `${dbsInfo[dbId].db_rpc}` : (meta_filter != null ? `match_events_meta` : `match_events`)}`)
+        if (`${dbsInfo[dbId].db_rpc}` === 'match_events match_events_meta') {
+          const { error: matchError, data: pageSections } = await supabaseClient.rpc(
+            meta_filter != null ? `match_events_meta` : `match_events`,
+            meta_filter?
+            {
+              query_embedding: retrievalPromptEmbedding,
+              // Make sure threshold never higher than .68
+              match_threshold: Math.min((specificity-1) / 10, 0.68),
+              // Get as many events as possible
+              match_count: 10,
+              filter: meta_filter
+            }
+            :
+            {
+              query_embedding: retrievalPromptEmbedding,
+              // Make sure threshold never higher than .68
+              match_threshold: Math.min((specificity-1) / 10, 0.68),
+              // Get as many events as possible
+              match_count: 10,
+            }
+          )
+          if (matchError) {
+              console.log('Failed to match page sections', matchError)
+              throw new Error(`Failed to match page sections`)
+          }
 
-        const { error: matchError, data: pageSections } = await supabaseClient.rpc(
-          dbId != 7 ? `${dbsInfo[dbId].db_rpc}` : (meta_filter != null ? `match_events_meta` : `match_events`),
-          meta_filter?
-          {
-            query_embedding: retrievalPromptEmbedding,
-            // Make sure threshold never higher than .68
-            match_threshold: Math.min((specificity-1) / 10, 0.68),
-            match_count: 5,
-            filter: meta_filter
+          allPageSections.push(pageSections)
+
+          for (let pageSection of pageSections)
+            investigationContext += pageSection.content
+
+        } else {
+          const { error: matchError, data: pageSections } = await supabaseClient.rpc(
+            `${dbsInfo[dbId].db_rpc}`,
+            {
+              query_embedding: retrievalPromptEmbedding,
+              // Make sure threshold never higher than .68
+              match_threshold: Math.min((specificity-1) / 10, 0.68),
+              match_count: 5,
+            }
+          )
+          if (matchError) {
+              console.log('Failed to match page sections', matchError)
+              throw new Error(`Failed to match page sections`)
           }
-          :
-          {
-            query_embedding: retrievalPromptEmbedding,
-            // Make sure threshold never higher than .68
-            match_threshold: Math.min((specificity-1) / 10, 0.68),
-            match_count: 5,
-          }
-        )
-        if (matchError) {
-            console.log('Failed to match page sections', matchError)
-            throw new Error(`Failed to match page sections`)
+
+          allPageSections.push(pageSections)
+
+          for (let pageSection of pageSections)
+            investigationContext += pageSection.content
         }
-
-        // console.log('match_threshold', Math.min((specificity-1) / 10, 0.68))
-
-        // console.log('db_rpc', `${dbsInfo[dbId].db_rpc}`)
-
-        // console.log('retrievalPrompt', retrievalPrompt)
-
-        // console.log('pageSections', pageSections)
-
-        // console.log('\n\n\n')
-
-        allPageSections.push(pageSections)
-
-        for (let pageSection of pageSections)
-          investigationContext += pageSection.content
     }
 
     // allPageSections: [[p11, p12, p13], [p21, p22, p23], [p31, p32, p33]] -> 
     // contextText: [p11, p21, p31, p12, p22, p32, p13, p23, p33]
-    let tokenCount = 0
     let contextText = ''
 
     let maxPageSectionLength = -1
@@ -101,18 +99,31 @@ export async function investigate(userPrompt: string, dbs: number[], specificity
             continue
 
           const content = pageSections[idx].content
-          const numTokens = tokenizer.encode(content).length
 
           contextText += `${content.trim()}\n---\n`
-          tokenCount += numTokens
       }
     }
-
-    tokenizer.free()
 
     // console.log('contextText', contextText)
 
     return contextText
+}
+
+const getSafeRetrievalPrompt = async (retrievalPrompt: string) : Promise<string> => {
+  await init((imports) => WebAssembly.instantiate(wasm, imports))
+  const tokenizer = new Tiktoken(
+    model.bpe_ranks,
+    model.special_tokens,
+    model.pat_str
+  )
+
+  const tokens = tokenizer.encode(retrievalPrompt)
+
+  const safePrompt = new TextDecoder().decode(tokenizer.decode(tokens.slice(-8191)))
+
+  tokenizer.free()
+
+  return tokens.length < 8191 ? retrievalPrompt : safePrompt
 }
 
 export const getSafeGPT4Prompt = async (prompt : string) : Promise<string> => {
@@ -125,9 +136,13 @@ export const getSafeGPT4Prompt = async (prompt : string) : Promise<string> => {
   
   const tokens = tokenizer.encode(prompt)
 
+  const safePrompt = new TextDecoder().decode(tokenizer.decode(tokens.slice(0, 8000)))
+
   // console.log('GPT4 prompt token length', tokens.length)
+
+  tokenizer.free()
   
-  return tokens.length < 8000 ? prompt : new TextDecoder().decode(tokenizer.decode(tokens.slice(0, 8000)))
+  return tokens.length < 8000 ? prompt : safePrompt
 }
 
 export const getSafeTurboPrompt = async (prompt: string) : Promise<string> => {
@@ -140,7 +155,11 @@ export const getSafeTurboPrompt = async (prompt: string) : Promise<string> => {
 
   const tokens = tokenizer.encode(prompt)
 
+  const safePrompt = new TextDecoder().decode(tokenizer.decode(tokens.slice(0, 10000)))
+
   // console.log('GPT3.5 Turbo 16k token length', tokens.length)
 
-  return tokens.length < 10000 ? prompt : new TextDecoder().decode(tokenizer.decode(tokens.slice(0, 10000)))
+  tokenizer.free()
+
+  return tokens.length < 10000 ? prompt : safePrompt
 }
