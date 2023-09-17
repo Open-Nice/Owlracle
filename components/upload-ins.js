@@ -6,28 +6,38 @@ import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import {IconClose } from '@/components/ui/icons'
 import CampaignRoundedIcon from '@mui/icons-material/CampaignRounded';
-import SuggestionArea from "./upload-suggestion"
+import InsArea from "./upload-ins-area"
 import useHasMounted from "@/components/useHasMounted"
+import Popover from "@/components/upload-ins-pop"
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import "@/components/stylings/upload.css"
 import "@/components/stylings/general.css"
 
 
-export default function UploadFile({propOpen = false, question = "", triggerHidden = false}) {
+export default function UploadIns() {
   const [open, setOpen] = React.useState(false)
   const hasMounted = useHasMounted()
+  const [pop, setPop] = React.useState(false);
+
+  function triggerPopup() {
+    setPop(true); 
+    setTimeout(()=>{setPop(false)}, 100);
+  }
 
   React.useEffect(()=>{
-    if (propOpen) {
-      setOpen(true)
-    }
-  }, [propOpen])
+    triggerPopup();
+    setInterval(()=>{
+      triggerPopup();
+    }, 600000);
+    
+  }, [])
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <div className="tooltip" 
-            style={{display: `${triggerHidden? "none" : ""}`}} 
-            >
+        <>
+        <div className="tooltip" >
             <a onClick={(e)=>{e.preventDefault(); setOpen(true)}}
                 style={{cursor: "pointer"}}
                 className={cn(
@@ -41,18 +51,22 @@ export default function UploadFile({propOpen = false, question = "", triggerHidd
                 }
               </div>
             </a>
-            <span className="tooltiptext tooltip-top tooltip-upload shadow border bg-popover text-popover-foreground"><div>Give me feedback! <span style={{ fontSize: '25px' }}>😍</span></div></span>
+            <Popover content = {<>Want to upload <b>club <InstagramIcon/> <FacebookIcon/></b>?</>} pop = {pop}/>
+            <span className="tooltiptext tooltip-top tooltip-upload shadow border bg-popover text-popover-foreground cursor-pt" onClick={()=>setOpen(true)}>
+              <div>I have info to share<span style={{ fontSize: '25px' }}>🤩</span></div></span>
         </div> 
+        </>
+        
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay">
           <Dialog.Content className="DialogContent">
             <div className='DialogScrollWrapper'>
-                <Dialog.Title className="DialogTitle">Teach me <span style={{ fontSize: '25px' }}>🤓</span> </Dialog.Title>
+                <Dialog.Title className="DialogTitle">Share club/event <InstagramIcon/> <FacebookIcon/>! <span style={{ fontSize: '25px' }}>🤗</span> </Dialog.Title>
                 <Dialog.Description className="DialogDescription">
-                  I would love your feedback! I will self-learn and give you more precise answers.
+                  I will use the links to grab club/event info and share them with Rice 🦉s!
                 </Dialog.Description>
-                <SuggestionArea question = {question}/>
+                <InsArea/>
                 <Dialog.Close>
                   <a className="IconButton" aria-label="Close">
                     <IconClose />

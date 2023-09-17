@@ -6,7 +6,7 @@ import { promptPrinciple } from '@/app/experts/expert'
 
 export const runtime = 'edge'
 
-export async function academicPlanEx(userPrompt: string, dbs: number[], specificity: number) : Promise<Response> {
+export async function academicPlanEx(userPrompt: string, dbs: number[], specificity: number, memory: string) : Promise<Response> {
     
     // Convert unrecognized tokens 'COMP 140' -> 'computational thinking'
     userPrompt = await substitute(userPrompt)
@@ -17,6 +17,11 @@ export async function academicPlanEx(userPrompt: string, dbs: number[], specific
 
     userPrompt = codeBlock`
         Student question: ${userPrompt}
+
+        ${memory !== '' ? `Here are the past conversation between you and user in case you need: ${memory}`
+        :
+        ''
+        }
 
         ${oneLine`
         You are an academic plan expert for Rice Univ. students.

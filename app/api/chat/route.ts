@@ -41,14 +41,7 @@ export async function POST(req: Request) {
   const dbIds: number[] = dbs[1].split(',').map(Number)
   const specScaler: number = parseInt(specificity[1])
 
-  if ( chatHistory.length > 0 ) {
-    userPrompt += `
-      Here are the past conversation between you and user:
-      ${memory}
-    `
-  }
-
-  const answer = await consultExpert(expertId, dbIds, specScaler, userPrompt)
+  const answer = await consultExpert(expertId, dbIds, specScaler, userPrompt, memory)
 
   const stream = OpenAIStream(answer, {
     async onCompletion(completion) {
@@ -81,14 +74,14 @@ export async function POST(req: Request) {
   return new StreamingTextResponse(stream)
 }
 
-const consultExpert = async (expert: number, dbs: number[], specScaler: number, userPrompt: string) : Promise<Response> => {
+const consultExpert = async (expert: number, dbs: number[], specScaler: number, userPrompt: string, memory: string) : Promise<Response> => {
   console.log('expertId', expert)
   console.log('dbIds', dbs)
   console.log('specificity', specScaler)
-  console.log('userPrompt', userPrompt)
+  // console.log('userPrompt', userPrompt)
 
   if (expertsInfo[expert] && expertsInfo[expert].expert_function)
-    return expertsInfo[expert].expert_function!(userPrompt, dbs, specScaler)
+    return expertsInfo[expert].expert_function!(userPrompt, dbs, specScaler, memory)
 
   return openAiAPIStream('say "Sorry I cannot solve this problem currently. I have noted it down on my things to learn."', 'gpt-3.5-turbo')
 }

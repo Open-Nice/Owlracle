@@ -67,14 +67,14 @@ export default function SuggestionArea ({question}) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className='upload-span'>I should learn more about... *</div>
+            <div className='upload-span'>Question I did poorly:</div>
             <div style={{paddingRight: "20px"}}>
-                <input placeholder='Give me a topic I should know, or a question I should answer better!' 
+                <input placeholder='e.g. Where can I find finance career fairs?'
                 className='upload-input' required value={description} onChange={(e)=>setDescription(e.target.value)}/>
             </div>
-            <div className='upload-span'>Related Url *</div>
+            <div className='upload-span'>Where I could find answer (URL):</div>
             <div style={{paddingRight: "20px"}}>
-                <input placeholder='Please give me a link to the related resources for me to learn and improve！' className='upload-input' value={url} onChange={(e)=>setUrl(e.target.value)} required/>
+                <input placeholder='https://' className='upload-input' value={url} onChange={(e)=>setUrl(e.target.value)} required/>
             </div>
             <div className='d-flex justify-content-end full-width'>
                 <button className='upload-submit-btn shadow' type='submit'>{submitBtn}</button>

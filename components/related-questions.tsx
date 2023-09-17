@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { type Message } from 'ai'
-import { Button } from '@/components/ui/button'
 import { IconArrowRight } from '@/components/ui/icons'
+import MiniCard from "@/components/card-mini"
 import "@/components/stylings/general.css"
 import "@/components/stylings/conversation.css"
 
@@ -12,72 +12,103 @@ interface RelatedQuestionAreaProps {
     messages: Message[]
 }
 
-type Question = {
-    heading : string,
-    message : string
-}
+// type Question = {
+//     heading : string,
+//     message : string
+// }
+
+const exampleMessages = [
+    {
+      heading: "Mon",
+      message: `events on Monday`
+    },
+    {
+      heading: "Tue",
+      message: `events on Tuesday`
+    },
+    {
+      heading: "Wed",
+      message: `events on Wednesday`
+    },
+    {
+      heading: "Thu",
+      message: `events on Thursday`
+    },
+    {
+      heading: "Fri",
+      message: `events on Friday`
+    },
+    {
+      heading: "Sat",
+      message: `events on Saturday`
+    },
+    {
+      heading: "Sun",
+      message: `events on Sunday`
+    },
+  ]
 
 export default function RelatedQuestionArea({ setInput, messages } : RelatedQuestionAreaProps) {
-  const [questions, setQ] = useState<Question[]>([]);
+    //   const [questions, setQ] = useState<Question[]>([]);
     
-    useEffect(() => {
+    // useEffect(() => {
         
-        // console.log(messages)
+    //     // console.log(messages)
 
-        let userChatIdx = []
-        let contextList = []
-        let chatHistory = ''
+    //     let userChatIdx = []
+    //     let contextList = []
+    //     let chatHistory = ''
 
-        for (let i = 0; i < messages.length - 1; i++)
-            if (messages[i].role === 'user' && messages[i + 1].role === 'assistant')
-                userChatIdx.push(i)
+    //     for (let i = 0; i < messages.length - 1; i++)
+    //         if (messages[i].role === 'user' && messages[i + 1].role === 'assistant')
+    //             userChatIdx.push(i)
 
-        if (userChatIdx.length == 0)
-            return
-        else if (userChatIdx.length == 1)
-            contextList = userChatIdx
-        else
-            // Random select 2 dialogues from userChatIdx
-            contextList = userChatIdx.sort(() => Math.random() - 0.5).slice(0, 2)
+    //     if (userChatIdx.length == 0)
+    //         return
+    //     else if (userChatIdx.length == 1)
+    //         contextList = userChatIdx
+    //     else
+    //         // Random select 2 dialogues from userChatIdx
+    //         contextList = userChatIdx.sort(() => Math.random() - 0.5).slice(0, 2)
 
-        for (let idx of contextList)
-            chatHistory += `${messages[idx].role}: ${messages[idx].content}; ${messages[idx+1].role}: ${messages[idx+1].content}\n`
+    //     for (let idx of contextList)
+    //         chatHistory += `${messages[idx].role}: ${messages[idx].content}; ${messages[idx+1].role}: ${messages[idx+1].content}\n`
         
-        // console.log(contextList)
-        // console.log(chatHistory)
+    //     // console.log(contextList)
+    //     // console.log(chatHistory)
 
-        fetch('/api/recommend', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ chatHistory: chatHistory })
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            // console.log('data', data)
+    //     fetch('/api/recommend', {
+    //         method: 'POST',
+    //         headers: {
+    //           'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({ chatHistory: chatHistory })
+    //       })
+    //       .then((response) => response.json())
+    //       .then((data) => {
+    //         // console.log('data', data)
 
-            const { questionList } = data
-            let q : Question[] = []
+    //         const { questionList } = data
+    //         let q : Question[] = []
 
-            for(let question of questionList) {
-                question = question.trim()
+    //         for(let question of questionList) {
+    //             question = question.trim()
 
-                q.push({
-                    heading: question,
-                    message: question,
-                })
-            }
+    //             q.push({
+    //                 heading: question,
+    //                 message: question,
+    //             })
+    //         }
 
-            setQ(q)
-          })
-          .catch((error) => console.error('Error fetching data:', error))
-    }, [])
+    //         setQ(q)
+    //       })
+    //       .catch((error) => console.error('Error fetching data:', error))
+    // }, [])
 
     return (
         <div className='related-question-area'>
-            <b>You may be interested:</b>
-            {
+            <b>Check out upcoming Events on:</b>
+            {/* {
                 questions.map((question, idx)=>{
                     return(
                         <div className='related-question-item' key={idx}>
@@ -99,7 +130,19 @@ export default function RelatedQuestionArea({ setInput, messages } : RelatedQues
                     )
                     
                 })
+            } */}
+
+            <div className='calendar-wrapper'>
+            {
+                exampleMessages.map((message, index) => (
+                    <div className='mini-card-wrapper' key={index}>
+                        <MiniCard content = {message.heading} handleClick = {() => {setInput ? setInput(message.message) : ()=>{}} }/>
+                    </div>
+                ))
             }
+            </div>
+            
+            
             
         </div>
     )

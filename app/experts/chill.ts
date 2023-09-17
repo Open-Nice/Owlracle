@@ -2,7 +2,7 @@ import { codeBlock, oneLine } from 'common-tags'
 import { openAiAPIStream } from '@/app/openaiApiCall'
 import { dbsInfo } from '@/app/knowledge/knowledge'
 
-export async function chillEx(userPrompt: string, _: number[], __: number) : Promise<Response> {
+export async function chillEx(userPrompt: string, _: number[], __: number, memory: string) : Promise<Response> {
 
     userPrompt = codeBlock`
         ${oneLine`
@@ -18,6 +18,10 @@ export async function chillEx(userPrompt: string, _: number[], __: number) : Pro
         Your goal is to create friendly atmosphere by conversing with this student.
 
         Student says: ${userPrompt}
+        ${memory !== '' ? `Here are the past conversation between you and user in case you need: ${memory}`
+        :
+        ''
+        }
         Answer in markdown:
     `
 

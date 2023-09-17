@@ -5,7 +5,7 @@ import { promptPrinciple } from '@/app/experts/expert'
 
 export const runtime = 'edge'
 
-export async function programEx(userPrompt: string, dbs: number[], specificity: number) : Promise<Response> {
+export async function programEx(userPrompt: string, dbs: number[], specificity: number, memory: string) : Promise<Response> {
     
     const contextText = await investigate(userPrompt, dbs, specificity)
 
@@ -13,6 +13,11 @@ export async function programEx(userPrompt: string, dbs: number[], specificity: 
 
     userPrompt = codeBlock`
         Student question: ${userPrompt}
+
+        ${memory !== '' ? `Here are the past conversation between you and user in case you need: ${memory}`
+        :
+        ''
+        }
 
         ${oneLine`
         You are a program recommender to Rice Univ. student.

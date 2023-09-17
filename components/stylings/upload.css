@@ -52,7 +52,7 @@ input {
 
 .DialogTitle {
   margin: 0;
-  font-weight: 500;
+  font-size: 18px;
   color: #000;
 }
 
@@ -257,4 +257,54 @@ input {
 .selected-file-chip{
   margin-right: 5px;
   margin-bottom: 5px;
+}
+
+.popup{
+  opacity: 0;
+  font-size: 10pt;
+  padding: 10px;
+  border-radius: 5px;
+  background-image: linear-gradient(30deg, rgb(170, 170, 255), rgb(255, 214, 255), pink, rgb(255, 255, 231));
+  min-width: 250px;
+  transition: all 0.9s ease;
+  color: #000;
+}
+
+.pop-wrapper{
+  font-size: 10pt;
+}
+
+.pop-animate{
+  opacity: 0;
+  animation: pop-floating 3s ease 5;
+  transition: all 0.9s ease;
+}
+
+/* .pop-wrapper:hover .pop-wrapper.pop-animate{
+   animation: pop-disappearing 0.9s ease;
+} */
+
+.pop-animate:hover{
+  opacity: 0;
+}
+
+@keyframes pop-floating {
+  0%{
+    opacity: 0;
+    transform: translateY(3px);
+  } 20%, 80% {
+    opacity: 1;
+    transform: translateY(0px);
+  } 100% {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+@keyframes pop-disappearing{
+  0% {
+    opacity: 1;
+  } 100% {
+    opacity: 0;
+  }
 }

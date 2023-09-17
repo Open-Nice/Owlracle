@@ -3,6 +3,7 @@ import { LoginButton } from '@/components/login-button'
 import { ExternalLink } from '@/components/external-link'
 import { redirect } from 'next/navigation'
 import SigninAnimation from "@/components/signin-animation"
+import "@/components/stylings/general.css"
 
 export default async function SignInPage() {
   const session = await auth()
@@ -18,7 +19,7 @@ export default async function SignInPage() {
       <div className='text-xl text-center pb-4' style={{opacity: 0.8}}>
         Unlock the full potential of your Rice experience.
       </div>
-      <LoginButton />
+      <LoginButton className='coloredBtn'/>
     </div>
   )
 }

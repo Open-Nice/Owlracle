@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/tooltip'
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { useRouter } from 'next/navigation'
-import  UploadFile  from './upload.js'
+import  UploadIns  from './upload-ins'
 
 export interface PromptProps
   extends Pick<UseChatHelpers, 'input' | 'setInput'> {
@@ -49,7 +49,7 @@ export function PromptForm({
     >
       <div className="relative flex max-h-60 w-full grow flex-col bg-background px-8 sm:rounded-md sm:border sm:px-12">
         <div className='absolute left-0'>
-          <UploadFile/>
+          <UploadIns/>
         </div>
         <Textarea
           ref={inputRef}

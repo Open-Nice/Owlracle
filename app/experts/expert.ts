@@ -10,7 +10,7 @@ import { programEx } from '@/app/experts/program'
 interface expertInfo {
     expert_name: string;
     expert_description: string;
-    expert_function?: (prompt: string, dbs: number[], specificity: number) => Promise<Response>;
+    expert_function?: (prompt: string, dbs: number[], specificity: number, memory: string) => Promise<Response>;
 }
 
 export const promptPrinciple: { [key: string]: string } = {

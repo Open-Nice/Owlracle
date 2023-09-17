@@ -23,22 +23,44 @@ function getDatesFromPrompt(prompt: string): string[] {
 
     if ( parsedDate ) {
         // Convert parsedDate to chicago time
-        const parsedDateInChicagoTime = dayjs(parsedDate).tz('America/Chicago')
-        return [parsedDateInChicagoTime.format('YYYY-MM-DD')]
+        let parsedDateInChicagoTime = dayjs(parsedDate).tz('America/Chicago')
+
+        // Check if parsedDate is in the past
+        if ( parsedDateInChicagoTime.isBefore(chicagoTime) ) {
+            // If so, advance it by one week
+            parsedDateInChicagoTime = parsedDateInChicagoTime.add(1, 'week')
+        }
+
+        // console.log('parsedDateInChicagoTime', parsedDateInChicagoTime)
+
+        // If parsedDate is still in the past
+        if ( parsedDateInChicagoTime.isBefore(chicagoTime) ) {
+            return []
+        } else {
+            return [parsedDateInChicagoTime.format('YYYY-MM-DD')]
+        }
+
     }
 
     return []
 }
 
-export async function eventEx(userPrompt: string, dbs: number[], specificity: number) : Promise<Response> {
+export async function eventEx(userPrompt: string, dbs: number[], _: number, memory: string) : Promise<Response> {
 
     const dates = getDatesFromPrompt(userPrompt)
+
+    // console.log(dates)
 
     // Set specificy = 1 -> Only get specific events
     const contextText = await investigate(userPrompt, dbs, 1, dates.length > 0 ? {'date': dates[0]} : null)
 
     userPrompt = codeBlock`
         Student question: ${userPrompt}
+
+        ${memory !== '' ? `Here are the past conversation between you and user in case you need: ${memory}`
+        :
+        ''
+        }
 
         Today is ${chicagoTime.format('dddd YYYY-MM-DD')}.
 

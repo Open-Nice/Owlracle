@@ -32,15 +32,19 @@ export function LoginButton({
       className={cn(className)}
       {...props}
     >
-      {isLoading ? (
-        <IconSpinner className="mr-2 animate-spin" />
-      ) : showGithubIcon ? (
-        <div className="mr-2">
-          <GoogleIcon fontSize='inherit' color='inherit'/>
-        </div>
-        
-      ) : null}
-      {text}
+      <div className='loginBtn-pure-bg'></div>
+      <div className='loginBtn-text flex items-center justify-center'>
+        {isLoading ? (
+          <IconSpinner className="mr-2 animate-spin" />
+        ) : showGithubIcon ? (
+          <div className="mr-2">
+            <GoogleIcon fontSize='inherit' color='inherit'/>
+          </div>
+          
+        ) : null}
+        {text}
+      </div>
+      
     </Button>
   )
 }
