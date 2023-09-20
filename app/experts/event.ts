@@ -70,7 +70,8 @@ export async function eventEx(userPrompt: string, dbs: number[], _: number, memo
         In your answer:
         1. Include all relevant events from context with date and type meeting student's question.
         2. For each event, give a concise description, date, urls, and location.
-        3. ${promptPrinciple['Ask what you do not know']}
+        3. Provide the link for reference if there is any in the context.
+        4. ${promptPrinciple['Ask what you do not know']}
         `}
 
         Here are some events:

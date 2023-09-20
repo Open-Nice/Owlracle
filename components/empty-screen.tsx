@@ -47,6 +47,12 @@ export function EmptyScreen({ id, append }: EmptyPanelProps) {
           </ExternalLink>
           {' '} and empowered by Rice<span style={{ fontSize: '25px' }} placeholder='Owl'>🦉</span>s. */}
         </p>
+        <div className='intro'>
+          <button onClick={async () => await append({ id, content: 'What can you do?', role: 'user'})} 
+          className='intro-btn shadow'>
+              <span>👉</span> See what I can do
+          </button>
+        </div>
         <p className="mb-2 leading-normal color-mid-purple">
           Checkout upcoming events:
         </p>

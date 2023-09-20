@@ -251,6 +251,27 @@
     }
 }
 
+.intro{
+    margin-bottom: 20px;
+    /* display: flex;
+    justify-content: center; */
+    width: 100%;
+}
+
+.intro-btn{
+    font-size: 11pt;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    border: 1px rgba(180, 180, 180, 0.389) solid;
+    transition: all ease 0.5s;
+}
+
+.intro-btn:hover{
+    background-color: #e17eff;
+    color: white;
+}
+
 .nice-icon{
     fill:black;
     stroke:black;
